@@ -1,7 +1,3 @@
-default:
-  tags:
-    - test-runner
-
 stages:         
   - build
   # - test
