@@ -15,12 +15,13 @@ build-job:
     - main
   image: docker:stable
   services:
-      - docker:19-dind
+      - name: docker:19-dind
+        command: ["--tls=false"]
 
   
   script:
     - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
-    - export DOCKER_HOST=tcp://docker:2375 && docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
+    - docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
     - docker push gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe
 
 # unit-test-job:   
