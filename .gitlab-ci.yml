@@ -2,8 +2,6 @@ default:
   tags: 
     - test-runner
 
-    
-
 stages:         
   - build
   # - test
@@ -18,6 +16,12 @@ build-job:
   image: docker:stable
   services:
       - docker:dind
+  variables:
+    DOCKER_HOST: tcp://thedockerhost:2375/
+    DOCKER_DRIVER: overlay2
+    DOCKER_TLS_CERTDIR: ""
+
+  
   script:
     - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
     - docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
