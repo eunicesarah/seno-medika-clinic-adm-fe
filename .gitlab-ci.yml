@@ -8,7 +8,7 @@ build-job:
   when: on_success
   only: master
   image: docker:stable
-  service:
+  services:
       - docker:dind
   script:
     - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
