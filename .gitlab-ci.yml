@@ -6,7 +6,7 @@ stages:
 build-job:       
   stage: build
   when: on_success
-  only: master
+  only: [master]
   image: docker:stable
   services:
       - docker:dind
