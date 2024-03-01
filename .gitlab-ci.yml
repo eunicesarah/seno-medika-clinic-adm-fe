@@ -20,7 +20,7 @@ build-job:
     DOCKER_TLS_CERTDIR: ""
 
   services:
-      - name: docker:19-dind
+      - name: docker:dind
         command: ["--tls=false"]
 
   
