@@ -17,7 +17,7 @@ build-job:
   services:
       - docker:dind
   script:
-    - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
+    - docker login gitlab.informatika.org:4567
     - docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
     - docker push gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe
 
