@@ -16,10 +16,6 @@ build-job:
   only: 
     - main
   image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
 
   services:
       - name: docker:dind
