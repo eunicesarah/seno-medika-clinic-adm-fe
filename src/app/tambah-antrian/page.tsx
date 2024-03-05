@@ -17,7 +17,7 @@ export default function TambahAntrian() {
 
 
     return (
-        <div className='flex flex-row mr-10 bg-primary1'>
+        <div className='flex flex-row bg-tint6'>
             <Image 
                 src={Background} 
                 alt="Background" 
@@ -25,7 +25,7 @@ export default function TambahAntrian() {
             />
             <div className=' text-shade6 font-poppins w-auto'>
                 <p className=' text-5xl font-extrabold mt-20 mb-4'>DAFTAR BEROBAT</p>
-                <p className=' text-2xl font-medium'>Jika baru pertama kali mendaftar, silahkan ke menu pendaftaran pasien</p>
+                <p className=' text-2xl font-medium mr-10'>Jika baru pertama kali mendaftar, silahkan ke menu pendaftaran pasien</p>
                 <div className=' mt-14'>
                     <div>
                         <p className=' text-2xl '>Nama</p>

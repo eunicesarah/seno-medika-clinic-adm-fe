@@ -35,8 +35,8 @@ export default function Dashboard() {
       const [showPopup, setShowPopup] = useState(false);
 
     return (
-        <div className=" bg-primary1">
-            <div className="flex mr-20 mt-14">
+        <div className=" bg-tint6 flex-col flex">
+            <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
                         src={SMLogo} 
@@ -51,7 +51,7 @@ export default function Dashboard() {
                     </button>
                 </div>
             </div>
-            <div className="flex mt-9 mr-14 ml-28 justify-between gap-0">
+            <div className="flex mt-9 ml-28 content-center justify-between mr-14">
                 <div className="flex items-center ml-auto">
                     <div className="flex bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
                         <div className=" ml-5 mr-4 mt-10 mb-3">
@@ -68,7 +68,7 @@ export default function Dashboard() {
                         </div> 
                     </div>
 
-                    <div className="flex  bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
+                    <div className="flex bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
                         <div className=" ml-5 mr-4 mt-10 mb-3">
                             <Image
                                 src={CheckLogo}
@@ -99,7 +99,7 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                <button className=" rounded-xl h-36 mr-14 bg-primary1 hover:bg-shade6 shadow-xl" onClick={() => setShowPopup(true)}>
+                <button className=" rounded-xl h-36 mr-auto bg-primary1 hover:bg-shade6 shadow-xl" onClick={() => setShowPopup(true)}>
                     <div>
                         <p className= " w-72 h-8 text-white text-[32px] font-bold font-['Poppins'] uppercase leading-[38.40px] text-center mt-5">Tambah Pasien</p> {/* teks atas */}
                     </div> 
