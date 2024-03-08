@@ -58,7 +58,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 const Dropdown = ({ options, onSelect }:any) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState({'label':null});
 
   const handleOptionClick = (option:any) => {
     setSelectedOption(option);
