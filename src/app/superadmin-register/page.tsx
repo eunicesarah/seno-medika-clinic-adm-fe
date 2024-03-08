@@ -4,6 +4,7 @@ import Image from "next/image";
 import Pattern from "../../../public/pattern.svg";
 import Modal from "react-modal";
 import Chip from "react-chip"
+import axios from "axios";
 
 export default function Register() {
   const [selectedPosisi, setSelectedPosisi] = useState("");
@@ -12,12 +13,14 @@ export default function Register() {
     nama: "",
     email: "",
     password: "",
+    role: "",
   });
 
+
   type Schedule = {
-	hari: string;
-	waktuMulai: string;
-	waktuSelesai: string;
+    hari: string;
+    waktuMulai: string;
+    waktuSelesai: string;
   };
   
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -35,7 +38,8 @@ export default function Register() {
     setShowAdditionalFields(
       value === "Dokter" || value === "Apoteker" || value === "Suster"
     );
-    setShowSubmitButton(value === "Kasir" || value === "front_officer");
+    setShowSubmitButton(value === "Kasir" || value === "Front Officer");
+    setFormData({ ...formData, role: value });
   };
 
   const handlePoliChange = (value: any) => {
@@ -57,32 +61,25 @@ export default function Register() {
     setJenisPoli(value);
   };
 
-  // const handleSimpanClick = (schedule:any) => {
-  //   console.log(schedule);
-  //   // Get the values of "hari", "waktu mulai", and "waktu selesai"
-  //   // This is just a placeholder, replace it with your actual logic
-
-  //   const hari = document.querySelector('input[name="hari_jadwal"]:checked').value;
-  //   const waktuMulai = document.getElementById('waktu_mulai]').value;
-  //   const waktuSelesai = document.getElementById("waktu_selesai").value;
-
-  //   // Add the new schedule to the state
-  //   setSchedules(prevSchedules => [...prevSchedules, { hari, waktuMulai, waktuSelesai }]);
-  // };
-
-  // const handleDelete = (scheduleToDelete) => () => {
-  //   setSchedules((prevSchedules) => prevSchedules.filter((schedule) => schedule !== scheduleToDelete));
-  // };
-
-  const handleSubmit = () => {
-    if (selectedPosisi === "Kasir") {
-      // Submit the form for Kasir
-      console.log("Form submitted for Kasir:", formData);
-    } else {
-      // Handle the form data for other positions (e.g., Dokter)
-      console.log("Form data for other positions:", formData);
-      // You can show a different form based on the selected position
+  const submitForm1 = async () => {
+    console.log("submitting form");
+    console.log(formData);
+    try {
+      const response = await axios.post("http://localhost:8080/user", formData);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("User created");
+        location.href = "/bye";
+      }
     }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleSubmit = async (e:any) => {
+    e.preventDefault();
+    submitForm1();
   };
 
   return (
@@ -98,7 +95,7 @@ export default function Register() {
         <h1 className="uppercase text-shade6 text-5xl font-Poppins font-bold leading-9 text-center m-5 ">
           REGISTRASI
         </h1>
-        <form className="space-y-4 md:space-y-6 flex flex-row">
+        <form className="space-y-4 md:space-y-6 flex flex-row" onSubmit={handleSubmit} method="post">
           <div className="flex flex-col gap-3">
             <div className="mx-16">
               <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
@@ -110,6 +107,10 @@ export default function Register() {
                 id="nama"
                 className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                 placeholder="Masukkan nama lengkap Anda"
+                value={formData.nama}
+                onChange={(e) =>
+                  setFormData({ ...formData, nama: e.target.value })
+                }
               />
             </div>
             <div className="mx-16">
@@ -122,6 +123,10 @@ export default function Register() {
                 id="email"
                 className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                 placeholder="Masukkan alamat e-mail Anda"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
               />
             </div>
             <div className="mx-16 ">
@@ -134,6 +139,10 @@ export default function Register() {
                 name="password"
                 id="password"
                 placeholder="Masukkan kata sandi Anda"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
               />
             </div>
             <div className="max-w-sm mx-16">
@@ -141,11 +150,12 @@ export default function Register() {
                 Daftar Sebagai
               </label>
               <select
-                id="posisi"
-                name="posisi"
+                id="role"
+                name="role"
                 className="font-Poppins font-semibold w-full  p-2 rounded-xl px-7 py-3.5 left-0 top-9 bg-gray-100  border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                 onChange={(e) => handlePosisiChange(e.target.value)}
-                value={selectedPosisi}
+                value={formData.role}
+    
               >
                 <option className="text-shade8 font-Poppins font-semibold w-full  p-2 hover:text-tint7 hover:bg-shade4">
                   Pilih
@@ -176,7 +186,7 @@ export default function Register() {
                 </option>
                 <option
                   className="text-shade8 font-Poppins font-semibold  w-full rounded-b-xl  p-2 hover:text-tint7 hover:bg-shade4"
-                  value="front_officer"
+                  value="Front Officer"
                 >
                   Front Officer
                 </option>
@@ -186,10 +196,11 @@ export default function Register() {
               {showSubmitButton && (
                 <button
                   className="rounded-2xl py-2.5 px-16 bg-primary1 font-Poppins font-semibold hover:bg-shade5"
-                  onClick={handleSubmit}
+                  // onSubmit={handleSubmit}
+                  type="submit"
                 >
                   {selectedPosisi === "Kasir" ||
-                  selectedPosisi === "front_officer"
+                  selectedPosisi === "Front Officer"
                     ? "Submit"
                     : "Lanjut"}
                 </button>
@@ -449,7 +460,8 @@ export default function Register() {
               showAdditionalFields && (
                 <button
                   className="rounded-2xl py-2.5 px-16 bg-primary1 font-Poppins font-semibold hover:bg-shade5"
-                  onClick={handleSubmit}
+                  // onSubmit={handleSubmit}
+                  type="submit"
                 >
                   Submit
                 </button>
