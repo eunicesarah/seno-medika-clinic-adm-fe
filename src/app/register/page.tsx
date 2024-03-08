@@ -5,6 +5,7 @@ import logo from "../../../public/logo.svg";
 import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "../../components/Dropdown";
 import CustomDropdown from "../../components/CustomDropdown";
+import axios from 'axios';
 
 const genderOptions = [
     { label: "Laki-laki", value: "laki-laki" },
@@ -99,7 +100,7 @@ export default function Register() {
 
     const handleOptionSelect2 = (selectedOption: any) => {
         setSelectedValue(selectedOption);
-        console.log(selectedOption);
+        // console.log(selectedOption);
     };
     const handleAsuransiChange = (option: any) => {
         setSelectedAsuransi(option);
@@ -140,10 +141,10 @@ export default function Register() {
     };
     const handleProvinsiSelect = (selectedOption: any) => {
         setSelectedProvinsi(selectedOption);
-        console.log(selectedOption);
-        console.log(
-            `https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${selectedOption.value}.json`
-        );
+        // console.log(selectedOption);
+        // console.log(
+        //     `https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${selectedOption.value}.json`
+        // );
         setFormValues({
             ...formValues,
             ["provinsi"]: selectedOption.label,
@@ -154,7 +155,7 @@ export default function Register() {
         )
             .then((response) => response.json())
             .then((data) => {
-                const kotaOptions = data.map((item) => ({
+                const kotaOptions = data.map((item:any) => ({
                     label: item.name,
                     value: item.id,
                 }));
@@ -164,7 +165,7 @@ export default function Register() {
 
     const handleCitySelect = (selectedOption: any) => {
         setSelectedKota(selectedOption);
-        console.log(selectedOption.value);
+        // console.log(selectedOption.value);
         setFormValues({
             ...formValues,
             ["kabupaten_kota"]: selectedOption.label,
@@ -174,7 +175,7 @@ export default function Register() {
         )
             .then((response) => response.json())
             .then((data) => {
-                const kecamatanOptions = data.map((item) => ({
+                const kecamatanOptions = data.map((item:any) => ({
                     label: item.name,
                     value: item.id,
                 }));
@@ -184,19 +185,19 @@ export default function Register() {
 
     const handleKecamatanSelect = (selectedOption: any) => {
         setSelectedKecamatan(selectedOption);
-        console.log(selectedOption.value);
+        // console.log(selectedOption.value);
         setFormValues({
             ...formValues,
             ["kecamatan"]: selectedOption.label,
         });
         // Fetch subdistrict options based on selected district
-        console.log(selectedOption.value);
+        // console.log(selectedOption.value);
         fetch(
             `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${selectedOption.value}.json`
         )
             .then((response) => response.json())
             .then((data) => {
-                const kelurahanOptions = data.map((item) => ({
+                const kelurahanOptions = data.map((item:any) => ({
                     label: item.name,
                     value: item.id,
                 }));
@@ -204,7 +205,7 @@ export default function Register() {
             });
     };
     const handleKelurahanSelect = (selectedOption: any) => {
-        console.log(selectedOption.value);
+        // console.log(selectedOption.value);
         setFormValues({
             ...formValues,
             ["kelurahan"]: selectedOption.label,
@@ -215,7 +216,7 @@ export default function Register() {
         fetch(`https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json`)
             .then((response) => response.json())
             .then((data) => {
-                const provinceOptions = data.map((item) => ({
+                const provinceOptions = data.map((item:any) => ({
                     label: item.name,
                     value: item.id,
                 }));
@@ -227,7 +228,7 @@ export default function Register() {
         name: "",
         NIK: "",
         no_KK: "",
-        no_erm: "",
+        no_erm: 0,
         gender: "",
         golongan_darah: "",
         tempat_lahir: "",
@@ -248,12 +249,28 @@ export default function Register() {
         no_kontak_darurat: "",
         jenis_pembayaran: "",
         no_asuransi: "",
+        no_IHS: "0",
+        no_rm_lama: "0",
+        no_dok_lama: "0",
+        created_by: "0",
+        updated_by: "0",
     });
 
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        console.log(formValues);
-    };
+    // const handleSubmit = async (e:any) => {
+    //     e.preventDefault();
+    //     // console.log(formValues); 
+    //     console.log(JSON.stringify(formValues));
+    //     console.log("12313213")
+    // };
+
+    const handleSubmit = async (e:any) => {
+        e.preventDefault()
+        console.log(formValues)
+
+        await axios.post('http://localhost:8080/pasien', formValues)
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+      }
 
     const handleInputChange = (e: any) => {
         setFormValues({
