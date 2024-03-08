@@ -78,6 +78,31 @@ const asuransiOptions = [
     { label: "BPJS", value: "bpjs" },
 ];
 
+interface IError{
+    nama: string;
+    email: string;
+    NIK: string;
+    no_KK: string;
+    no_erm: string;
+    goldar: string;
+    gender: string;
+    tempat_lahir: string;
+    tanggal_lahir: string;
+    provinsi: string;
+    kabupaten_kota: string;
+    kecamatan: string;
+    kelurahan: string;
+    alamat: string;
+    no_telepon: string;
+    warga_negara: string;
+    status_perkawinan: string;
+    pendidikan_terakhir: string;
+    agama: string;
+    pekerjaan: string;
+    nama_kontak_darurat: string;
+    no_kontak_darurat: string;
+}
+
 export default function Register() {
     const [selectedGenderOption, setSelectedGenderOption] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -98,97 +123,130 @@ export default function Register() {
     const [kotaOptions, setKotaOptions] = useState([]);
     const [kecamatanOptions, setKecamatanOptions] = useState([]);
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
-    const [errors, setErrors] = useState({}); 
+    const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
 
+    const [formValues, setFormValues] = useState({
+        name: "",
+        NIK: "",
+        no_KK: "",
+        no_erm: "",
+        gender: "",
+        golongan_darah: "",
+        tempat_lahir: "",
+        tanggal_lahir: "",
+        email: "",
+        no_telepon: "",
+        provinsi: "",
+        kabupaten_kota: "",
+        kecamatan: "",
+        kelurahan: "",
+        alamat: "",
+        warga_negara: "",
+        status_perkawinan: "",
+        pendidikan_terakhir: "",
+        agama: "",
+        pekerjaan: "",
+        nama_kontak_darurat: "",
+        no_kontak_darurat: "",
+        jenis_pembayaran: "",
+        no_asuransi: "",
+        no_IHS: "0",
+        no_rm_lama: "0",
+        no_dok_lama: "0",
+        created_by: "0",
+        updated_by: "0",
+    });
 
-    const validateForm = () => { 
-        let errors = {}; 
+
+    const validateForm = () => {
+        let err: IError = {} as IError;
 
         if(!formValues.name){
-            errors.nama = 'Nama is required.';
+            err.nama = 'Nama is required.';
         }
 
-        if (!formValues.email) { 
-            errors.email = 'Email is required.'; 
-        }else if (!/\S+@\S+\.\S+/.test(formValues.email)) { 
-            errors.email = 'Email is invalid.'; 
-        } 
+        if (!formValues.email) {
+            err.email = 'Email is required.';
+        }else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
+            err.email = 'Email is invalid.';
+        }
 
         if(!formValues.NIK) {
-            errors.NIK = 'NIK is required.';
+            err.NIK = 'NIK is required.';
         }
 
         if(!formValues.no_KK) {
-            errors.no_KK = 'No KK is required.';
+            err.no_KK = 'No KK is required.';
         }
 
         if(!formValues.no_erm) {
-            errors.no_erm = 'No ERM is required.';
+            err.no_erm = 'No ERM is required.';
         }
 
         if(!formValues.golongan_darah){
-            errors.goldar = 'Golongan Darah is required.';
+            err.goldar = 'Golongan Darah is required.';
         }
 
         if(!formValues.gender){
-            errors.gender = "Jenis Kelamin is required."
+            err.gender = "Jenis Kelamin is required."
         }
 
         if(!formValues.tempat_lahir) {
-            errors.tempat_lahir = 'Tempat Lahir is required.';
+            err.tempat_lahir = 'Tempat Lahir is required.';
         }
 
         if(!formValues.tanggal_lahir) {
-            errors.tanggal_lahir = 'Tanggal Lahir is required.';
-        }
-        
-        if(!formValues.provinsi){
-            errors.provinsi = 'Provinsi is required.';
-        }
-        if(!formValues.kabupaten_kota){
-            errors.kabupaten_kota = 'Kabupaten Kota is required.';
-        }
-        if(!formValues.kecamatan){
-            errors.kecamatan = 'Kecamatan is required.';
-        }
-        if(!formValues.kelurahan){
-            errors.kelurahan = 'Kelurahan is required.';
-        }
-        if(!formValues.alamat){
-            errors.alamat = 'Alamat is required.';
-        }
-        if(!formValues.no_telepon){
-            errors.no_telepon = 'No Telepon is required.';
-        }else if(!/^\d{10,13}$/.test(formValues.no_telepon)){
-            errors.no_telepon = 'No Telepon is invalid.';
-        }
-        if(!formValues.warga_negara){
-            errors.warga_negara = 'Warga Negara is required.';
-        }
-        if(!formValues.status_perkawinan){
-            errors.status_perkawinan = 'Status Perkawinan is required.';
-        }
-        if(!formValues.pendidikan_terakhir){
-            errors.pendidikan_terakhir = 'Pendidikan Terakhir is required.';
-        }
-        if(!formValues.agama){
-            errors.agama = 'Agama is required.';
-        }
-        if(!formValues.pekerjaan){
-            errors.pekerjaan = 'Pekerjaan is required.';
-        }
-        if(!formValues.nama_kontak_darurat){
-            errors.nama_kontak_darurat = 'Nama Kontak Darurat is required.';
-        }
-        if(!formValues.no_kontak_darurat){
-            errors.no_kontak_darurat = 'No Kontak Darurat is required.';
+            err.tanggal_lahir = 'Tanggal Lahir is required.';
         }
 
-  
-        setErrors(errors); 
+        if(!formValues.provinsi){
+            err.provinsi = 'Provinsi is required.';
+        }
+        if(!formValues.kabupaten_kota){
+            err.kabupaten_kota = 'Kabupaten Kota is required.';
+        }
+        if(!formValues.kecamatan){
+            err.kecamatan = 'Kecamatan is required.';
+        }
+        if(!formValues.kelurahan){
+            err.kelurahan = 'Kelurahan is required.';
+        }
+        if(!formValues.alamat){
+            err.alamat = 'Alamat is required.';
+        }
+        if(!formValues.no_telepon){
+            err.no_telepon = 'No Telepon is required.';
+        }else if(!/^\d{10,13}$/.test(formValues.no_telepon)){
+            err.no_telepon = 'No Telepon is invalid.';
+        }
+        if(!formValues.warga_negara){
+            err.warga_negara = 'Warga Negara is required.';
+        }
+        if(!formValues.status_perkawinan){
+            err.status_perkawinan = 'Status Perkawinan is required.';
+        }
+        if(!formValues.pendidikan_terakhir){
+            err.pendidikan_terakhir = 'Pendidikan Terakhir is required.';
+        }
+        if(!formValues.agama){
+            err.agama = 'Agama is required.';
+        }
+        if(!formValues.pekerjaan){
+            err.pekerjaan = 'Pekerjaan is required.';
+        }
+        if(!formValues.nama_kontak_darurat){
+            err.nama_kontak_darurat = 'Nama Kontak Darurat is required.';
+        }
+        if(!formValues.no_kontak_darurat){
+            err.no_kontak_darurat = 'No Kontak Darurat is required.';
+        }
+
+
+
+        setErrors(err);
         setIsFormValid(Object.keys(errors).length === 0); 
-    }; 
+    }
 
     // const handleOptionSelect2 = (selectedOption: any) => {
     //     setSelectedValue(selectedOption);
@@ -306,37 +364,7 @@ export default function Register() {
             });
     }, []);
 
-    const [formValues, setFormValues] = useState({
-        name: "",
-        NIK: "",
-        no_KK: "",
-        no_erm: "",
-        gender: "",
-        golongan_darah: "",
-        tempat_lahir: "",
-        tanggal_lahir: "",
-        email: "",
-        no_telepon: "",
-        provinsi: "",
-        kabupaten_kota: "",
-        kecamatan: "",
-        kelurahan: "",
-        alamat: "",
-        warga_negara: "",
-        status_perkawinan: "",
-        pendidikan_terakhir: "",
-        agama: "",
-        pekerjaan: "",
-        nama_kontak_darurat: "",
-        no_kontak_darurat: "",
-        jenis_pembayaran: "",
-        no_asuransi: "",
-        no_IHS: "0",
-        no_rm_lama: "0",
-        no_dok_lama: "0",
-        created_by: "0",
-        updated_by: "0",
-    });
+
     const styles = { 
         container: { 
             display: 'flex', 
@@ -400,7 +428,7 @@ export default function Register() {
         validateForm();
         if(isFormValid){
             await axios.post('http://localhost:8080/pasien', formValues)
-            .then(response => {
+            .then((response :any) => {
                 console.log(response)
                 if(response.status < 400){
                     alert('Data berhasil disimpan')
@@ -409,7 +437,7 @@ export default function Register() {
                     alert(response.data.message)
                 )
             })
-            .catch(error => console.log(error))
+            .catch((error : any) => console.log(error))
         }else{
             alert('Form is not valid')
         }
