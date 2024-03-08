@@ -21,6 +21,7 @@ const CustomDropdown = ({ options, selectedOption, onChange }:any) => {
   return (
     <Select
       options={[...options, customOption].filter(Boolean)} // Filter out undefined values
+      className='text-black'
       value={selectedOption}
       onChange={handleOptionChange}
       onInputChange={handleInputChange}
