@@ -6,6 +6,7 @@ import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "../../components/Dropdown";
 import CustomDropdown from "../../components/CustomDropdown";
 import axios from 'axios';
+import { isValid } from "date-fns";
 
 const genderOptions = [
     { label: "Laki-laki", value: "laki-laki" },
@@ -80,28 +81,118 @@ const asuransiOptions = [
 export default function Register() {
     const [selectedGenderOption, setSelectedGenderOption] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedGoldar, setSelectedGoldarOption] = useState("");
-    const [selectedAgama, setSelectedAgamaOption] = useState("");
-    const [selectedPendidikan, setSelectedPendidikanOption] = useState("");
-    const [selectedKawin, setSelectedKawinOption] = useState("");
-    const [selectedWargaNegara, setSelectedWargaNegaraOption] = useState("");
+    // const [selectedGoldar, setSelectedGoldarOption] = useState("");
+    // const [selectedAgama, setSelectedAgamaOption] = useState("");
+    // const [selectedPendidikan, setSelectedPendidikanOption] = useState("");
+    // const [selectedKawin, setSelectedKawinOption] = useState("");
+    // const [selectedWargaNegara, setSelectedWargaNegaraOption] = useState("");
     const [selectedAsuransi, setSelectedAsuransi] = useState(null);
     const [showNoAsuransiTextField, setShowNoAsuransiTextField] =
         useState(false);
-    const [inputNoAsuransiValue, setInputNoAsuransiValue] = useState("");
-    const [selectedValue, setSelectedValue] = useState("");
-    const [selectedProvinsi, setSelectedProvinsi] = useState(null);
-    const [selectedKota, setSelectedKota] = useState(null);
-    const [selectedKecamatan, setSelectedKecamatan] = useState(null);
+    // const [inputNoAsuransiValue, setInputNoAsuransiValue] = useState("");
+    // const [selectedValue, setSelectedValue] = useState("");
+    // const [selectedProvinsi, setSelectedProvinsi] = useState(null);
+    // const [selectedKota, setSelectedKota] = useState(null);
+    // const [selectedKecamatan, setSelectedKecamatan] = useState(null);
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [kotaOptions, setKotaOptions] = useState([]);
     const [kecamatanOptions, setKecamatanOptions] = useState([]);
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
+    const [errors, setErrors] = useState({}); 
+    const [isFormValid, setIsFormValid] = useState(false);
 
-    const handleOptionSelect2 = (selectedOption: any) => {
-        setSelectedValue(selectedOption);
-        // console.log(selectedOption);
-    };
+
+    const validateForm = () => { 
+        let errors = {}; 
+
+        if(!formValues.name){
+            errors.nama = 'Nama is required.';
+        }
+
+        if (!formValues.email) { 
+            errors.email = 'Email is required.'; 
+        }else if (!/\S+@\S+\.\S+/.test(formValues.email)) { 
+            errors.email = 'Email is invalid.'; 
+        } 
+
+        if(!formValues.NIK) {
+            errors.NIK = 'NIK is required.';
+        }
+
+        if(!formValues.no_KK) {
+            errors.no_KK = 'No KK is required.';
+        }
+
+        if(!formValues.no_erm) {
+            errors.no_erm = 'No ERM is required.';
+        }
+
+        if(!formValues.golongan_darah){
+            errors.goldar = 'Golongan Darah is required.';
+        }
+
+        if(!formValues.gender){
+            errors.gender = "Jenis Kelamin is required."
+        }
+
+        if(!formValues.tempat_lahir) {
+            errors.tempat_lahir = 'Tempat Lahir is required.';
+        }
+
+        if(!formValues.tanggal_lahir) {
+            errors.tanggal_lahir = 'Tanggal Lahir is required.';
+        }
+        
+        if(!formValues.provinsi){
+            errors.provinsi = 'Provinsi is required.';
+        }
+        if(!formValues.kabupaten_kota){
+            errors.kabupaten_kota = 'Kabupaten Kota is required.';
+        }
+        if(!formValues.kecamatan){
+            errors.kecamatan = 'Kecamatan is required.';
+        }
+        if(!formValues.kelurahan){
+            errors.kelurahan = 'Kelurahan is required.';
+        }
+        if(!formValues.alamat){
+            errors.alamat = 'Alamat is required.';
+        }
+        if(!formValues.no_telepon){
+            errors.no_telepon = 'No Telepon is required.';
+        }else if(!/^\d{10,13}$/.test(formValues.no_telepon)){
+            errors.no_telepon = 'No Telepon is invalid.';
+        }
+        if(!formValues.warga_negara){
+            errors.warga_negara = 'Warga Negara is required.';
+        }
+        if(!formValues.status_perkawinan){
+            errors.status_perkawinan = 'Status Perkawinan is required.';
+        }
+        if(!formValues.pendidikan_terakhir){
+            errors.pendidikan_terakhir = 'Pendidikan Terakhir is required.';
+        }
+        if(!formValues.agama){
+            errors.agama = 'Agama is required.';
+        }
+        if(!formValues.pekerjaan){
+            errors.pekerjaan = 'Pekerjaan is required.';
+        }
+        if(!formValues.nama_kontak_darurat){
+            errors.nama_kontak_darurat = 'Nama Kontak Darurat is required.';
+        }
+        if(!formValues.no_kontak_darurat){
+            errors.no_kontak_darurat = 'No Kontak Darurat is required.';
+        }
+
+  
+        setErrors(errors); 
+        setIsFormValid(Object.keys(errors).length === 0); 
+    }; 
+
+    // const handleOptionSelect2 = (selectedOption: any) => {
+    //     setSelectedValue(selectedOption);
+    // };
     const handleAsuransiChange = (option: any) => {
         setSelectedAsuransi(option);
         setShowNoAsuransiTextField(option.value !== "tunai");
@@ -110,21 +201,21 @@ export default function Register() {
           ["jenis_pembayaran"]: option.label,
       });
     };
-    const handleOptionGoldarChange = (option: any) => {
-        setSelectedGoldarOption(option);
-    };
-    const handleOptionAgamaChange = (option: any) => {
-        setSelectedAgamaOption(option);
-    };
-    const handleOptionPendidikanChange = (option: any) => {
-        setSelectedPendidikanOption(option);
-    };
-    const handleOptionKawinChange = (option: any) => {
-        setSelectedKawinOption(option);
-    };
-    const handleOptionWargaNegaraChange = (option: any) => {
-        setSelectedWargaNegaraOption(option);
-    };
+    // const handleOptionGoldarChange = (option: any) => {
+    //     setSelectedGoldarOption(option);
+    // };
+    // const handleOptionAgamaChange = (option: any) => {
+    //     setSelectedAgamaOption(option);
+    // };
+    // const handleOptionPendidikanChange = (option: any) => {
+    //     setSelectedPendidikanOption(option);
+    // };
+    // const handleOptionKawinChange = (option: any) => {
+    //     setSelectedKawinOption(option);
+    // };
+    // const handleOptionWargaNegaraChange = (option: any) => {
+    //     setSelectedWargaNegaraOption(option);
+    // };
     const handleDateChange = (date: any) => {
         setSelectedDate(date);
         setFormValues({
@@ -140,11 +231,7 @@ export default function Register() {
         });
     };
     const handleProvinsiSelect = (selectedOption: any) => {
-        setSelectedProvinsi(selectedOption);
-        // console.log(selectedOption);
-        // console.log(
-        //     `https://emsifa.github.io/api-wilayah-indonesia/api/regencies/${selectedOption.value}.json`
-        // );
+        // setSelectedProvinsi(selectedOption);
         setFormValues({
             ...formValues,
             ["provinsi"]: selectedOption.label,
@@ -164,8 +251,7 @@ export default function Register() {
     };
 
     const handleCitySelect = (selectedOption: any) => {
-        setSelectedKota(selectedOption);
-        // console.log(selectedOption.value);
+        // setSelectedKota(selectedOption);
         setFormValues({
             ...formValues,
             ["kabupaten_kota"]: selectedOption.label,
@@ -184,14 +270,11 @@ export default function Register() {
     };
 
     const handleKecamatanSelect = (selectedOption: any) => {
-        setSelectedKecamatan(selectedOption);
-        // console.log(selectedOption.value);
+        // setSelectedKecamatan(selectedOption);
         setFormValues({
             ...formValues,
             ["kecamatan"]: selectedOption.label,
         });
-        // Fetch subdistrict options based on selected district
-        // console.log(selectedOption.value);
         fetch(
             `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${selectedOption.value}.json`
         )
@@ -205,7 +288,6 @@ export default function Register() {
             });
     };
     const handleKelurahanSelect = (selectedOption: any) => {
-        // console.log(selectedOption.value);
         setFormValues({
             ...formValues,
             ["kelurahan"]: selectedOption.label,
@@ -228,7 +310,7 @@ export default function Register() {
         name: "",
         NIK: "",
         no_KK: "",
-        no_erm: 0,
+        no_erm: "",
         gender: "",
         golongan_darah: "",
         tempat_lahir: "",
@@ -255,21 +337,83 @@ export default function Register() {
         created_by: "0",
         updated_by: "0",
     });
-
-    // const handleSubmit = async (e:any) => {
-    //     e.preventDefault();
-    //     // console.log(formValues); 
-    //     console.log(JSON.stringify(formValues));
-    //     console.log("12313213")
-    // };
+    const styles = { 
+        container: { 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center', 
+            minHeight: '100vh', 
+            backgroundColor: '#f0f0f0', 
+        }, 
+        heading: { 
+            fontWeight: 'bold', 
+            fontSize: '25px', 
+            color: "green", 
+            textAlign: "center", 
+        }, 
+        subHeading: { 
+            fontWeight: 'bold', 
+            fontSize: '25px', 
+            textAlign: "center", 
+      
+        }, 
+        form: { 
+            backgroundColor: '#fff', 
+            padding: '20px', 
+            borderRadius: '8px', 
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', 
+            width: '100%', 
+            maxWidth: '400px', 
+            margin: '0 auto', 
+        }, 
+        input: { 
+            width: '100%', 
+            padding: '12px', 
+            marginBottom: '12px', 
+            border: '1px solid #ccc', 
+            borderRadius: '10px', 
+            fontSize: '16px', 
+            transition: 'border-color 0.2s ease', 
+        }, 
+        button: { 
+            backgroundColor: 'green', 
+            color: '#fff', 
+            fontWeight: 'bold', 
+            fontSize: '16px', 
+            padding: '12px', 
+            border: 'none', 
+            borderRadius: '10px', 
+            cursor: 'pointer', 
+            width: '40%', 
+            transition: 'opacity 0.2s ease', 
+        }, 
+        error: { 
+            color: 'red', 
+            fontSize: '14px', 
+            marginBottom: '6px', 
+        }, 
+    }; 
 
     const handleSubmit = async (e:any) => {
         e.preventDefault()
         console.log(formValues)
+        validateForm();
+        if(isFormValid){
+            await axios.post('http://localhost:8080/pasien', formValues)
+            .then(response => {
+                console.log(response)
+                if(response.status < 400){
+                    alert('Data berhasil disimpan')
+                    location.href = '/dashboard'
+                }else(
+                    alert(response.data.message)
+                )
+            })
+            .catch(error => console.log(error))
+        }else{
+            alert('Form is not valid')
+        }
 
-        await axios.post('http://localhost:8080/pasien', formValues)
-        .then(response => console.log(response))
-        .catch(error => console.log(error))
       }
 
     const handleInputChange = (e: any) => {
@@ -322,6 +466,7 @@ export default function Register() {
                                     value={formValues.name}
                                     onChange={handleInputChange}
                                 />
+                                {errors.nama && <p style={styles.error}>{errors.nama}</p>} 
                             </div>
                         </div>
                         <div className="col-start-1 col-span-12">
@@ -339,6 +484,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.NIK && <p style={styles.error}>{errors.NIK}</p>} 
                             </div>
                         </div>
                         <div className="col-start-1 col-span-12">
@@ -355,6 +501,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.no_KK && <p style={styles.error}>{errors.no_KK}</p>} 
                             </div>
                         </div>
                         <div className="col-start-1 col-span-12">
@@ -371,6 +518,7 @@ export default function Register() {
                                     placeholder="Masukkan No Rekam Medik Anda"
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>} 
                             </div>
                         </div>
                           <div className="col-start-1 col-span-3 ">
@@ -388,6 +536,7 @@ export default function Register() {
                                         )
                                     }
                                 />
+                                {errors.goldar && <p style={styles.error}>{errors.goldar}</p>} 
                               </div>
                           </div>
                           <div className="col-start-4 col-span-3">
@@ -423,6 +572,7 @@ export default function Register() {
                                       </label>
                                   ))}
                               </div>
+                              {errors.gender && <p style={styles.error}>{errors.gender}</p>} 
                           </div>
                           <div className="col-start-7 col-span-3">
                               <label
@@ -441,6 +591,7 @@ export default function Register() {
                                       onChange={handleInputChange}
                                       className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                   />
+                                  {errors.tempat_lahir && <p style={styles.error}>{errors.tempat_lahir}</p>} 
                               </div>
                           </div>
                           <div className="col-start-10 col-span-3">
@@ -456,6 +607,7 @@ export default function Register() {
                                       onDateChange={handleDateChange} 
                                       className="w-full"
                                   />
+                                  {errors.tanggal_lahir && <p style={styles.error}>{errors.tanggal_lahir}</p>} 
                               </div>
                           </div>
                           <div className="col-start-1 col-span-6">
@@ -475,6 +627,7 @@ export default function Register() {
                                       onChange={handleInputChange}
                                       className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                   />
+                                  {errors.email && <p style={styles.error}>{errors.email}</p>} 
                               </div>
                           </div>
 
@@ -495,6 +648,7 @@ export default function Register() {
                                       onChange={handleInputChange}
                                       className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                   />
+                                  {errors.no_telepon && <p style={styles.error}>{errors.no_telepon}</p>} 
                               </div>
                           </div>
                         
@@ -510,6 +664,7 @@ export default function Register() {
                                       options={provinceOptions}
                                       onSelect={handleProvinsiSelect}
                                   />
+                                  {errors.provinsi && <p style={styles.error}>{errors.provinsi}</p>} 
                               </div>
                           </div>
 
@@ -525,6 +680,7 @@ export default function Register() {
                                       options={kotaOptions}
                                       onSelect={handleCitySelect}
                                   />
+                                  {errors.kabupaten_kota && <p style={styles.error}>{errors.kabupaten_kota}</p>} 
                               </div>
                           </div>
 
@@ -540,6 +696,7 @@ export default function Register() {
                                       options={kecamatanOptions}
                                       onSelect={handleKecamatanSelect}
                                   />
+                                  {errors.kecamatan && <p style={styles.error}>{errors.kecamatan}</p>} 
                               </div>
                           </div>
 
@@ -555,6 +712,7 @@ export default function Register() {
                                       options={kelurahanOptions}
                                       onSelect={handleKelurahanSelect}
                                   />
+                                  {errors.kelurahan && <p style={styles.error}>{errors.kelurahan}</p>} 
                               </div>
                           </div>
                         <div className="col-start-1 col-span-12">
@@ -572,6 +730,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.alamat && <p style={styles.error}>{errors.alamat}</p>} 
                             </div>
                         </div>
                         <div className="col-start-1 col-span-3">
@@ -592,6 +751,7 @@ export default function Register() {
                                         )
                                     }
                                 />
+                                {errors.warga_negara && <p style={styles.error}>{errors.warga_negara}</p>} 
                             </div>
                         </div>
 
@@ -612,6 +772,7 @@ export default function Register() {
                                         )
                                     }
                                 />
+                                {errors.status_perkawinan && <p style={styles.error}>{errors.status_perkawinan}</p>} 
                             </div>
                         </div>
 
@@ -633,6 +794,7 @@ export default function Register() {
                                         )
                                     }
                                 />
+                                {errors.pendidikan_terakhir && <p style={styles.error}>{errors.pendidikan_terakhir}</p>} 
                             </div>
                         </div>
 
@@ -654,6 +816,7 @@ export default function Register() {
                                         )
                                     }
                                 />
+                                {errors.agama && <p style={styles.error}>{errors.agama}</p>} 
                             </div>
                         </div>
                         
@@ -674,6 +837,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.pekerjaan && <p style={styles.error}>{errors.pekerjaan}</p>} 
                             </div>
                         </div>
 
@@ -694,6 +858,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.nama_kontak_darurat && <p style={styles.error}>{errors.nama_kontak_darurat}</p>} 
                             </div>
                         </div>
 
@@ -714,6 +879,7 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
+                                {errors.no_kontak_darurat && <p style={styles.error}>{errors.no_kontak_darurat}</p>} 
                             </div>
                         </div>
                         
