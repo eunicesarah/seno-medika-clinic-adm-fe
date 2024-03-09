@@ -3,7 +3,7 @@ import React from 'react';
 const Popup = ({ isvisible, onClose, children }: { isvisible: boolean, onClose: () => void, children: React.ReactNode }) => {
     if (!isvisible) return null
 
-    const handleClose = (e) => {
+    const handleClose = (e:any) => {
         if (e.target.id === 'wrapper') onClose()
     }
 

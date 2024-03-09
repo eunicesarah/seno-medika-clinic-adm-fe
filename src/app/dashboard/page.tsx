@@ -7,35 +7,76 @@ import CheckLogo from '../../../public/check.svg';
 import PlusLogo from '../../../public/plus_pasien.svg';
 import TurnLogo from '../../../public/giliran.svg';
 import RefreshLogo from '../../../public/refresh.svg';
-import React,  { useState } from 'react';
+import React,  { useState, useEffect } from 'react';
 import Table from '../components/tabel_pasien'; 
 import Popup from '../components/popup';
 import Link from "next/link";
+import axios from "axios";
 
+interface pasienData
+    {
+        pasien_id: number;
+        nama: string;
+        penjamin: string;
+    }
 
 export default function Dashboard() {
-    const data = [
-        { no: 1, tanggal_masuk: '2024-03-04', nama: 'John Doe', no_antrean: 1, jenis_pasien: 'BPJS' },
-        { no: 2, tanggal_masuk: '2024-03-04', nama: 'Jane Doe', no_antrean: 2, jenis_pasien: 'Umum' },
-        { no: 3, tanggal_masuk: '2024-03-04', nama: 'Bob Smith', no_antrean: 3, jenis_pasien: 'Asuransi' },
-        { no: 4, tanggal_masuk: '2024-03-04', nama: 'Alice Johnson', no_antrean: 4, jenis_pasien: 'BPJS' },
-        { no: 5, tanggal_masuk: '2024-03-04', nama: 'Charlie Brown', no_antrean: 5, jenis_pasien: 'Umum' },
-        { no: 6, tanggal_masuk: '2024-03-04', nama: 'David Lee', no_antrean: 6, jenis_pasien: 'Asuransi' },
-        { no: 7, tanggal_masuk: '2024-03-04', nama: 'Eva Miller', no_antrean: 7, jenis_pasien: 'BPJS' },
-        { no: 8, tanggal_masuk: '2024-03-04', nama: 'Frank White', no_antrean: 8, jenis_pasien: 'Umum' },
-        { no: 9, tanggal_masuk: '2024-03-04', nama: 'Grace Davis', no_antrean: 9, jenis_pasien: 'Asuransi' },
-        { no: 10, tanggal_masuk: '2024-03-04', nama: 'Henry Taylor', no_antrean: 10, jenis_pasien: 'BPJS' },
-        { no: 11, tanggal_masuk: '2024-03-04', nama: 'Ivy Clark', no_antrean: 11, jenis_pasien: 'Umum' },
-        { no: 12, tanggal_masuk: '2024-03-04', nama: 'Jack Wilson', no_antrean: 12, jenis_pasien: 'Asuransi' },
-        { no: 13, tanggal_masuk: '2024-03-04', nama: 'Karen Harris', no_antrean: 13, jenis_pasien: 'BPJS' },
-        { no: 14, tanggal_masuk: '2024-03-04', nama: 'Leo Turner', no_antrean: 14, jenis_pasien: 'Umum' },
-        { no: 15, tanggal_masuk: '2024-03-04', nama: 'Mia Martin', no_antrean: 15, jenis_pasien: 'Asuransi' },
-      ];
+    const antrianAPI = "http://localhost:8080/antrian";
 
-      const [showPopup, setShowPopup] = useState(false);
+    const [data, setData] = useState([]);
+    const [pasien, setPasien] = useState([] as pasienData[]);
+    const handleReload = () => {
+            window.location.reload();
+        };
+    
+    const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
+    const fetchData = async () => {
+        let arr: Array<any> = [];
+        
+        try {
+            const response = await axios.get(antrianAPI);
+            const data1 = response.data;
+            const data = data1.data;
+            // console.log(data);
+            setData(data);
+            
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
+
+      useEffect(() => {
+        const fetchDataDetails = async () => {
+            const promises = data.map(async (item: any) => {
+                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
+                const hasil = response.data.data[0];
+                const convert: pasienData = {} as pasienData;
+                convert.pasien_id = hasil.pasien_id;
+                convert.nama = hasil.nama;
+                convert.penjamin = hasil.penjamin;
+                return convert;
+            });
+    
+            const result = await Promise.all(promises);
+            setPasien(result);
+        };
+    
+        fetchDataDetails();
+    }, [data]);
+    
+    
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const [showPopup, setShowPopup] = useState(false);
+
+    const calculateDataLength = () => {
+        return data && data.length > 0 ? data.length : 0;
+    };
 
     return (
-        <div className=" bg-tint6 flex-col flex">
+        <div className=" bg-tint6 flex-col flex h-auto">
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
@@ -64,7 +105,7 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <p className= " w-60 text-white text-2xl font-bold font-['Poppins'] uppercase leading-7 mt-4">Total Antrian</p> {/* teks atas */}
-                            <p className=" w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">18</p> {/* teks bawah */}
+                            <p className=" w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">{calculateDataLength()}</p> {/* teks bawah */}
                         </div> 
                     </div>
 
@@ -79,7 +120,7 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <p className= " w-60 text-white text-2xl font-bold font-['Poppins'] uppercase leading-7 mt-4">Selesai Dilayani</p> {/* teks atas */}
-                            <p className="w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">3</p> {/* teks bawah */}
+                            <p className="w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">0</p> {/* teks bawah */}
                         </div> 
                     </div>
 
@@ -94,7 +135,7 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <p className= " w-60 text-white text-2xl font-bold font-['Poppins'] uppercase leading-7 mt-4">Nomor Giliran</p> {/* teks atas */}
-                            <p className="w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">06</p> {/* teks bawah */}
+                            <p className="w-20 h-16 text-white text-5xl font-bold font-['Poppins'] uppercase leading-10">00</p> {/* teks bawah */}
                         </div> 
                     </div>
                 </div>
@@ -117,7 +158,7 @@ export default function Dashboard() {
 
             <div className="flex mt-14 mb-14 mr-12">
                 <p className=" font-poppins ml-28 font-bold h-11 w-[482px] text-5xl text-shade6">DAFTAR ANTREAN</p>
-                <button className="rounded-[10px] ml-auto h-14 mr-8">
+                <button className="rounded-[10px] ml-auto h-14 mr-8" onClick={handleReload}>
                     <div className="flex items-center justify-center">
                         <Image
                             src={RefreshLogo}
@@ -127,17 +168,11 @@ export default function Dashboard() {
                         />    
                     </div>
                 </button>
-                <input
-                    type="text"
-                    placeholder="Cari Pasien..."
-                    className=" w-96 rounded-xl px-5"
-                />
-                <button className=" justify-center items-center bg-primary1 rounded-xl w-40 ml-14 hover:bg-shade6">
-                    <p className="text-center text-white text-base font-semibold font-poppins leading-normal">Cari</p>
-                </button>
+                
             </div>
-
-            <Table data={data} />
+            {pasien && pasien.length > 0 &&
+            <Table data={data} pasien={pasien} />
+            }
 
             <Popup isvisible={showPopup} onClose={() => setShowPopup(false)}>
                 <div className="flex">

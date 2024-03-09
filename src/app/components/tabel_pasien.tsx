@@ -1,44 +1,83 @@
 import React from 'react';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+import test from 'node:test';
 
 interface TableProps {
     data: Array<{
-      no: number;
-      tanggal_masuk: string;
-      nama: string;
-      no_antrean: number;
-      jenis_pasien: string;
+      antrian_id: number;
+      pasien_id: number;
+      nomor_antrian: number;
+      status: boolean;
+      created_at: string;
+      instalasi: string;
+      poli: string;
     }>;
+
+    pasien: Array<{
+      pasien_id: number;
+      nama: string;
+      penjamin: string;
+    }>
   }
 
+  function formatUpdatedAtToDDMMYYYY(timestamp:string) {
+    const updatedAtDate = new Date(timestamp);
+    const day = updatedAtDate.getDate().toString().padStart(2, '0');
+    const month = (updatedAtDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = updatedAtDate.getFullYear();
+  
+    return `${day}/${month}/${year}`;
+  }
 
-const Table: React.FC<TableProps> = ({ data }) => {
+  const Table: React.FC<TableProps> = ({ data, pasien }) => {
+
+    console.log(pasien)
+    console.log(data)
+  
     return (
-      <table className=' ml-20 mr-20 w-11/12 mb-14'>
+      <table className='ml-20 mr-20 w-11/12 mb-14'>
         <thead>
-          <tr className=' bg-shade1 h-16 font-poppins font-semibold text-shade8 text-left'>
-            <th className=' text-center'>No</th>
+          <tr className='bg-shade1 h-16 font-poppins font-semibold text-shade8 text-left'>
+            <th className='text-center'>No</th>
             <th>Tanggal Masuk</th>
+            <th>Id Pasien</th>
             <th>Nama</th>
             <th>No Antrean</th>
             <th>Jenis Pasien</th>
+            <th>Poli</th>
+            <th>Instalasi</th>
           </tr>
         </thead>
         <tbody>
-          {data.map((item) => (
-            <tr key={item.no} className={`h-16 font-poppins text-shade8 text-left font-medium hover:bg-shade4 ${
-                item.no % 2 === 0 ? 'bg-tint4' : 'bg-tint5'
-              }`}>
-              <td className=' w-28 text-center'>{item.no}</td>
-              <td className=' w-60'>{item.tanggal_masuk}</td>
-              <td className=' w-96'>{item.nama}</td>
-              <td>{item.no_antrean}</td>
-              <td>{item.jenis_pasien}</td>
+        {data && data.length > 0 ? (
+          data.map((item, index) => (
+            <tr
+              key={item.antrian_id}
+              className={`h-16 font-poppins text-shade8 text-left font-medium hover:bg-shade4 ${
+                item.antrian_id % 2 === 0 ? 'bg-tint4' : 'bg-tint5'
+              }`}
+            >
+              <td className='w-28 text-center'>{item.nomor_antrian}</td>
+              <td className='w-60'>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
+              <td className='w-40'>{item.pasien_id}</td>
+              <td className=' w-72'>{pasien[index]?.nama}</td>
+              <td className='w-32'>{item.nomor_antrian}</td>
+              <td className=' w-60'>{pasien[index]?.penjamin}</td>
+              <td className=' w-44'>{item.poli}</td>
+              <td className=' w-40'>{item.instalasi}</td>
             </tr>
-          ))}
+          ))
+        ) : (
+          <tr>
+            <td colSpan={7} className='text-center h-16 font-poppins text-shade8 font-medium hover:bg-shade4'>
+              Tidak ada data.
+            </td>
+          </tr>
+        )}
         </tbody>
       </table>
     );
   };
   
   export default Table;
-  

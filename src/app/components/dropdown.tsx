@@ -6,7 +6,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 
 const Dropdown = ({ options, onSelect }:any) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState<any>([]);
 
   const handleOptionClick = (option:any) => {
     setSelectedOption(option);
@@ -22,10 +22,10 @@ const Dropdown = ({ options, onSelect }:any) => {
   );
 
   return (
-    <div className="relative inline-block text-left w-96">
+    <div className="relative inline-block text-left w-full">
       <button
         type="button"
-        className="inline-flex justify-between items-center w-full p-2 border rounded-2xl shadow-sm text-sm  bg-white text-shade8 font-Poppins font-semibold hover:text-tint7 hover:bg-shade4 h-12"
+        className="inline-flex justify-between h-12 items-center w-full p-2 border rounded-md shadow-sm text-sm  bg-white text-shade8 font-Poppins font-semibold hover:text-tint7 hover:bg-shade4"
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedOption ? selectedOption.label : 'Select an option'}
