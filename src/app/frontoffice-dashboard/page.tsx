@@ -171,9 +171,9 @@ export default function Dashboard() {
                 </button>
                 
             </div>
-            {pasien && pasien.length > 0 &&
+            {/*{pasien && pasien.length > 0 &&*/}
             <Table data={data} pasien={pasien} />
-            }
+            {/*}*/}
 
             <Popup isvisible={showPopup} onClose={() => setShowPopup(false)}>
                 <div className="flex">
