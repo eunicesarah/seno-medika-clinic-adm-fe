@@ -1,49 +1,47 @@
 'use client';
 import React, {useState} from 'react'
 import Image from "next/image";
-import Pattern from '../../../public/images/pattern.svg'
-import { useRouter } from 'next/navigation';
+import Pattern from '../../../public/images/pattern.svg';
+import axios from "axios";
+
 
 const loginPage = () => {
-    const router = useRouter()
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+      });
     
     const validateEmail = (email:any) => {
         var re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
 
-const handleSubmit =  async(e: React.FormEvent<HTMLFormElement>) => {
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true); 
-    setError(''); 
-
-    let isValid = true;
-
+    setIsLoading(true);
+    setError('');
     if (validateEmail(email)===false) {
-    setError( 'Email tidak valid');
-    isValid = false;
-    } else {
-    setError(''); 
-    }
-
-    if (password === '') {
-    setError('Pass tidak valid');
-    isValid = false;
-    } else {
-    setError(''); 
-    }
-
-    if (isValid) {
-    console.log('Email: ', email);
-    
-
-    
-    }
-}
+        setError( 'Emaill tidak valid');
+        } 
+    else {
+        setError(''); 
+        try {
+            const response = await axios.post("http://localhost:8080/login", formData);
+            console.log(response);
+            if (response.status === 200) {
+              console.log("User created");
+              location.href = "/byee";
+            }
+          }
+          catch (error) {
+            console.log(error);
+          }
+        }
+};
 
 return (
     <div className='h-screen w-full flex flex-row bg-tint6 text-shade6'>
@@ -59,12 +57,16 @@ return (
                     <div className="flex flex-col gap-4">
                         <div className="flex flex-col">
                             <label className="pl-4 mb-1 block text-l font-medium text-shade6 ">E-mail</label>
-                            <input type="email" name="email" id="email" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan e-mail anda"  value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <input type="email" name="email" id="email" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan e-mail anda"  value={formData.email} onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                } />
                             {error && <span className="text-red-500 pl-4 text-xs pt-1">{error}</span>}
                         </div>
                         <div className='flex flex-col'>
                             <label htmlFor="password" className="block mb-1 pl-4 text-l font-medium text-shade6 ">Kata Sandiaga</label>
-                            <input type="password" name="password" id="password" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan kata sandi anda" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input type="password" name="password" id="password" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan kata sandi anda" value={formData.password} onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                } />
                             {error && <span className="text-red-500 pl-4 text-xs pt-1">{error}</span>}
                         </div>
                         <p className="text-sm font-light text-shade6 ">
