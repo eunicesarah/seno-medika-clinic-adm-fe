@@ -49,7 +49,8 @@ export default function Dashboard() {
         const fetchDataDetails = async () => {
             const promises = data.map(async (item: any) => {
                 const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
-                const hasil = response.data.data[0];
+                const hasil = response.data.data;
+                console.log(response)
                 const convert: pasienData = {} as pasienData;
                 convert.pasien_id = hasil.pasien_id;
                 convert.nama = hasil.nama;

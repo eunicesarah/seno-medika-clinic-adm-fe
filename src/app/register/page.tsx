@@ -6,7 +6,7 @@ import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "../../components/Dropdown";
 import CustomDropdown from "../../components/CustomDropdown";
 import axios from 'axios';
-import { isValid } from "date-fns";
+// import { isValid } from "date-fns";
 
 const genderOptions = [
     { label: "Laki-laki", value: "laki-laki" },
@@ -432,7 +432,7 @@ export default function Register() {
                 console.log(response)
                 if(response.status < 400){
                     alert('Data berhasil disimpan')
-                    location.href = '/dashboard'
+                    location.href = '/frontoffice-dashboard'
                 }else(
                     alert(response.data.message)
                 )

@@ -7,6 +7,7 @@ import ruang_vip from "../../public/ruang_vip.svg";
 import toko_kami from "../../public/toko_kami.svg"
 import photobooth from "../../public/photobooth.svg"
 import Footer from "./components/footer";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   return (
