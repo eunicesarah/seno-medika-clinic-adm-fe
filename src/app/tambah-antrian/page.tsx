@@ -39,7 +39,7 @@ export default function TambahAntrian() {
           if (response.status >= 200 && response.status < 300) {
             console.log('API Response:', response.data);
             alert("Berhasil menambahkan antrian")
-            router.push('/dashboard'); 
+            router.push('/frontoffice-dashboard'); 
           } else {
             alert('Error:'+ response.status + response.statusText);
           }
