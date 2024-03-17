@@ -482,6 +482,308 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+
+
+           {/* SKRALA NYERI DAN SKRINING GIZI  */}
+          <label className="text-shade6 font-bold text-xl m-4 underline">
+              Skala Nyeri
+          </label>
+          <div className="flex flex-row  items-center mb-4 justify-center">
+            <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              Skala Nyeri<span className="text-[#D66A63]"> *</span>
+            </label>
+            <div className="w-2/3 flex flex-row gap-10 items-center">
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="1"
+                  className=" text-white font-Poppins font-normal ">
+                  1
+                </label>
+                  <input
+                  type="radio"
+                  id="1"
+                  name="skala_nyeri"
+                  value="1"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="2"
+                  className=" text-white font-Poppins font-normal ">
+                  2
+                </label>
+                  <input
+                  type="radio"
+                  id="2"
+                  name="skala_nyeri"
+                  value="2"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="3"
+                  className=" text-white font-Poppins font-normal ">
+                  3
+                </label>
+                  <input
+                  type="radio"
+                  id="3"
+                  name="skala_nyeri"
+                  value="3"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="4"
+                  className=" text-white font-Poppins font-normal ">
+                  4
+                </label>
+                  <input
+                  type="radio"
+                  id="4"
+                  name="skala_nyeri"
+                  value="4"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="5"
+                  className=" text-white font-Poppins font-normal ">
+                  5
+                </label>
+                  <input
+                  type="radio"
+                  id="5"
+                  name="skala_nyeri"
+                  value="5"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="6"
+                  className=" text-white font-Poppins font-normal ">
+                  6
+                </label>
+                  <input
+                  type="radio"
+                  id="6"
+                  name="skala_nyeri"
+                  value="6"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="7"
+                  className=" text-white font-Poppins font-normal ">
+                  7
+                </label>
+                  <input
+                  type="radio"
+                  id="7"
+                  name="skala_nyeri"
+                  value="7"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="8"
+                  className=" text-white font-Poppins font-normal ">
+                  8
+                </label>
+                  <input
+                  type="radio"
+                  id="8"
+                  name="skala_nyeri"
+                  value="8"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="9"
+                  className=" text-white font-Poppins font-normal ">
+                  9
+                </label>
+                  <input
+                  type="radio"
+                  id="9"
+                  name="skala_nyeri"
+                  value="9"
+                />
+              </div>
+              <div className="flex flex-col items-center justify-center text-center">
+                  <label
+                  htmlFor="y10"
+                  className=" text-white font-Poppins font-normal ">
+                  10
+                </label>
+                  <input
+                  type="radio"
+                  id="10"
+                  name="skala_nyeri"
+                  value="10"
+                />
+              </div>
+              
+            </div>
+          </div>
+          <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Kapan Nyeri Berulang<span className="text-[#D66A63]"> *</span>
+              </label>
+              <input
+                type="text"
+                name="nyeri_berulang"
+                id="nyeri_berulang"
+                className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
+          </div>
+          <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Sifat Nyeri<span className="text-[#D66A63]"> *</span>
+              </label>
+              <input
+                type="text"
+                name="sifat_nyeri"
+                id="sifat_nyeri"
+                className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
+          </div>
+          <label className="text-shade6 font-bold text-xl m-4 underline">
+              Skrining Gizi
+          </label>
+          <div className="flex flex-row  items-center mb-4 justify-center">
+            <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+            Apakah pasien mengalami penurunan berat badan yang tidak diinginkan dalam kurun waktu 6 bulan terakhir <span className="text-[#D66A63]"> *</span>
+            </label>
+            <div className="w-2/3 flex flex-col gap-2  text-start justify-start items-start">
+              <div className="flex flex-row items-center justify-center text-center">
+              <input
+                  type="radio"
+                  id="tdk_tahu"
+                  name="penurunan_bb"
+                  value="ya"
+                /> 
+                <label
+                  htmlFor="tdk_tahu"
+                  className=" text-white font-Poppins font-normal ml-4 "
+                >
+                  Tidak tahu / terasa baju lebih longgar
+                </label>
+                
+              </div>
+              <div className="flex flex-row items-center justify-center text-center">
+              <input
+                  type="radio"
+                  id="1-5"
+                  name="penurunan_bb"
+                  value="ya"
+                /> 
+                <label
+                  htmlFor="1-5"
+                  className=" text-white font-Poppins font-normal ml-4 "
+                >
+                  Penurunan berat badan 1 - 5 kg
+                </label>
+                
+              </div>
+              <div className="flex flex-row items-center justify-center text-center">
+              <input
+                  type="radio"
+                  id="6-10"
+                  name="penurunan_bb"
+                  value="ya"
+                /> 
+                <label
+                  htmlFor="6-10"
+                  className=" text-white font-Poppins font-normal ml-4 "
+                >
+                  Penurunan berat badan 6 - 10 kg
+                </label>
+                
+              </div>
+              <div className="flex flex-row items-center justify-center text-center">
+              <input
+                  type="radio"
+                  id="11-15"
+                  name="penurunan_bb"
+                  value="ya"
+                /> 
+                <label
+                  htmlFor="11-15"
+                  className=" text-white font-Poppins font-normal ml-4 "
+                >
+                  Penurunan berat badan 11 - 15 kg
+                </label>
+                
+              </div>
+              <div className="flex flex-row items-center justify-center text-center">
+              <input
+                  type="radio"
+                  id=">15"
+                  name="penurunan_bb"
+                  value="ya"
+                /> 
+                <label
+                  htmlFor=">15"
+                  className=" text-white font-Poppins font-normal ml-4 "
+                >
+                  Penurunan berat badan {'>'} 15 kg
+                </label>
+                
+              </div>
+              
+            </div>
+          </div>
+          <div className="flex flex-row justify-between items-center mb-4">
+            <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+            Pasien dengan diagnosis khusus <span className="text-[#D66A63]"> *</span>
+            </label>
+            <div className="w-2/3 flex flex-row gap-10 items-center">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="ya"
+                  name="diagnosis_khusus"
+                  value="ya"
+                />
+                <label
+                  htmlFor="ya"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Ya
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="tidak"
+                  name="diagnosis_khusus"
+                  value="tidak"
+                />
+                <label
+                  htmlFor="tidak"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Tidak
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Nama Penyakit <span className="text-[#D66A63]"> *</span>
+              </label>
+              <input
+                type="text"
+                name="nama_penyakit"
+                id="nama_penyakit"
+                className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
+          </div>
+          
           </div>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-14 py-11">
             bagian 3
