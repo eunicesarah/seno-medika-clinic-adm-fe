@@ -785,8 +785,345 @@ export default function Dashboard() {
           </div>
           
           </div>
-          <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-14 py-11">
-            bagian 3
+          <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-11 grid grid-cols-2 gap-4">
+            <div className="mr-4 px-5 ">
+              <label className="text-shade6 font-bold text-xl mv-4 underline">
+                Riwayat Penyakit
+              </label>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  RPS
+                </label>
+                <input
+                  type="text"
+                  name="rps"
+                  id="rps"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  placeholder="Ada / Tidak Ada"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  RPD
+                </label>
+                <input
+                  type="text"
+                  name="rpd"
+                  id="rpd"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  placeholder="Ada / Tidak Ada"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  RPK
+                </label>
+                <input
+                  type="text"
+                  name="rpk"
+                  id="rpk"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  placeholder="Ada / Tidak Ada"
+                />
+              </div>
+              <br />
+              <br />
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Kesadaran <span className="text-[#D66A63]"> *</span>
+                </label>
+                <Dropdown
+                  className="w-2/3"
+                  options={options}
+                  onSelect={handleOptionClick}
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Sistole <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="sistole"
+                  id="sistole"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl  border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Mm</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Diastole <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="diastole"
+                  id="diastole"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Hg</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Tinggi Badan <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="tinggi_badan"
+                  id="tinggi_badan"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Cm</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Cara Ukur TB <span className="text-[#D66A63]"> *</span>
+                </label>
+                <Dropdown
+                  className="w-2/3"
+                  options={options}
+                  onSelect={handleOptionClick}
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Berat Badan <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="berat_badan"
+                  id="berat_badan"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Kg</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  IMT <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="imt"
+                  id="imt"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Hasil IMT <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="hasil_imt"
+                  id="hasil_imt"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+              </div>
+            </div>
+            <div >
+              <label className="text-shade6 font-bold text-xl mv-4 underline">
+                Alergi
+              </label>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Obat
+                </label>
+                <input
+                  type="text"
+                  name="rps"
+                  id="rps"
+                  placeholder="Ada / Tidak Ada"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Makanan
+                </label>
+                <input
+                  type="text"
+                  name="rpd"
+                  id="rpd"
+                  placeholder="Ada / Tidak Ada"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Lainnya
+                </label>
+                <input
+                  type="text"
+                  name="rpk"
+                  id="rpk"
+                  placeholder="Ada / Tidak Ada"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+              </div>
+              <br />
+              <br />
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Lingkar Perut <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="lingkar_perut"
+                  id="lingkar_perut"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Cm</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Detak Nadi <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="detak_nadi"
+                  id="detak_nadi"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">/Menit</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Nafas <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="nafas"
+                  id="nafas"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">/Menit</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Saturasi <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="saturasi"
+                  id="saturasi"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-6 text-sm text-tint7">%</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4 relative">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Suhu <span className="text-[#D66A63]"> *</span>
+                </label>
+                <input
+                  type="text"
+                  name="suhu"
+                  id="suhu"
+                  className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                />
+                <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-6 text-sm text-tint7">℃</span>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Detak Jantung <span className="text-[#D66A63]"> *</span>
+                </label>
+                <div className="w-2/3 flex flex-row gap-10 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="regular"
+                    name="detak_jantung"
+                    value="regular"
+                  />
+                  <label
+                    htmlFor="regular"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Regular
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="iregular"
+                    name="detak_jantung"
+                    value="iregular"
+                  />
+                  <label
+                    htmlFor="iregular"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Iregular
+                  </label>
+                </div>
+              </div>
+              </div>
+              <div className="flex flex-row justify-between items-center mb-4">
+                <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
+                  Triage <span className="text-[#D66A63]"> *</span>
+                </label>
+                <div className="w-2/3 flex flex-col gap-2  text-start justify-start items-start">
+                  <div className="flex flex-row items-center justify-center text-center">
+                  <input
+                      type="radio"
+                      id="gawat_darurat"
+                      name="triage"
+                      value="gawat_darurat"
+                    /> 
+                    <label
+                      htmlFor="gawat_darurat"
+                      className=" text-white font-Poppins font-normal ml-4 "
+                    >
+                      Gawat Darurat
+                    </label>
+                  </div>
+                  <div className="flex flex-row items-center justify-center text-center">
+                  <input
+                      type="radio"
+                      id="darurat"
+                      name="triage"
+                      value="darurat"
+                    /> 
+                    <label
+                      htmlFor="darurat"
+                      className=" text-white font-Poppins font-normal ml-4 "
+                    >
+                      Darurat
+                    </label>
+                    
+                  </div>
+                  <div className="flex flex-row items-center justify-center text-center">
+                  <input
+                      type="radio"
+                      id="tdk_gawat_darurat"
+                      name="triage"
+                      value="tdk_gawat_darurat"
+                    /> 
+                    <label
+                      htmlFor="tdk_gawat_darurat"
+                      className=" text-white font-Poppins font-normal ml-4 "
+                    >
+                      Tidak Gawat Darurat
+                    </label>
+                    
+                  </div>
+                  <div className="flex flex-row items-center justify-center text-center">
+                  <input
+                      type="radio"
+                      id="meninggal"
+                      name="triage"
+                      value="meninggal"
+                    /> 
+                    <label
+                      htmlFor="meninggal"
+                      className=" text-white font-Poppins font-normal ml-4 "
+                    >
+                      Meninggal
+                    </label>
+                  </div>
+                </div>
+              </div>
+              
+
+            </div>
           </div>
         </form>
       </div>
