@@ -194,8 +194,10 @@ export default function Dashboard() {
         <form className=" mr-20 ">
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">Tenaga Medis
-              <span className="text-[#D66A63]"> *</span></label>
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Tenaga Medis
+                <span className="text-[#D66A63]"> *</span>
+              </label>
               <Dropdown
                 className="w-2/3"
                 options={options}
@@ -204,7 +206,9 @@ export default function Dashboard() {
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">Asisten Perawat</label>
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Asisten Perawat
+              </label>
               <Dropdown
                 className="w-2/3"
                 options={options}
@@ -283,8 +287,201 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-14 py-11">
-            bagian 2
+          <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
+            <label className="text-shade6 font-bold text-xl m-4 underline">
+              Status Fungsional Pasien
+            </label>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Disabilitas
+              </label>
+              <div className="w-2/3 flex flex-row gap-10 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="ya"
+                    name="disabilitas"
+                    value="ya"
+                  />
+                  <label
+                    htmlFor="ya"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Ya
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="tidak"
+                    name="disabilitas"
+                    value="tidak"
+                  />
+                  <label
+                    htmlFor="tidak"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Ambulasi
+              </label>
+              <input
+                type="text"
+                name="ambulasi"
+                id="ambulasi"
+                className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Hambatan Komunikasi
+              </label>
+              <div className="w-2/3 flex flex-row gap-10 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="ya"
+                    name="hambatan_komunikasi"
+                    value="ya"
+                  />
+                  <label
+                    htmlFor="ya"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Ya
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="tidak"
+                    name="hambatan_komunikasi"
+                    value="tidak"
+                  />
+                  <label
+                    htmlFor="tidak"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+            <label className="text-shade6 font-bold text-xl m-4 underline">
+              Risiko Jatuh
+            </label>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Tidak seimbang, Sempoyongan, Limbung
+              </label>
+              <div className="w-2/3 flex flex-row gap-10 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="ya"
+                    name="sempoyongan"
+                    value="ya"
+                  />
+                  <label
+                    htmlFor="ya"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Ya
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="tidak"
+                    name="sempoyongan"
+                    value="tidak"
+                  />
+                  <label
+                    htmlFor="tidak"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+                Menopang saat duduk : Tampak memegang pinggiran kursi atau meja
+                / benda lain sebagaipenopang saat akan duduk
+              </label>
+              <div className="w-2/3 flex flex-row gap-10 items-center">
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="ya"
+                    name="duduk_menopang"
+                    value="ya"
+                  />
+                  <label
+                    htmlFor="ya"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Ya
+                  </label>
+                </div>
+                <div className="flex items-center">
+                  <input
+                    type="radio"
+                    id="tidak"
+                    name="duduk_menopang"
+                    value="tidak"
+                  />
+                  <label
+                    htmlFor="tidak"
+                    className="text-white font-Poppins font-normal ml-4"
+                  >
+                    Tidak
+                  </label>
+                </div>
+              </div>
+            </div>
+          <div className="flex flex-row justify-between items-center mb-4">
+            <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              Jalan menggunakan alat bantu ( Kruk, Tripod, Kursi Roda, Orang
+            </label>
+            <div className="w-2/3 flex flex-row gap-10 items-center">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="ya"
+                  name="alat_bantu"
+                  value="ya"
+                />
+                <label
+                  htmlFor="ya"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Ya
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="tidak"
+                  name="alat_bantu"
+                  value="tidak"
+                />
+                <label
+                  htmlFor="tidak"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Tidak
+                </label>
+              </div>
+            </div>
+          </div>
           </div>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-14 py-11">
             bagian 3
