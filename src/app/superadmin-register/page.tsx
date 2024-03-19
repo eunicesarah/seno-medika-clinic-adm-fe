@@ -6,6 +6,18 @@ import Modal from "react-modal";
 import Chip from "react-chip"
 import axios from "axios";
 
+
+interface Perawat{
+  nama: string;
+  password: string;
+  email: string;
+  role: string;
+  perawat_data: PerawatData;
+}
+interface PerawatData{
+  NomorLisensi: string;
+}
+
 export default function Register() {
   const [selectedPosisi, setSelectedPosisi] = useState("");
   const [selectedPoli, setSelectedPoli] = useState("");
@@ -14,9 +26,16 @@ export default function Register() {
     email: "",
     password: "",
     role: "",
+    perawat_data: {
+      nomor_lisensi: "",
+    },
+    apoteker_data: {
+      nomor_lisensi:"",
+    },
   });
-
-
+  const [nomor_lisensi, setnomor_lisensi] = useState("");
+  
+  
   type Schedule = {
     hari: string;
     waktuMulai: string;
@@ -24,7 +43,7 @@ export default function Register() {
   };
   
   const [schedules, setSchedules] = useState<Schedule[]>([]);
-
+  
   const [jenisPoli, setJenisPoli] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState("");
@@ -77,10 +96,92 @@ export default function Register() {
     }
   }
 
+  const submitFormDokter = async () => {
+    console.log(selectedPosisi);
+    console.log(formData);
+    console.log(nomor_lisensi);
+    console.log(selectedPoli);
+  }
+  const submitFormSuster = async () => {
+    console.log(selectedPosisi);
+    console.log(nomor_lisensi);
+    console.log(formData);
+    try {
+      const response = await axios.post("http://localhost:8080/perawat", formData);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("User created");
+        location.href = "/bye";
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+  const submitFormApoteker = async () => {
+    console.log(selectedPosisi);
+    console.log(nomor_lisensi);
+    console.log(formData);
+    try {
+      const response = await axios.post("http://localhost:8080/apoteker", formData);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("User created");
+        location.href = "/bye";
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+    
+  }
+
   const handleSubmit = async (e:any) => {
     e.preventDefault();
-    submitForm1();
+    if(selectedPosisi === "Front Officer" || selectedPosisi === "Kasir") {
+      submitForm1();
+    }else if(selectedPosisi === "Dokter") {
+      submitFormDokter();
+    }else if(selectedPosisi === "Suster") {
+      setFormData({
+        ...formData,
+        perawat_data: {
+          nomor_lisensi: nomor_lisensi
+        }
+      });
+      submitFormSuster();
+    }else{
+      setFormData({
+        ...formData,
+        apoteker_data: {
+          nomor_lisensi: nomor_lisensi
+        }
+      });
+      submitFormApoteker();
+    }
   };
+
+  const handleLisensiChange = (event:any) => {
+    console.log(selectedPosisi);
+    setnomor_lisensi(event.target.value);
+    if(selectedPosisi === "Dokter") {
+      console.log("Dokter")
+    }else if(selectedPosisi === "Suster") {
+      setFormData({
+        ...formData,
+        perawat_data: {
+          nomor_lisensi: event.target.value
+        }
+      });
+    }else if(selectedPosisi === "Apoteker"){
+      setFormData({
+        ...formData,
+        apoteker_data: {
+          nomor_lisensi: event.target.value
+        }
+      });
+    }
+  }
 
   return (
     <div className="w-full h-screen bg-tint6 flex flex-row">
@@ -219,6 +320,7 @@ export default function Register() {
                   id="no_lisensi"
                   className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                   placeholder="Masukkan nomor lisensi Anda"
+                  onChange={handleLisensiChange}
                 />
               </div>
               <div className="max-w-sm mx-16">
