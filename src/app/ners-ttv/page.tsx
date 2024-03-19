@@ -4,6 +4,47 @@ import Image from "next/image";
 import Arrow from "../../../public/right_arrow.svg";
 import Dropdown from "../components/dropdown";
 
+interface NurseStation {
+  tenaga_medis: string;
+  asisten_perawat: string;
+  keluhan_utama: string;
+  keluhan_tambahan: string;
+  lama_sakit: number;
+  disabilitas: boolean;
+  ambulasi: string;
+  hambatan_komunikasi: boolean;
+  sempoyongan: boolean;
+  duduk_menopang: boolean;
+  alat_bantu: boolean;
+  skala_nyeri: number;
+  nyeri_berulang: string;
+  sifat_nyeri: string;
+  penurunan_bb: string;
+  diagnosis_khusus: boolean;
+  nama_penyakit: string;
+  rps: string;
+  rpd: string;
+  rpk: string;
+  kesadaran: string;
+  sistole: number;
+  diastole: number;
+  tinggi_badan: number;
+  cara_ukur_tb: string;
+  berat_badan: number;
+  imt: number;
+  hasil_imt: string;
+  alergi: string;
+  makanan: string;
+  lainnya: string;
+  lingkar_perut: number;
+  detak_nadi: number;
+  nafas: number;
+  saturasi: number;
+  suhu: number;
+  detak_jantung: string;
+  triage: string;
+}
+
 export default function Dashboard() {
   const [selectedOption, setSelectedOption] = useState(null);
   const options = [
