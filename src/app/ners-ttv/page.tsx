@@ -5,37 +5,47 @@ import Arrow from "../../../public/right_arrow.svg";
 import Dropdown from "../components/dropdown";
 
 interface NurseStation {
-  tenaga_medis: string;
-  asisten_perawat: string;
-  keluhan_utama: string;
-  keluhan_tambahan: string;
-  lama_sakit: number;
+  skriningAwal: SkriningAwal;
+  skriningGizi: SkriningGizi;
+  riwayatPenyakit: RiwayatPenyakit;
+  ttv: TTV;
+  alergi: Alergi;
+  anamnesis: Anamnesis;
+}
+
+interface SkriningAwal {
   disabilitas: boolean;
-  ambulasi: string;
+  ambulansi: boolean;
   hambatan_komunikasi: boolean;
-  sempoyongan: boolean;
-  duduk_menopang: boolean;
-  alat_bantu: boolean;
+  jalan_tidak_seimbang: boolean;
+  menopang_saat_duduk: boolean;
+  jalan_alat_bantu: boolean;
   skala_nyeri: number;
   nyeri_berulang: string;
-  sifat_nyeri: string;
+}
+
+interface SkriningGizi {
   penurunan_bb: string;
   diagnosis_khusus: boolean;
   nama_penyakit: string;
+  skala_nyeri: number;
+  nyeri_berulang: string;
+  sifat_nyeri: string;
+}
+
+interface RiwayatPenyakit {
   rps: string;
   rpd: string;
   rpk: string;
+}
+
+interface TTV {
   kesadaran: string;
   sistole: number;
   diastole: number;
   tinggi_badan: number;
   cara_ukur_tb: string;
   berat_badan: number;
-  imt: number;
-  hasil_imt: string;
-  alergi: string;
-  makanan: string;
-  lainnya: string;
   lingkar_perut: number;
   detak_nadi: number;
   nafas: number;
@@ -43,6 +53,21 @@ interface NurseStation {
   suhu: number;
   detak_jantung: string;
   triage: string;
+}
+
+interface Alergi {
+  obat: string;
+  makanan: string;
+  lainnya: string;
+}
+
+interface Anamnesis {
+  pasien_id: number;
+  dokter_id: number;
+  perawat_id: number;
+  keluhan_utama: string;
+  keluhan_tambahan: string;
+  lama_sakit: number;
 }
 
 export default function Dashboard() {
