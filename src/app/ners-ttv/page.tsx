@@ -5,9 +5,9 @@ import Arrow from "../../../public/right_arrow.svg";
 import Dropdown from "../components/dropdown";
 
 interface NurseStation {
-  skriningAwal: SkriningAwal;
-  skriningGizi: SkriningGizi;
-  riwayatPenyakit: RiwayatPenyakit;
+  skrining_awal: SkriningAwal;
+  skrining_gizi: SkriningGizi;
+  riwayat_penyakit: RiwayatPenyakit;
   ttv: TTV;
   alergi: Alergi;
   anamnesis: Anamnesis;
