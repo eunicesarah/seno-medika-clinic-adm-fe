@@ -1187,8 +1187,30 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              
-
+            </div>
+          </div>
+          <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-11">
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              Psikososial Spiritual
+              </label>
+              <textarea
+                name="psikososial_spirit"
+                id="psikososial_spirit"
+                className="w-2/3 px-4 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
+            </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              Keterangan
+              </label>
+              <textarea
+                name="keterangan"
+                id="keterangan"
+                className="w-2/3 px-4 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                placeholder="Ada / Tidak Ada"
+              />
             </div>
           </div>
         </form>
