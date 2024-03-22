@@ -3,16 +3,18 @@ import React, {useState} from 'react'
 import Image from "next/image";
 import Pattern from '../../../public/images/pattern.svg';
 import axios from "axios";
+import Cookies from "js-cookie";
+// import jwt_decode from 'jsonwebtoken';
+import { jwtDecode } from 'jwt-decode';
+
 
 
 const loginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-      });
+    });
     const validateEmail = (email:any) => {
         var re = /\S+@\S+\.\S+/;
         return re.test(email);
@@ -45,24 +47,41 @@ const validateForm = () => {
 }
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
         setIsLoading(true);
         setError({ email: '', password: '' });
         if (validateForm()) {
             setIsLoading(false);
-            console.log(formData);
+            // console.log(formData);
             try {
                 const response = await axios.post("http://localhost:8080/login", formData);
-                console.log(response);
+                // console.log(response);
                 if (response.status === 200) {
-                  console.log("Success!");
-                  location.href = "/";
+                //   console.log("Success!");
+                  Cookies.set('token', response.data.token, { expires: 1 }); 
+                    location.href = '/';
                 }
-              }
-              catch (error) {
-                console.log(error);
-              }
-        }
+                const token = Cookies.get('token');
+
+                if (token) {
+                    try {
+                        const decoded = jwtDecode(token);
+                        // console.log('Payload Data:', decoded);
+                        
+                    } catch (error) {
+                        console.error('Gagal mendekode token:', error);
+                    }
+                } else {
+                    console.log('Cookie tidak ditemukan');
+                }
+                        
+                    }
+                    catch (error) {
+                        console.log(error);
+                    }
+                }
+
+
+        
 };
 
 return (
