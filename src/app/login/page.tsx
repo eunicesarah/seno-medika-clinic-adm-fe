@@ -55,9 +55,9 @@ return (
                 </h1>
                 <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                     <div className="flex flex-col gap-4">
-                        <div className="flex flex-col">
-                            <label className="pl-4 mb-1 block text-l font-medium text-shade6 ">E-mail</label>
-                            <input type="email" name="email" id="email" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan e-mail anda"  value={formData.email} onChange={(e) =>
+                        <div className="flex flex-col" id="email">
+                            <label className="pl-4 mb-1 block text-l font-medium text-shade6 " >E-mail</label>
+                            <input aria-labelledby="email" type="email" name="email" id="email" className="bg-tint7 text-gray-900 w-[428px] h-[47px] pl-4 py-[18px] rounded-[18px] border border-neutral-200 justify-start items-center gap-2.5 text-md" placeholder="Masukkan e-mail anda"  value={formData.email} onChange={(e) =>
                   setFormData({ ...formData, email: e.target.value })
                 } />
                             {error && <span className="text-red-500 pl-4 text-xs pt-1">{error}</span>}
