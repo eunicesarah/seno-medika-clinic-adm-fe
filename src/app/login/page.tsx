@@ -47,17 +47,16 @@ const validateForm = () => {
 }
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
         setIsLoading(true);
         setError({ email: '', password: '' });
         if (validateForm()) {
             setIsLoading(false);
-            console.log(formData);
+            // console.log(formData);
             try {
                 const response = await axios.post("http://localhost:8080/login", formData);
-                console.log(response);
+                // console.log(response);
                 if (response.status === 200) {
-                  console.log("Success!");
+                //   console.log("Success!");
                   Cookies.set('token', response.data.token, { expires: 1 }); 
                     location.href = '/';
                 }
@@ -66,7 +65,7 @@ const validateForm = () => {
                 if (token) {
                     try {
                         const decoded = jwtDecode(token);
-                        console.log('Payload Data:', decoded);
+                        // console.log('Payload Data:', decoded);
                         
                     } catch (error) {
                         console.error('Gagal mendekode token:', error);
