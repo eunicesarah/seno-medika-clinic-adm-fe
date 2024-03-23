@@ -6,7 +6,6 @@ import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "../../components/Dropdown";
 import CustomDropdown from "../../components/CustomDropdown";
 import axios from 'axios';
-import { isValid } from "date-fns";
 
 const genderOptions = [
     { label: "Laki-laki", value: "laki-laki" },
@@ -53,30 +52,20 @@ const wargaNegaraOptions = [
     { label: "Lainnya", value: "lainnya" },
 ];
 
-const options = [
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-    { label: "Option 1", value: "option1" },
-    { label: "Option 2", value: "option2" },
-    { label: "Option 3", value: "option3" },
-];
-const asuransiOptions = [
+const penjaminOptions = [
     { label: "Tunai", value: "tunai" },
-    { label: "BPJS", value: "bpjs" },
+    { label: "BPJS Kesehatan", value: "bpjs" },
+    {label: "Asuransi/Kontraktor", value:"asuransi/kontraktor"}
 ];
+
+const asuransiOptions = [
+    { label:"BNI life", value:"bni-life"},
+    { label:"BCA life", value:"bca-life"},
+    { label:"Ad Medika", value:"ad-medikau"},
+
+]
+
+
 
 interface IError{
     nama: string;
@@ -85,7 +74,7 @@ interface IError{
     no_KK: string;
     no_erm: string;
     goldar: string;
-    gender: string;
+    jenis_kelamin: string;
     tempat_lahir: string;
     tanggal_lahir: string;
     provinsi: string;
@@ -93,32 +82,26 @@ interface IError{
     kecamatan: string;
     kelurahan: string;
     alamat: string;
-    no_telepon: string;
+    no_telpon: string;
     warga_negara: string;
     status_perkawinan: string;
-    pendidikan_terakhir: string;
+    pendidikan: string;
     agama: string;
     pekerjaan: string;
+    penjamin: string;
+    no_penjamin: string;
     nama_kontak_darurat: string;
-    no_kontak_darurat: string;
+    nomor_kontak_darurat: string;
 }
 
 export default function Register() {
     const [selectedGenderOption, setSelectedGenderOption] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
-    // const [selectedGoldar, setSelectedGoldarOption] = useState("");
-    // const [selectedAgama, setSelectedAgamaOption] = useState("");
-    // const [selectedPendidikan, setSelectedPendidikanOption] = useState("");
-    // const [selectedKawin, setSelectedKawinOption] = useState("");
-    // const [selectedWargaNegara, setSelectedWargaNegaraOption] = useState("");
-    const [selectedAsuransi, setSelectedAsuransi] = useState(null);
+    const [selectedPenjamin, setSelectedPenjamin] = useState(null);
     const [showNoAsuransiTextField, setShowNoAsuransiTextField] =
         useState(false);
-    // const [inputNoAsuransiValue, setInputNoAsuransiValue] = useState("");
-    // const [selectedValue, setSelectedValue] = useState("");
-    // const [selectedProvinsi, setSelectedProvinsi] = useState(null);
-    // const [selectedKota, setSelectedKota] = useState(null);
-    // const [selectedKecamatan, setSelectedKecamatan] = useState(null);
+    const [showAsuransiDropdown, setShowAsuransiDropdown] =
+        useState(false);
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [kotaOptions, setKotaOptions] = useState([]);
     const [kecamatanOptions, setKecamatanOptions] = useState([]);
@@ -127,16 +110,16 @@ export default function Register() {
     const [isFormValid, setIsFormValid] = useState(false);
 
     const [formValues, setFormValues] = useState({
-        name: "",
+        nama: "",
         NIK: "",
         no_KK: "",
         no_erm: "",
-        gender: "",
+        jenis_kelamin: "",
         golongan_darah: "",
         tempat_lahir: "",
         tanggal_lahir: "",
         email: "",
-        no_telepon: "",
+        no_telpon: "",
         provinsi: "",
         kabupaten_kota: "",
         kecamatan: "",
@@ -144,13 +127,13 @@ export default function Register() {
         alamat: "",
         warga_negara: "",
         status_perkawinan: "",
-        pendidikan_terakhir: "",
+        pendidikan: "",
         agama: "",
         pekerjaan: "",
         nama_kontak_darurat: "",
-        no_kontak_darurat: "",
-        jenis_pembayaran: "",
-        no_asuransi: "",
+        nomor_kontak_darurat: "",
+        penjamin: "",
+        no_penjamin:"",
         no_IHS: "0",
         no_rm_lama: "0",
         no_dok_lama: "0",
@@ -162,7 +145,7 @@ export default function Register() {
     const validateForm = () => {
         let err: IError = {} as IError;
 
-        if(!formValues.name){
+        if(!formValues.nama){
             err.nama = 'Nama is required.';
         }
 
@@ -188,8 +171,8 @@ export default function Register() {
             err.goldar = 'Golongan Darah is required.';
         }
 
-        if(!formValues.gender){
-            err.gender = "Jenis Kelamin is required."
+        if(!formValues.jenis_kelamin){
+            err.jenis_kelamin = "Jenis Kelamin is required."
         }
 
         if(!formValues.tempat_lahir) {
@@ -215,10 +198,10 @@ export default function Register() {
         if(!formValues.alamat){
             err.alamat = 'Alamat is required.';
         }
-        if(!formValues.no_telepon){
-            err.no_telepon = 'No Telepon is required.';
-        }else if(!/^\d{10,13}$/.test(formValues.no_telepon)){
-            err.no_telepon = 'No Telepon is invalid.';
+        if(!formValues.no_telpon){
+            err.no_telpon = 'No Telepon is required.';
+        }else if(!/^\d{10,13}$/.test(formValues.no_telpon)){
+            err.no_telpon = 'No Telepon is invalid.';
         }
         if(!formValues.warga_negara){
             err.warga_negara = 'Warga Negara is required.';
@@ -226,8 +209,8 @@ export default function Register() {
         if(!formValues.status_perkawinan){
             err.status_perkawinan = 'Status Perkawinan is required.';
         }
-        if(!formValues.pendidikan_terakhir){
-            err.pendidikan_terakhir = 'Pendidikan Terakhir is required.';
+        if(!formValues.pendidikan){
+            err.pendidikan = 'Pendidikan Terakhir is required.';
         }
         if(!formValues.agama){
             err.agama = 'Agama is required.';
@@ -238,42 +221,35 @@ export default function Register() {
         if(!formValues.nama_kontak_darurat){
             err.nama_kontak_darurat = 'Nama Kontak Darurat is required.';
         }
-        if(!formValues.no_kontak_darurat){
-            err.no_kontak_darurat = 'No Kontak Darurat is required.';
+        if(!formValues.nomor_kontak_darurat){
+            err.nomor_kontak_darurat = 'No Kontak Darurat is required.';
         }
-
-
 
         setErrors(err);
         setIsFormValid(Object.keys(errors).length === 0); 
     }
 
-    // const handleOptionSelect2 = (selectedOption: any) => {
-    //     setSelectedValue(selectedOption);
-    // };
+    const handlePenjaminChange = (option: any) => {
+        setSelectedPenjamin(option);
+        if(option==="tunai" || option==="bpjs"){
+            setFormValues({
+                ...formValues,
+                ["penjamin"]: option,
+            });
+        }
+        setShowNoAsuransiTextField(option === "bpjs");
+        setShowAsuransiDropdown(option==="asuransi/kontraktor")
+    };
     const handleAsuransiChange = (option: any) => {
-        setSelectedAsuransi(option);
-        setShowNoAsuransiTextField(option.value !== "tunai");
+        setSelectedPenjamin(option);
+        setShowNoAsuransiTextField(true);
+        console.log(option)
         setFormValues({
           ...formValues,
-          ["jenis_pembayaran"]: option.label,
+          ["penjamin"]: option,
       });
     };
-    // const handleOptionGoldarChange = (option: any) => {
-    //     setSelectedGoldarOption(option);
-    // };
-    // const handleOptionAgamaChange = (option: any) => {
-    //     setSelectedAgamaOption(option);
-    // };
-    // const handleOptionPendidikanChange = (option: any) => {
-    //     setSelectedPendidikanOption(option);
-    // };
-    // const handleOptionKawinChange = (option: any) => {
-    //     setSelectedKawinOption(option);
-    // };
-    // const handleOptionWargaNegaraChange = (option: any) => {
-    //     setSelectedWargaNegaraOption(option);
-    // };
+
     const handleDateChange = (date: any) => {
         setSelectedDate(date);
         setFormValues({
@@ -285,11 +261,10 @@ export default function Register() {
         setSelectedGenderOption(value);
         setFormValues({
             ...formValues,
-            ["gender"]: value,
+            ["jenis_kelamin"]: value,
         });
     };
     const handleProvinsiSelect = (selectedOption: any) => {
-        // setSelectedProvinsi(selectedOption);
         setFormValues({
             ...formValues,
             ["provinsi"]: selectedOption.label,
@@ -309,7 +284,6 @@ export default function Register() {
     };
 
     const handleCitySelect = (selectedOption: any) => {
-        // setSelectedKota(selectedOption);
         setFormValues({
             ...formValues,
             ["kabupaten_kota"]: selectedOption.label,
@@ -328,7 +302,6 @@ export default function Register() {
     };
 
     const handleKecamatanSelect = (selectedOption: any) => {
-        // setSelectedKecamatan(selectedOption);
         setFormValues({
             ...formValues,
             ["kecamatan"]: selectedOption.label,
@@ -424,15 +397,16 @@ export default function Register() {
 
     const handleSubmit = async (e:any) => {
         e.preventDefault()
-        console.log(formValues)
         validateForm();
+        console.log(formValues)
+
         if(isFormValid){
             await axios.post('http://localhost:8080/pasien', formValues)
             .then((response :any) => {
                 console.log(response)
                 if(response.status < 400){
                     alert('Data berhasil disimpan')
-                    location.href = '/dashboard'
+                    // location.href = '/frontoffice-dashboard'
                 }else(
                     alert(response.data.message)
                 )
@@ -486,12 +460,12 @@ export default function Register() {
                             <div className="mt-2 ">
                                 <input
                                     type="text"
-                                    name="name"
-                                    id="name"
+                                    name="nama"
+                                    id="nama"
                                     placeholder="Masukkan Nama Anda"
                                     autoComplete="given-name"
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
-                                    value={formValues.name}
+                                    value={formValues.nama}
                                     onChange={handleInputChange}
                                 />
                                 {errors.nama && <p style={styles.error}>{errors.nama}</p>} 
@@ -560,7 +534,6 @@ export default function Register() {
                                         handleDropdownChange(
                                             "golongan_darah",
                                             goldarOption.value
-                                            // onSelect={handleOptionGoldarChange}
                                         )
                                     }
                                 />
@@ -600,7 +573,7 @@ export default function Register() {
                                       </label>
                                   ))}
                               </div>
-                              {errors.gender && <p style={styles.error}>{errors.gender}</p>} 
+                              {errors.jenis_kelamin && <p style={styles.error}>{errors.jenis_kelamin}</p>} 
                           </div>
                           <div className="col-start-7 col-span-3">
                               <label
@@ -661,7 +634,7 @@ export default function Register() {
 
                           <div className="col-start-7 col-span-6">
                               <label
-                                  htmlFor="no_telepon"
+                                  htmlFor="no_telpon"
                                   className="text-shade6 font-semibold text-2xl"
                               >
                                   No HP / Telepon *
@@ -669,14 +642,14 @@ export default function Register() {
                               <div className="mt-2">
                                   <input
                                       type="text"
-                                      name="no_telepon"
-                                      id="no_telepon"
+                                      name="no_telpon"
+                                      id="no_telpon"
                                       placeholder="Masukkan No HP / Telepon Anda"
-                                      value={formValues.no_telepon}
+                                      value={formValues.no_telpon}
                                       onChange={handleInputChange}
                                       className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                   />
-                                  {errors.no_telepon && <p style={styles.error}>{errors.no_telepon}</p>} 
+                                  {errors.no_telpon && <p style={styles.error}>{errors.no_telpon}</p>} 
                               </div>
                           </div>
                         
@@ -771,7 +744,6 @@ export default function Register() {
                             <div className="mt-2">
                                 <Dropdown
                                     options={wargaNegaraOptions}
-                                    // onSelect={handleOptionWargaNegaraChange}
                                     onSelect={(wargaNegaraOptions: any) =>
                                         handleDropdownChange(
                                             "warga_negara",
@@ -814,15 +786,14 @@ export default function Register() {
                             <div className="mt-2">
                                 <Dropdown
                                     options={pendidikanOptions}
-                                    // onSelect={handleOptionPendidikanChange}
                                     onSelect={(pendidikanOptions: any) =>
                                         handleDropdownChange(
-                                            "pendidikan_terakhir",
+                                            "pendidikan",
                                             pendidikanOptions.value
                                         )
                                     }
                                 />
-                                {errors.pendidikan_terakhir && <p style={styles.error}>{errors.pendidikan_terakhir}</p>} 
+                                {errors.pendidikan && <p style={styles.error}>{errors.pendidikan}</p>} 
                             </div>
                         </div>
 
@@ -836,7 +807,6 @@ export default function Register() {
                             <div className="mt-2">
                                 <Dropdown
                                     options={agamaOptions}
-                                    // onSelect={handleOptionAgamaChange}
                                     onSelect={(agamaOptions: any) =>
                                         handleDropdownChange(
                                             "agama",
@@ -862,6 +832,7 @@ export default function Register() {
                                     name="pekerjaan"
                                     id="pekerjaan"
                                     placeholder="Masukkan Pekerjaan Anda"
+                                    value={formValues.pekerjaan}
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
@@ -892,7 +863,7 @@ export default function Register() {
 
                         <div className="col-start-9 col-span-4">
                             <label
-                                htmlFor="no_kontak_darurat"
+                                htmlFor="nomor_kontak_darurat"
                                 className="text-shade6 font-semibold text-2xl"
                             >
                                 No Kontak Darurat *
@@ -900,14 +871,14 @@ export default function Register() {
                             <div className="mt-2">
                                 <input
                                     type="text"
-                                    name="no_kontak_darurat"
-                                    id="no_kontak_darurat"
+                                    name="nomor_kontak_darurat"
+                                    id="nomor_kontak_darurat"
                                     placeholder="Masukkan No Kontak Darurat Anda"
-                                    value={formValues.no_kontak_darurat}
+                                    value={formValues.nomor_kontak_darurat}
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
-                                {errors.no_kontak_darurat && <p style={styles.error}>{errors.no_kontak_darurat}</p>} 
+                                {errors.nomor_kontak_darurat && <p style={styles.error}>{errors.nomor_kontak_darurat}</p>} 
                             </div>
                         </div>
                         
@@ -916,14 +887,36 @@ export default function Register() {
                                 htmlFor="city"
                                 className="text-shade6 font-semibold text-2xl"
                             >
-                                Jenis Pembayaran *
+                                Jenis Penjamin *
                             </label>
-                            <CustomDropdown
+                            {/* <CustomDropdown
                                 options={asuransiOptions}
                                 selectedOption={selectedAsuransi}
                                 onChange={handleAsuransiChange}
-                                // onSelect={(asuransiOptions:any) => handleDropdownChange('jenis_pembayaran', selectedAsuransi)}
-                            />
+                            /> */}
+                            <Dropdown
+                                    options={penjaminOptions}
+                                    onSelect={(penjaminOptions: any) =>
+                                        handlePenjaminChange(
+                                            penjaminOptions.value
+                                        )
+                                    }
+                                />
+                            {showAsuransiDropdown && (
+                                <div className="mt-2">
+                                    <label className="text-shade6 font-semibold text-2xl">
+                                        Jenis Asuransi *
+                                    </label>
+                                    <Dropdown
+                                        options={asuransiOptions}
+                                        onSelect={(asuransiOptions: any) =>
+                                            handleAsuransiChange(
+                                                asuransiOptions.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            )}
                             {showNoAsuransiTextField && (
                                 <div className="mt-2">
                                     <label className="text-shade6 font-semibold text-2xl">
@@ -931,11 +924,11 @@ export default function Register() {
                                     </label>
                                     <input
                                     type="text"
-                                    name="no_asuransi"
-                                    id="no_asuransi"
+                                    name="no_penjamin"
+                                    id="no_penjamin"
                                     autoComplete="no_asuransi"
                                     placeholder="Masukkan No Asuransi Anda"
-                                    value={formValues.no_asuransi}
+                                    value={formValues.no_penjamin}
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />

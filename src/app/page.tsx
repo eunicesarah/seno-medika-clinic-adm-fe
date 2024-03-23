@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import mba_depan from "../../public/mba_depan.svg";
 import dokter2 from "../../public/dokter2.svg";
@@ -7,13 +8,21 @@ import ruang_vip from "../../public/ruang_vip.svg";
 import toko_kami from "../../public/toko_kami.svg"
 import photobooth from "../../public/photobooth.svg"
 import Footer from "./components/footer";
+import { useRouter } from "next/navigation";
+
+
 
 export default function Home() {
+  const router = useRouter();
+
+  const handleLoginClick = () => {
+    router.push('/login');
+  };
   return (
     <main className="min-h-screen  font-Poppins">
       <div className="bg-gradient-to-tr from-[#1C4033] to-[#5DB091] h-screen">
         <div className="flex flex-row-reverse ">
-          <button className="bg-[#2F5849] text-white font-semibold py-3 px-8 mt-5 mb-[-20px] mr-5 rounded-3xl">LOGIN</button>
+          <button onClick={handleLoginClick} className="bg-[#2F5849] text-white font-semibold py-3 px-8 mt-5 mb-[-20px] mr-5 rounded-3xl">LOGIN</button>
         </div>
         <div className="flex flex-col items-center justify-between py-20 px-16">
           <div className="flex flex-row items-center">
