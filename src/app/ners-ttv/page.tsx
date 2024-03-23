@@ -259,30 +259,32 @@ export default function Dashboard() {
         </div>
         <form className=" mr-20 ">
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
-            <div className="flex flex-row justify-between items-center mb-4">
+            <div className="flex flex-row justify-between items-center mb-4" data-testid="tenaga_medis">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Tenaga Medis
                 <span className="text-[#D66A63]"> *</span>
               </label>
               <Dropdown
+                id="tenaga_medis"
                 className="w-2/3"
                 options={options}
                 onSelect={handleOptionClick}
                 required
               />
             </div>
-            <div className="flex flex-row justify-between items-center mb-4">
+            <div className="flex flex-row justify-between items-center mb-4" data-testid="asisten_perawat">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Asisten Perawat
               </label>
               <Dropdown
+                id="asisten_perawat"
                 className="w-2/3"
                 options={options}
                 onSelect={handleOptionClick}
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              <label htmlFor="keluhan_utama" className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Keluhan Utama
                 <span className="text-[#D66A63]"> *</span>
               </label>
@@ -295,7 +297,7 @@ export default function Dashboard() {
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              <label htmlFor="keluhan_tambahan" className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Keluhan Tambahan
               </label>
               <textarea
