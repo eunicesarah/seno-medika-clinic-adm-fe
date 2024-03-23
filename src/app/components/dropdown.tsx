@@ -15,7 +15,7 @@ const Dropdown = ({ options, onSelect }:any) => {
   };
 
   const dropdownClasses = classNames(
-    'origin-top-right right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5',
+    'origin-top-right right-0 w-full rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 absolute ',
     {
       'max-h-60 overflow-y-auto': options.length > 10,
     }
