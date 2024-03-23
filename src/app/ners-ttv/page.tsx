@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Arrow from "../../../public/right_arrow.svg";
 import Dropdown from "../components/dropdown";
+import axios from "axios";
 
 interface NurseStation {
   skrining_awal: SkriningAwal;
@@ -71,7 +72,85 @@ interface Anamnesis {
 }
 
 export default function Dashboard() {
+  const antrianId = "1";
+
   const [selectedOption, setSelectedOption] = useState(null);
+
+  const antrianAPI = "http://localhost:8080/antrian?find_by=id&target=";
+  const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
+
+  const [data, setData] = useState<any>(null);
+  const [pasien, setPasien] = useState<any>(null);
+
+  const fetchData = async () => {
+    let arr: Array<any> = [];
+    
+    try {
+        const response = await axios.get(`${antrianAPI}${antrianId}`);
+        const data1 = response.data;
+        const data = data1.data;
+        console.log(data);
+        setData(data);
+        
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchDataPasien = async () => {
+    if (data) {
+      try {
+        const response = await axios.get(`${additionalDataAPI}${data.pasien_id}`);
+        const responseData = response.data;
+        const fetchedData = responseData.data;
+        console.log(fetchedData);
+        setPasien(fetchedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchDataPasien();
+  }, [data]);
+
+  function calculateAge(dateOfBirth: string) {
+    const dob = new Date(dateOfBirth);
+    // console.log("dob", dob);
+    const today = new Date();
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+        age--;
+    }
+
+    const years = age;
+    
+    let months;
+    if (today.getMonth() < dob.getMonth()) {
+        months = (12 - dob.getMonth()) + today.getMonth();
+    } else {
+        months = today.getMonth() - dob.getMonth();
+    }
+
+    let days;
+    if (today.getDate() < dob.getDate()) {
+        const tempDate = new Date(today.getFullYear(), today.getMonth(), 0);
+        const daysInMonth = tempDate.getDate();
+        days = daysInMonth - dob.getDate() + today.getDate();
+    } else {
+        days = today.getDate() - dob.getDate();
+    }
+
+    return { years, months, days };
+  }
   const options = [
     { label: "dr. Seni", value: "dr. Seni" },
     { label: "dr. Budi", value: "dr. Budi" },
@@ -112,7 +191,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      24-02-2024 07:00:13
+                      {data && (
+                          <p>{data.created_at}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -124,7 +205,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      Bidan
+                      {data && (
+                          <p>{data.poli}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -136,7 +219,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      12342943201
+                      {pasien && (
+                          <p>{pasien.no_erm}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -148,7 +233,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      31750723432243
+                      {pasien && (
+                          <p>{pasien.nik}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -160,7 +247,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      Afnan Edsa Ramadhan
+                      {pasien && (
+                          <p>{pasien.nama}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -172,7 +261,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      24 tahun 2 bulan 5 hari
+                      {pasien && (
+                          <p>{calculateAge(pasien.tanggal_lahir).years} tahun {calculateAge(pasien.tanggal_lahir).months} bulan {calculateAge(pasien.tanggal_lahir).days} hari </p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -184,7 +275,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      AB
+                      {pasien && (
+                          <p>{pasien.golongan_darah}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -196,7 +289,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      BPJS / 00032132812
+                      {pasien && (
+                          <p>{pasien.penjamin} / {pasien.no_penjamin}</p> /* TODO: jenis pembayaran belum jelas ada dimana */
+                        )}
                     </p>
                   </td>
                 </tr>
@@ -208,7 +303,9 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      Jl. Mangga no 12
+                      {pasien && (
+                          <p>{pasien.alamat}</p>
+                        )}
                     </p>
                   </td>
                 </tr>
