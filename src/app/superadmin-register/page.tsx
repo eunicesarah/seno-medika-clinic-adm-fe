@@ -98,7 +98,7 @@ export default function Register() {
         <form className="space-y-4 md:space-y-6 flex flex-row" onSubmit={handleSubmit} method="post">
           <div className="flex flex-col gap-3">
             <div className="mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="nama" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Nama
               </label>
               <input
@@ -114,7 +114,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="email" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 E-mail
               </label>
               <input
@@ -130,7 +130,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16 ">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="password" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Kata Sandi
               </label>
               <input
@@ -146,7 +146,7 @@ export default function Register() {
               />
             </div>
             <div className="max-w-sm mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="role" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Daftar Sebagai
               </label>
               <select
@@ -210,7 +210,7 @@ export default function Register() {
           {showAdditionalFields && (
             <div className="flex flex-col gap-3">
               <div className="mx-16">
-                <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                <label htmlFor="no_lisensi" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                   Nomor Lisensi
                 </label>
                 <input
@@ -224,7 +224,7 @@ export default function Register() {
               <div className="max-w-sm mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label htmlFor="jenis_poli" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jenis Poli
                     </label>
                     <select
@@ -262,7 +262,7 @@ export default function Register() {
               <div className="mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label htmlFor="jadwal" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jadwal
                     </label>
                     <div>
