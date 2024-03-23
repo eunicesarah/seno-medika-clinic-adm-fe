@@ -27,6 +27,7 @@ const Dropdown = ({ options, onSelect }:any) => {
         type="button"
         className="inline-flex justify-between h-12 items-center w-full p-2 border rounded-md shadow-sm text-sm  bg-white text-shade8 font-Poppins font-semibold hover:text-tint7 hover:bg-shade4"
         onClick={() => setIsOpen(!isOpen)}
+        data-testid="dropdown-button"
       >
         {selectedOption ? selectedOption.label : 'Select an option'}
         <IoMdArrowDropdown />
