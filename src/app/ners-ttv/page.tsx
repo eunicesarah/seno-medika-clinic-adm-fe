@@ -96,6 +96,11 @@ export default function Dashboard() {
       detak_jantung: '',
       triage: '',
     });
+    const [alergi, setAlergi] = useState({
+      obat : '',
+      makanan: '',
+      lainnya: '',
+    });
 
   const fetchData = async () => {
     let arr: Array<any> = [];
@@ -198,6 +203,9 @@ export default function Dashboard() {
   const handleInputTTV = (e: any) => {
     setTtv({ ...ttv, [e.target.name]: e.target.value });
   }
+  const handleInputAlergi = (e: any) => {
+    setAlergi({ ...alergi, [e.target.name]: e.target.value });
+  }
 
   const handleDetakJantung = (e: any) => {
     setTtv({ ...ttv, detak_jantung: e.target.value });
@@ -210,6 +218,7 @@ export default function Dashboard() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     console.log(ttv);
+    console.log(alergi);
     // try {
     //   const response = await axios.post("http://localhost:8080/ttv", ttv);
     //   console.log(response);
@@ -1160,9 +1169,9 @@ export default function Dashboard() {
                 </label>
                 <input
                   type="text"
-                  name="rps"
-                  id="rps"
-                  onChange={handleInputTTV}
+                  name="obat"
+                  id="obat"
+                  onChange={handleInputAlergi}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   />
@@ -1175,7 +1184,7 @@ export default function Dashboard() {
                   type="text"
                   name="makanan"
                   id="makanan"
-                  onChange={handleInputTTV}
+                  onChange={handleInputAlergi}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   />
@@ -1188,7 +1197,7 @@ export default function Dashboard() {
                   type="text"
                   name="lainnya"
                   id="lainnya"
-                  onChange={handleInputTTV}
+                  onChange={handleInputAlergi}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   />
