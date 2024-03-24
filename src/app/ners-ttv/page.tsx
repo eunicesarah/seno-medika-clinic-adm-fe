@@ -81,6 +81,21 @@ export default function Dashboard() {
 
   const [data, setData] = useState<any>(null);
   const [pasien, setPasien] = useState<any>(null);
+  const [ttv, setTtv] = useState<TTV>({
+      kesadaran: '',
+      sistole: 0,
+      diastole: 0,
+      tinggi_badan: 0,
+      cara_ukur_tb: '',
+      berat_badan: 0,
+      lingkar_perut: 0,
+      detak_nadi: 0,
+      nafas: 0,
+      saturasi: 0,
+      suhu: 0,
+      detak_jantung: '',
+      triage: '',
+    });
 
   const fetchData = async () => {
     let arr: Array<any> = [];
@@ -157,9 +172,52 @@ export default function Dashboard() {
     { label: "dr. Toto", value: "dr. Toto" },
   ];
 
+  const kesadaranOptions =[
+    { label: "Compos Mentis", value: "Compos Mentis" },
+    { label: "Somnolen", value: "Somnolen" },
+    { label: "Sopor", value: "Sopor" },
+    { label: "Coma", value: "Coma" },
+  ]
+
+  const cara_ukur_tbOptions = [
+    { label: "Berdiri", value: "Berdiri" },
+    { label: "Berbaring", value: "Berbaring" },
+  ]
+
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
   };
+  const handleCaraUkurTbDropdown = (option: any) => {
+    setTtv({ ...ttv, cara_ukur_tb: option.value });
+  }
+
+  const handleKesadaranDropdown = (option: any) => {
+    setTtv({ ...ttv, kesadaran: option.value });
+  }
+
+  const handleInputTTV = (e: any) => {
+    setTtv({ ...ttv, [e.target.name]: e.target.value });
+  }
+
+  const handleDetakJantung = (e: any) => {
+    setTtv({ ...ttv, detak_jantung: e.target.value });
+  }
+
+  const handleTriage = (e: any) => {
+    setTtv({ ...ttv, triage: e.target.value });
+  }
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log(ttv);
+    // try {
+    //   const response = await axios.post("http://localhost:8080/ttv", ttv);
+    //   console.log(response);
+    // } catch (error) {
+    //   console.error('Error fetching data:', error);
+    // }
+  }
+
   return (
     <div className="bg-tint6 h-full flex flex-col">
       <div className=" mr-20 flex flex-row justify-end mt-14">
@@ -354,7 +412,7 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
-        <form className=" mr-20 ">
+        <form className=" mr-20 " onSubmit={handleSubmit}>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
             <div className="flex flex-row justify-between items-center mb-4" data-testid="tenaga_medis">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
@@ -963,9 +1021,10 @@ export default function Dashboard() {
                   type="text"
                   name="rps"
                   id="rps"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
-                />
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -975,9 +1034,10 @@ export default function Dashboard() {
                   type="text"
                   name="rpd"
                   id="rpd"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
-                />
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -987,9 +1047,10 @@ export default function Dashboard() {
                   type="text"
                   name="rpk"
                   id="rpk"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
-                />
+                  />
               </div>
               <br />
               <br />
@@ -999,8 +1060,8 @@ export default function Dashboard() {
                 </label>
                 <Dropdown
                   className="w-2/3"
-                  options={options}
-                  onSelect={handleOptionClick}
+                  options={kesadaranOptions}
+                  onSelect={handleKesadaranDropdown}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1011,8 +1072,9 @@ export default function Dashboard() {
                   type="text"
                   name="sistole"
                   id="sistole"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl  border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Mm</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1023,8 +1085,9 @@ export default function Dashboard() {
                   type="text"
                   name="diastole"
                   id="diastole"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Hg</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1034,9 +1097,10 @@ export default function Dashboard() {
                 <input
                   type="text"
                   name="tinggi_badan"
+                  onChange={handleInputTTV}
                   id="tinggi_badan"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Cm</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -1045,9 +1109,9 @@ export default function Dashboard() {
                 </label>
                 <Dropdown
                   className="w-2/3"
-                  options={options}
-                  onSelect={handleOptionClick}
-                />
+                  options={cara_ukur_tbOptions}
+                  onSelect={handleCaraUkurTbDropdown}
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -1057,8 +1121,9 @@ export default function Dashboard() {
                   type="text"
                   name="berat_badan"
                   id="berat_badan"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Kg</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -1070,7 +1135,7 @@ export default function Dashboard() {
                   name="imt"
                   id="imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -1079,9 +1144,10 @@ export default function Dashboard() {
                 <input
                   type="text"
                   name="hasil_imt"
+                  onChange={handleInputTTV}
                   id="hasil_imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
               </div>
             </div>
             <div >
@@ -1096,9 +1162,10 @@ export default function Dashboard() {
                   type="text"
                   name="rps"
                   id="rps"
+                  onChange={handleInputTTV}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -1106,11 +1173,12 @@ export default function Dashboard() {
                 </label>
                 <input
                   type="text"
-                  name="rpd"
-                  id="rpd"
+                  name="makanan"
+                  id="makanan"
+                  onChange={handleInputTTV}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
@@ -1118,11 +1186,12 @@ export default function Dashboard() {
                 </label>
                 <input
                   type="text"
-                  name="rpk"
-                  id="rpk"
+                  name="lainnya"
+                  id="lainnya"
+                  onChange={handleInputTTV}
                   placeholder="Ada / Tidak Ada"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
               </div>
               <br />
               <br />
@@ -1134,8 +1203,9 @@ export default function Dashboard() {
                   type="text"
                   name="lingkar_perut"
                   id="lingkar_perut"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">Cm</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1146,8 +1216,9 @@ export default function Dashboard() {
                   type="text"
                   name="detak_nadi"
                   id="detak_nadi"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">/Menit</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1158,8 +1229,9 @@ export default function Dashboard() {
                   type="text"
                   name="nafas"
                   id="nafas"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">/Menit</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1170,8 +1242,9 @@ export default function Dashboard() {
                   type="text"
                   name="saturasi"
                   id="saturasi"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-6 text-sm text-tint7">%</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
@@ -1182,8 +1255,9 @@ export default function Dashboard() {
                   type="text"
                   name="suhu"
                   id="suhu"
+                  onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                  />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-6 text-sm text-tint7">℃</span>
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -1197,11 +1271,12 @@ export default function Dashboard() {
                     id="regular"
                     name="detak_jantung"
                     value="regular"
-                  />
+                    onChange={handleDetakJantung}
+                    />
                   <label
                     htmlFor="regular"
                     className="text-white font-Poppins font-normal ml-4"
-                  >
+                    >
                     Regular
                   </label>
                 </div>
@@ -1211,11 +1286,11 @@ export default function Dashboard() {
                     id="iregular"
                     name="detak_jantung"
                     value="iregular"
-                  />
+                    />
                   <label
                     htmlFor="iregular"
                     className="text-white font-Poppins font-normal ml-4"
-                  >
+                    >
                     Iregular
                   </label>
                 </div>
@@ -1232,6 +1307,7 @@ export default function Dashboard() {
                       id="gawat_darurat"
                       name="triage"
                       value="gawat_darurat"
+                      onChange={handleTriage}
                     /> 
                     <label
                       htmlFor="gawat_darurat"
@@ -1311,6 +1387,15 @@ export default function Dashboard() {
                 placeholder="Ada / Tidak Ada"
               />
             </div>
+          </div>
+
+          <div>
+            <button
+                type="submit"
+                className="flex items-center justify-center text-white font-semibold border-none rounded-2xl h-12 px-10 py-3.5 bg-primary1 w-full"
+            >
+                Simpan
+            </button>
           </div>
         </form>
       </div>
