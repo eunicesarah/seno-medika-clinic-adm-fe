@@ -21,17 +21,17 @@ interface SkriningAwal {
   jalan_tidak_seimbang: boolean;
   menopang_saat_duduk: boolean;
   jalan_alat_bantu: boolean;
+  hasil_cara_jalan: string;
   skala_nyeri: number;
   nyeri_berulang: string;
+  sifat_nyeri: string;
 }
 
 interface SkriningGizi {
   penurunan_bb: string;
+  tdk_nafsu_makan: boolean;
   diagnosis_khusus: boolean;
   nama_penyakit: string;
-  skala_nyeri: number;
-  nyeri_berulang: string;
-  sifat_nyeri: string;
 }
 
 interface RiwayatPenyakit {
@@ -54,6 +54,8 @@ interface TTV {
   suhu: number;
   detak_jantung: string;
   triage: string;
+  psikososial_spirit: string;
+  keterangan: string;
 }
 
 interface Alergi {
@@ -84,6 +86,12 @@ export default function Dashboard() {
   const [tahun, setTahun] = useState<any>(0);
   const [bulan, setBulan] = useState<any>(0);
   const [hari, setHari] = useState<any>(0);
+  const [skriningGizi, setSkriningGizi] = useState<SkriningGizi>({
+    penurunan_bb: '',
+    tdk_nafsu_makan: false,
+    diagnosis_khusus: false,
+    nama_penyakit: '',
+  });
   const [skriningAwal, setSkriningAwal] = useState<SkriningAwal>({
     disabilitas: false,
     ambulansi: false,
@@ -91,8 +99,10 @@ export default function Dashboard() {
     jalan_tidak_seimbang: false,
     menopang_saat_duduk: false,
     jalan_alat_bantu: false,
+    hasil_cara_jalan: "kurang baik",
     skala_nyeri: 0,
     nyeri_berulang: "",
+    sifat_nyeri: "",
   });
   const [anamnesis, setAnamnesis] = useState<Anamnesis>({
     pasien_id: 0,
@@ -116,11 +126,19 @@ export default function Dashboard() {
     suhu: 0,
     detak_jantung: "",
     triage: "",
+    psikososial_spirit: "",
+    keterangan: "",
   });
   const [alergi, setAlergi] = useState({
     obat: "",
     makanan: "",
     lainnya: "",
+  });
+
+  const [riwayatPenyakit, setRiwayatPenyakit] = useState<RiwayatPenyakit>({
+    rps: "",
+    rpd: "",
+    rpk: "",
   });
 
   const fetchData = async () => {
@@ -211,7 +229,9 @@ export default function Dashboard() {
     { label: "Berdiri", value: "Berdiri" },
     { label: "Berbaring", value: "Berbaring" },
   ];
-
+  const handleInputSkriningGizi = (e: any) => {
+    setSkriningGizi({ ...skriningGizi, [e.target.name]: e.target.value });
+  }
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
   };
@@ -254,6 +274,10 @@ export default function Dashboard() {
     setAnamnesis({ ...anamnesis, keluhan_tambahan: e.target.value });
   };
 
+  const handleInputRiwayatPenyakit = (e: any) => {
+    setRiwayatPenyakit({ ...riwayatPenyakit, [e.target.name]: e.target.value });
+  }
+
   const handleLamaSakit = (e: any) => {
     const { name, value } = e.target;
 
@@ -270,7 +294,7 @@ export default function Dashboard() {
       default:
         break;
     }
-    const totalHari = tahun * 365 + bulan * 30 + hari;
+    const totalHari = tahun * 365 + bulan * 30 + hari * 1;
     setAnamnesis({ ...anamnesis, lama_sakit: totalHari });
   };
 
@@ -297,6 +321,10 @@ export default function Dashboard() {
   const handleAlatBantu = (e: any) => {
     setSkriningAwal({ ...skriningAwal, jalan_alat_bantu: e.target.value });
   };
+  
+  const handleSkalaNyeri = (e: any) => {
+    setSkriningAwal({ ...skriningAwal, [e.target.name]: e.target.value });
+  }
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -304,6 +332,8 @@ export default function Dashboard() {
     console.log(alergi);
     console.log(anamnesis);
     console.log(skriningAwal);
+    console.log(skriningGizi);
+    console.log(riwayatPenyakit);
     // try {
     //   const response = await axios.post("http://localhost:8080/ttv", ttv);
     //   console.log(response);
@@ -656,7 +686,7 @@ export default function Dashboard() {
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
-                Ambulasi
+                Ambulansi
               </label>
               <input
                 type="text"
@@ -836,7 +866,7 @@ export default function Dashboard() {
                   >
                     1
                   </label>
-                  <input type="radio" id="1" name="skala_nyeri" value="1" />
+                  <input type="radio" id="1" name="skala_nyeri" value="1" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -845,7 +875,7 @@ export default function Dashboard() {
                   >
                     2
                   </label>
-                  <input type="radio" id="2" name="skala_nyeri" value="2" />
+                  <input type="radio" id="2" name="skala_nyeri" value="2" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -854,7 +884,7 @@ export default function Dashboard() {
                   >
                     3
                   </label>
-                  <input type="radio" id="3" name="skala_nyeri" value="3" />
+                  <input type="radio" id="3" name="skala_nyeri" value="3" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -863,7 +893,7 @@ export default function Dashboard() {
                   >
                     4
                   </label>
-                  <input type="radio" id="4" name="skala_nyeri" value="4" />
+                  <input type="radio" id="4" name="skala_nyeri" value="4" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -872,7 +902,7 @@ export default function Dashboard() {
                   >
                     5
                   </label>
-                  <input type="radio" id="5" name="skala_nyeri" value="5" />
+                  <input type="radio" id="5" name="skala_nyeri" value="5" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -881,7 +911,7 @@ export default function Dashboard() {
                   >
                     6
                   </label>
-                  <input type="radio" id="6" name="skala_nyeri" value="6" />
+                  <input type="radio" id="6" name="skala_nyeri" value="6" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -890,7 +920,7 @@ export default function Dashboard() {
                   >
                     7
                   </label>
-                  <input type="radio" id="7" name="skala_nyeri" value="7" />
+                  <input type="radio" id="7" name="skala_nyeri" value="7" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -899,7 +929,7 @@ export default function Dashboard() {
                   >
                     8
                   </label>
-                  <input type="radio" id="8" name="skala_nyeri" value="8" />
+                  <input type="radio" id="8" name="skala_nyeri" value="8" onChange={handleSkalaNyeri} />
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -908,7 +938,7 @@ export default function Dashboard() {
                   >
                     9
                   </label>
-                  <input type="radio" id="9" name="skala_nyeri" value="9" />
+                  <input type="radio" id="9" name="skala_nyeri" value="9" onChange={handleSkalaNyeri}/>
                 </div>
                 <div className="flex flex-col items-center justify-center text-center">
                   <label
@@ -917,7 +947,7 @@ export default function Dashboard() {
                   >
                     10
                   </label>
-                  <input type="radio" id="10" name="skala_nyeri" value="10" />
+                  <input type="radio" id="10" name="skala_nyeri" value="10" onChange={handleSkalaNyeri}/>
                 </div>
               </div>
             </div>
@@ -930,7 +960,8 @@ export default function Dashboard() {
                 name="nyeri_berulang"
                 id="nyeri_berulang"
                 className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                placeholder="Ada / Tidak Ada"
+                placeholder="Tidak Ada"
+                onChange={handleSkalaNyeri}
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
@@ -942,7 +973,8 @@ export default function Dashboard() {
                 name="sifat_nyeri"
                 id="sifat_nyeri"
                 className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                placeholder="Ada / Tidak Ada"
+                placeholder="Tidak Ada"
+                onChange={handleSkalaNyeri}
               />
             </div>
             <label className="text-shade6 font-bold text-xl m-4 underline">
@@ -960,7 +992,8 @@ export default function Dashboard() {
                     type="radio"
                     id="tdk_tahu"
                     name="penurunan_bb"
-                    value="ya"
+                    value="tidak tahu"
+                    onChange={handleInputSkriningGizi}
                   />
                   <label
                     htmlFor="tdk_tahu"
@@ -970,7 +1003,7 @@ export default function Dashboard() {
                   </label>
                 </div>
                 <div className="flex flex-row items-center justify-center text-center">
-                  <input type="radio" id="1-5" name="penurunan_bb" value="ya" />
+                  <input type="radio" id="1-5" name="penurunan_bb" value="1-5" onChange={handleInputSkriningGizi} />
                   <label
                     htmlFor="1-5"
                     className=" text-white font-Poppins font-normal ml-4 "
@@ -983,7 +1016,8 @@ export default function Dashboard() {
                     type="radio"
                     id="6-10"
                     name="penurunan_bb"
-                    value="ya"
+                    value="6-10"
+                    onChange={handleInputSkriningGizi}
                   />
                   <label
                     htmlFor="6-10"
@@ -997,7 +1031,8 @@ export default function Dashboard() {
                     type="radio"
                     id="11-15"
                     name="penurunan_bb"
-                    value="ya"
+                    value="11-15"
+                    onChange={handleInputSkriningGizi}
                   />
                   <label
                     htmlFor="11-15"
@@ -1007,7 +1042,7 @@ export default function Dashboard() {
                   </label>
                 </div>
                 <div className="flex flex-row items-center justify-center text-center">
-                  <input type="radio" id=">15" name="penurunan_bb" value="ya" />
+                  <input type="radio" id=">15" name="penurunan_bb" value=">15" onChange={handleInputSkriningGizi}/>
                   <label
                     htmlFor=">15"
                     className=" text-white font-Poppins font-normal ml-4 "
@@ -1017,6 +1052,43 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            <div className="flex flex-row justify-between items-center mb-4">
+            <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+            Apakah asupan makan berkurang karena tidak nafsu makan <span className="text-[#D66A63]"> *</span>
+            </label>
+            <div className="w-2/3 flex flex-row gap-10 items-center">
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="ya"
+                  name="tdk_nafsu_makan"
+                  value="true"
+                  onChange={handleInputSkriningGizi}
+                />
+                <label
+                  htmlFor="ya"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Ya
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  type="radio"
+                  id="tidak"
+                  name="tdk_nafsu_makan"
+                  value="false"
+                  onChange={handleInputSkriningGizi}
+                />
+                <label
+                  htmlFor="tidak"
+                  className="text-white font-Poppins font-normal ml-4"
+                >
+                  Tidak
+                </label>
+              </div>
+            </div>
+          </div>
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Pasien dengan diagnosis khusus{" "}
@@ -1028,7 +1100,8 @@ export default function Dashboard() {
                     type="radio"
                     id="ya"
                     name="diagnosis_khusus"
-                    value="ya"
+                    value="true"
+                    onChange={handleInputSkriningGizi}
                   />
                   <label
                     htmlFor="ya"
@@ -1042,7 +1115,8 @@ export default function Dashboard() {
                     type="radio"
                     id="tidak"
                     name="diagnosis_khusus"
-                    value="tidak"
+                    value="false"
+                    onChange={handleInputSkriningGizi}
                   />
                   <label
                     htmlFor="tidak"
@@ -1062,7 +1136,8 @@ export default function Dashboard() {
                 name="nama_penyakit"
                 id="nama_penyakit"
                 className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                placeholder="Ada / Tidak Ada"
+                placeholder="Tidak Ada"
+                onChange={handleInputSkriningGizi}
               />
             </div>
           </div>
@@ -1079,9 +1154,10 @@ export default function Dashboard() {
                   type="text"
                   name="rps"
                   id="rps"
-                  onChange={handleInputTTV}
+                  onChange={handleInputRiwayatPenyakit}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
+                  
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -1092,7 +1168,7 @@ export default function Dashboard() {
                   type="text"
                   name="rpd"
                   id="rpd"
-                  onChange={handleInputTTV}
+                  onChange={handleInputRiwayatPenyakit}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
                 />
@@ -1105,7 +1181,7 @@ export default function Dashboard() {
                   type="text"
                   name="rpk"
                   id="rpk"
-                  onChange={handleInputTTV}
+                  onChange={handleInputRiwayatPenyakit}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Ada / Tidak Ada"
                 />
@@ -1448,6 +1524,7 @@ export default function Dashboard() {
                 id="psikososial_spirit"
                 className="w-2/3 px-4 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                 placeholder="Ada / Tidak Ada"
+                onChange={handleInputTTV}
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
@@ -1459,6 +1536,7 @@ export default function Dashboard() {
                 id="keterangan"
                 className="w-2/3 px-4 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                 placeholder="Ada / Tidak Ada"
+                onChange={handleInputTTV}
               />
             </div>
           </div>
