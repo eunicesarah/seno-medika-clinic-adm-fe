@@ -11,7 +11,7 @@ describe('Login page', () => {
     it('should display error message for invalid email', () => {
         render(<LoginPage />)
         const emailInput = screen.getByLabelText('E-mail')
-        const passwordInput = screen.getByLabelText('Kata Sandiaga')
+        const passwordInput = screen.getByLabelText('Kata Sandi')
         const submitButton = screen.getByText('Login')
 
         fireEvent.change(emailInput, { target: { value: 'invalid-email' } })
@@ -23,7 +23,7 @@ describe('Login page', () => {
     it('should submit form and redirect on successful login', async () => {
         render(<LoginPage />)
         const emailInput = screen.getByLabelText('E-mail')
-        const passwordInput = screen.getByLabelText('Kata Sandiaga')
+        const passwordInput = screen.getByLabelText('Kata Sandi')
         const submitButton = screen.getByText('Login')
 
         fireEvent.change(emailInput, { target: { value: 'valid-email@example.com' } })
