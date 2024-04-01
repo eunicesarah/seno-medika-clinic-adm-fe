@@ -52,7 +52,7 @@ interface TTV {
   nafas: number;
   saturasi: number;
   suhu: number;
-  detak_jantung: string;
+  detak_jantung: boolean;
   triage: string;
   psikososial_spirit: string;
   keterangan: string;
@@ -74,6 +74,27 @@ interface Anamnesis {
 }
 
 export default function Dashboard() {
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const requestData = {
+      skrining_awal: skriningAwal,
+      skrining_gizi: skriningGizi,
+      riwayat_penyakit: riwayatPenyakit,
+      ttv: ttv,
+      alergi: alergi,
+      anamnesis: anamnesis,
+    };
+    console.log(requestData);
+  
+    try {
+      const response = await axios.post("http://localhost:8080/ttv", requestData);
+      console.log(response);
+
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
+  };
   const antrianId = "1";
 
   const [selectedOption, setSelectedOption] = useState(null);
@@ -105,9 +126,9 @@ export default function Dashboard() {
     sifat_nyeri: "",
   });
   const [anamnesis, setAnamnesis] = useState<Anamnesis>({
-    pasien_id: 0,
-    dokter_id: 0,
-    perawat_id: 0,
+    pasien_id: 1,
+    dokter_id: 1,
+    perawat_id: 2,
     keluhan_utama: "",
     keluhan_tambahan: "",
     lama_sakit: 0,
@@ -124,7 +145,7 @@ export default function Dashboard() {
     nafas: 0,
     saturasi: 0,
     suhu: 0,
-    detak_jantung: "",
+    detak_jantung: false,
     triage: "",
     psikososial_spirit: "",
     keterangan: "",
@@ -230,7 +251,13 @@ export default function Dashboard() {
     { label: "Berbaring", value: "Berbaring" },
   ];
   const handleInputSkriningGizi = (e: any) => {
-    setSkriningGizi({ ...skriningGizi, [e.target.name]: e.target.value });
+    const target  = e.target.name;
+    const boolVal = e.target.value === "ya";
+    const intVal = parseInt(e.target.value);
+    const isBoolOpton = target === "tdk_nafsu_makan" || target === "diagnosis_khusus";
+    const isIntOption = target === "penurunan_bb";
+    setSkriningGizi({ ...skriningGizi, [e.target.name]: 
+      (isBoolOpton)?boolVal:(isIntOption)?intVal:e.target.value });
   }
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
@@ -244,14 +271,19 @@ export default function Dashboard() {
   };
 
   const handleInputTTV = (e: any) => {
-    setTtv({ ...ttv, [e.target.name]: e.target.value });
+    const isIntOption = 
+    e.target.name === "saturasi" || e.target.name === "nafas" || e.target.name === "detak_nadi"||
+    e.target.name === "berat_badan" || e.target.name === "tinggi_badan" || e.target.name === "diastole"||
+    e.target.name === "sistole" || e.target.name === "suhu"|| e.target.name === "lingkar_perut";
+    const intVal = parseInt(e.target.value);
+    setTtv({ ...ttv, [e.target.name]: (isIntOption)?intVal:e.target.value });
   };
   const handleInputAlergi = (e: any) => {
     setAlergi({ ...alergi, [e.target.name]: e.target.value });
   };
 
   const handleDetakJantung = (e: any) => {
-    setTtv({ ...ttv, detak_jantung: e.target.value });
+    setTtv({ ...ttv, detak_jantung: e.target.value === "regular"});
   };
 
   const handleTriage = (e: any) => {
@@ -276,8 +308,8 @@ export default function Dashboard() {
 
   const handleInputRiwayatPenyakit = (e: any) => {
     setRiwayatPenyakit({ ...riwayatPenyakit, [e.target.name]: e.target.value });
-  }
-
+  };
+  
   const handleLamaSakit = (e: any) => {
     const { name, value } = e.target;
 
@@ -299,48 +331,36 @@ export default function Dashboard() {
   };
 
   const handleDisabilitas = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, disabilitas: e.target.value });
+
+    setSkriningAwal({ ...skriningAwal, disabilitas: (e.target.value === "ya") });
   };
 
   const handleAmbulansi = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, ambulansi: e.target.value });
+    setSkriningAwal({ ...skriningAwal, ambulansi: (e.target.value === "ya") });
   };
 
   const handleHambatanKomunikasi = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, hambatan_komunikasi: e.target.value });
+    setSkriningAwal({ ...skriningAwal, hambatan_komunikasi: (e.target.value === "ya")  });
   };
 
   const handleJalanTidakSeimbang = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, jalan_tidak_seimbang: e.target.value });
+    setSkriningAwal({ ...skriningAwal, jalan_tidak_seimbang: (e.target.value === "ya")  });
   };
 
   const handleMenopangSaatDuduk = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, menopang_saat_duduk: e.target.value });
+    setSkriningAwal({ ...skriningAwal, menopang_saat_duduk:(e.target.value === "ya")  });
   };
 
   const handleAlatBantu = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, jalan_alat_bantu: e.target.value });
+    setSkriningAwal({ ...skriningAwal, jalan_alat_bantu: (e.target.value === "ya")  });
   };
   
   const handleSkalaNyeri = (e: any) => {
-    setSkriningAwal({ ...skriningAwal, [e.target.name]: e.target.value });
+    const intvalue = parseInt(e.target.value);
+    setSkriningAwal({ ...skriningAwal, [e.target.name]: intvalue });
   }
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    console.log(ttv);
-    console.log(alergi);
-    console.log(anamnesis);
-    console.log(skriningAwal);
-    console.log(skriningGizi);
-    console.log(riwayatPenyakit);
-    // try {
-    //   const response = await axios.post("http://localhost:8080/ttv", ttv);
-    //   console.log(response);
-    // } catch (error) {
-    //   console.error('Error fetching data:', error);
-    // }
-  };
+  
 
   return (
     <div className="bg-tint6 h-full flex flex-col">
