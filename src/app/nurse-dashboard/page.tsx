@@ -108,10 +108,8 @@ export default function NurseDashboard() {
       try {
         const response = await axios("http://localhost:8080/antrian")
             .then(async (resAntrian) => {
-              // await axios.get("http://localhost:8080/antrian").then((resPasien) => {
 
               for (const antrian of resAntrian.data.data) {
-                console.log(antrian.pasien_id);
                 await axios.get(`http://localhost:8080/pasien?find_by=id&target=${antrian.pasien_id}`)
                     .then((resPasien) => {
                       console.log(resPasien.data);
