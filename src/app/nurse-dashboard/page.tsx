@@ -114,7 +114,7 @@ export default function NurseDashboard() {
                     .then((resPasien) => {
                       console.log(resPasien.data);
                       const pasien = resPasien.data.data;
-                      const data = {
+                      const dataPasien = {
                         nomor_antrian: antrian.nomor_antrian,
                         poli: antrian.poli,
                         created_at: antrian.created_at,
@@ -126,7 +126,11 @@ export default function NurseDashboard() {
                         asuransi: pasien.penjamin,
                         TTV: pasien.TTV,
                       };
-                      setTableData((prevData) => [...prevData, data]);
+                      const pasienIdExists = tableData.some(data => data.nik === dataPasien.nik);
+                      console.log(pasienIdExists);
+                      if (!pasienIdExists) {
+                        setTableData((prevData) => [...prevData, dataPasien]);
+                      }
                     } )
               }
             });
@@ -136,7 +140,7 @@ export default function NurseDashboard() {
       }
     };
     fetchData();
-  }, [])
+  }, [tableData])
 
   return (
     <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
