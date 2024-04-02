@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
 import SMLogo from "../../../public/Logo_Seno_Medika.svg";
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "@/components/Dropdown";
+import axios from "axios";
 
 const head = [
   "No",
@@ -38,37 +39,49 @@ interface TableData extends Antrian, PendaftaranPasien {
     no_eRM: string;
 }
 
+interface IError{
+  nama: string;
+  email: string;
+  NIK: string;
+  no_KK: string;
+  no_erm: string;
+  goldar: string;
+  jenis_kelamin: string;
+  tempat_lahir: string;
+  tanggal_lahir: string;
+  provinsi: string;
+  kabupaten_kota: string;
+  kecamatan: string;
+  kelurahan: string;
+  alamat: string;
+  no_telpon: string;
+  warga_negara: string;
+  status_perkawinan: string;
+  pendidikan: string;
+  agama: string;
+  pekerjaan: string;
+  nama_kontak_darurat: string;
+  nomor_kontak_darurat: string;
+}
+function parseAndFormatDate(tanggal_lahir: string, tempat_lahir: string): string {
+  // Parse the date string
+  const parsedDate: Date = new Date(tanggal_lahir);
+
+  // Format the date
+  const formattedDate: string = `${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}`;
+
+  // Create the desired output
+  const output: string = `${tempat_lahir}, ${formattedDate}`;
+
+  return output;
+}
 export default function NurseDashboard() {
-    const initialData: TableData[] = [
-        {
-          nomor_antrian: 1,
-          poli: 'Cardiology',
-          created_at: '2022-01-01',
-          nik: '1234567890',
-          no_eRM: 'ERM123',
-          nama_pasien: 'John Doe',
-          jenis_kelamin: 'Male',
-          tempat_tanggal_lahir: 'Jakarta, 1990-01-01',
-          asuransi: 'BPJS',
-          TTV: '120/80 mmHg',
-        },
-        {
-          nomor_antrian: 2,
-          poli: 'Neurology',
-          created_at: '2022-01-02',
-          nik: '0987654321',
-          no_eRM: 'ERM456',
-          nama_pasien: 'Jane Doe',
-          jenis_kelamin: 'Female',
-          tempat_tanggal_lahir: 'Jakarta, 1992-02-02',
-          asuransi: 'Private',
-          TTV: '110/70 mmHg',
-        },
-      ];
+    const initialData: TableData[] = [];
     
       const [tableData, setTableData] = useState<TableData[]>(initialData);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedPasien, setSelectedPasien] = useState(null)
 
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
@@ -88,6 +101,44 @@ export default function NurseDashboard() {
     { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
     { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
   ];
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios("http://localhost:8080/antrian")
+            .then(async (resAntrian) => {
+              // await axios.get("http://localhost:8080/antrian").then((resPasien) => {
+
+              for (const antrian of resAntrian.data.data) {
+                console.log(antrian.pasien_id);
+                await axios.get(`http://localhost:8080/pasien?find_by=id&target=${antrian.pasien_id}`)
+                    .then((resPasien) => {
+                      console.log(resPasien.data);
+                      const pasien = resPasien.data.data;
+                      const data = {
+                        nomor_antrian: antrian.nomor_antrian,
+                        poli: antrian.poli,
+                        created_at: antrian.created_at,
+                        no_eRM: pasien.no_eRM,
+                        nik: pasien.nik,
+                        nama_pasien: pasien.nama,
+                        jenis_kelamin: pasien.jenis_kelamin,
+                        tempat_tanggal_lahir: parseAndFormatDate(pasien.tanggal_lahir, pasien.tempat_lahir),
+                        asuransi: pasien.penjamin,
+                        TTV: pasien.TTV,
+                      };
+                      setTableData((prevData) => [...prevData, data]);
+                    } )
+              }
+            });
+        // setTableData(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [])
 
   return (
     <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
@@ -167,7 +218,7 @@ export default function NurseDashboard() {
               </tr>
             </thead>
             <tbody>
-                {tableData.map((data, index) => (
+                {tableData && tableData.map((data, index) => (
                     <tr key={data.nomor_antrian} className=" odd:bg-tint4 even:bg-tint5 text-shade7 text-center hover:bg-shade4 hover:text-tint7">
                         <td className="p-2">{index + 1}</td>
                         <td className="p-2">{data.nomor_antrian}</td>
