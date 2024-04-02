@@ -52,10 +52,20 @@ const wargaNegaraOptions = [
     { label: "Lainnya", value: "lainnya" },
 ];
 
-const asuransiOptions = [
+const penjaminOptions = [
     { label: "Tunai", value: "tunai" },
-    { label: "BPJS", value: "bpjs" },
+    { label: "BPJS Kesehatan", value: "bpjs" },
+    {label: "Asuransi/Kontraktor", value:"asuransi/kontraktor"}
 ];
+
+const asuransiOptions = [
+    { label:"BNI life", value:"bni-life"},
+    { label:"BCA life", value:"bca-life"},
+    { label:"Ad Medika", value:"ad-medikau"},
+
+]
+
+
 
 interface IError{
     nama: string;
@@ -78,6 +88,8 @@ interface IError{
     pendidikan: string;
     agama: string;
     pekerjaan: string;
+    penjamin: string;
+    no_penjamin: string;
     nama_kontak_darurat: string;
     nomor_kontak_darurat: string;
 }
@@ -85,8 +97,10 @@ interface IError{
 export default function Register() {
     const [selectedGenderOption, setSelectedGenderOption] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedAsuransi, setSelectedAsuransi] = useState(null);
+    const [selectedPenjamin, setSelectedPenjamin] = useState(null);
     const [showNoAsuransiTextField, setShowNoAsuransiTextField] =
+        useState(false);
+    const [showAsuransiDropdown, setShowAsuransiDropdown] =
         useState(false);
     const [provinceOptions, setProvinceOptions] = useState([]);
     const [kotaOptions, setKotaOptions] = useState([]);
@@ -118,8 +132,8 @@ export default function Register() {
         pekerjaan: "",
         nama_kontak_darurat: "",
         nomor_kontak_darurat: "",
-        jenis_pembayaran: "",
-        no_asuransi: "",
+        penjamin: "",
+        no_penjamin:"",
         no_IHS: "0",
         no_rm_lama: "0",
         no_dok_lama: "0",
@@ -215,12 +229,24 @@ export default function Register() {
         setIsFormValid(Object.keys(errors).length === 0); 
     }
 
+    const handlePenjaminChange = (option: any) => {
+        setSelectedPenjamin(option);
+        if(option==="tunai" || option==="bpjs"){
+            setFormValues({
+                ...formValues,
+                ["penjamin"]: option,
+            });
+        }
+        setShowNoAsuransiTextField(option === "bpjs");
+        setShowAsuransiDropdown(option==="asuransi/kontraktor")
+    };
     const handleAsuransiChange = (option: any) => {
-        setSelectedAsuransi(option);
-        setShowNoAsuransiTextField(option.value !== "tunai");
+        setSelectedPenjamin(option);
+        setShowNoAsuransiTextField(true);
+        console.log(option)
         setFormValues({
           ...formValues,
-          ["jenis_pembayaran"]: option.label,
+          ["penjamin"]: option,
       });
     };
 
@@ -372,6 +398,7 @@ export default function Register() {
     const handleSubmit = async (e:any) => {
         e.preventDefault()
         validateForm();
+        console.log(formValues)
 
         if(isFormValid){
             await axios.post('http://localhost:8080/pasien', formValues)
@@ -860,13 +887,36 @@ export default function Register() {
                                 htmlFor="city"
                                 className="text-shade6 font-semibold text-2xl"
                             >
-                                Jenis Pembayaran *
+                                Jenis Penjamin *
                             </label>
-                            <CustomDropdown
+                            {/* <CustomDropdown
                                 options={asuransiOptions}
                                 selectedOption={selectedAsuransi}
                                 onChange={handleAsuransiChange}
-                            />
+                            /> */}
+                            <Dropdown
+                                    options={penjaminOptions}
+                                    onSelect={(penjaminOptions: any) =>
+                                        handlePenjaminChange(
+                                            penjaminOptions.value
+                                        )
+                                    }
+                                />
+                            {showAsuransiDropdown && (
+                                <div className="mt-2">
+                                    <label className="text-shade6 font-semibold text-2xl">
+                                        Jenis Asuransi *
+                                    </label>
+                                    <Dropdown
+                                        options={asuransiOptions}
+                                        onSelect={(asuransiOptions: any) =>
+                                            handleAsuransiChange(
+                                                asuransiOptions.value
+                                            )
+                                        }
+                                    />
+                                </div>
+                            )}
                             {showNoAsuransiTextField && (
                                 <div className="mt-2">
                                     <label className="text-shade6 font-semibold text-2xl">
@@ -874,11 +924,11 @@ export default function Register() {
                                     </label>
                                     <input
                                     type="text"
-                                    name="no_asuransi"
-                                    id="no_asuransi"
+                                    name="no_penjamin"
+                                    id="no_penjamin"
                                     autoComplete="no_asuransi"
                                     placeholder="Masukkan No Asuransi Anda"
-                                    value={formValues.no_asuransi}
+                                    value={formValues.no_penjamin}
                                     onChange={handleInputChange}
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                 />
