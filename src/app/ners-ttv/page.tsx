@@ -105,7 +105,26 @@ export default function Dashboard() {
   }, [dokterOptions]);
 
   console.log(dokterOptions);
-
+  useEffect(() => {
+    const fetchPerawatOptions = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/perawat?find_by=&target=');
+        console.log(response);
+        const perawatData = response.data.data;
+        console.log(perawatData);
+        const options = perawatData.map((perawat: { nama: any; user_id: any}) => ({
+          label: `sus. ${perawat.nama}`,
+          value: perawat.user_id
+        }));
+        setPerawatOptions(options);
+        console.log(options);
+      } catch (error) {
+        console.error('Error fetching perawat data:', error);
+      }
+    }
+    fetchPerawatOptions();
+  }
+  , [perawatOptions]);
 
 
   const handleSubmit = async (e: any) => {
