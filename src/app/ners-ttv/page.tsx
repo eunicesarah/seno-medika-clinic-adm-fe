@@ -83,6 +83,28 @@ export default function Dashboard() {
   const [perawatOptions, setPerawatOptions] = useState([]);
 
 
+  useEffect(() => {
+    const fetchDokterOptions = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/dokter?find_by=&target=');
+        console.log(response);
+        const dokterData = response.data.data;
+        console.log(dokterData);
+        const options = dokterData.map((dokter: { nama: any; user_id: any}) => ({
+          label: `dr. ${dokter.nama}`,
+          value: dokter.user_id
+        }));
+        setDokterOptions(options);
+        console.log(options);
+      } catch (error) {
+        console.error('Error fetching dokter data:', error);
+      }
+    };
+
+    fetchDokterOptions();
+  }, [dokterOptions]);
+
+  console.log(dokterOptions);
 
 
 
