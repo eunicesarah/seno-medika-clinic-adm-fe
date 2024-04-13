@@ -142,6 +142,20 @@ export default function NurseDashboard() {
     fetchData();
   }, [tableData])
 
+  const handleTTVButtonClick = async (nik: string, poli: string, created_at : string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+      const pasienId = response.data.data.pasien_id;
+      console.log(response.data.data);
+      console.log(pasienId);
+      // Redirect to /ners-ttv page with the pasien_id parameter
+      window.location.href = `/ners-ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
+    } catch (error) {
+      console.error("Error fetching pasien data:", error);
+    }
+  };
+  
+ 
   return (
     <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
       <div className="flex mr-20 mt-14 bg-tint6 items-center">
@@ -232,7 +246,7 @@ export default function NurseDashboard() {
                         <td className="p-2">{data.jenis_kelamin}</td>
                         <td className="p-2">{data.tempat_tanggal_lahir}</td>
                         <td className="p-2">{data.asuransi}</td>
-                        <a className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" href="/ners-ttv?pasien_id=">Buka TTV</a>
+                        <a className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" onClick={() => handleTTVButtonClick(data.nik, data.poli, data.created_at)}>Buka TTV</a>
                     </tr>
                 ))}
             </tbody>
