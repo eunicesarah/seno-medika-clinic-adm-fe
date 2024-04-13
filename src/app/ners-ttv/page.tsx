@@ -87,15 +87,12 @@ export default function Dashboard() {
     const fetchDokterOptions = async () => {
       try {
         const response = await axios.get('http://localhost:8080/dokter?find_by=&target=');
-        console.log(response);
         const dokterData = response.data.data;
-        console.log(dokterData);
         const options = dokterData.map((dokter: { nama: any; user_id: any}) => ({
           label: `dr. ${dokter.nama}`,
           value: dokter.user_id
         }));
         setDokterOptions(options);
-        console.log(options);
       } catch (error) {
         console.error('Error fetching dokter data:', error);
       }
@@ -104,14 +101,11 @@ export default function Dashboard() {
     fetchDokterOptions();
   }, [dokterOptions]);
 
-  console.log(dokterOptions);
   useEffect(() => {
     const fetchPerawatOptions = async () => {
       try {
         const response = await axios.get('http://localhost:8080/perawat?find_by=&target=');
-        console.log(response);
         const perawatData = response.data.data;
-        console.log(perawatData);
         const options = perawatData.map((perawat: { nama: any; user_id: any}) => ({
           label: `sus. ${perawat.nama}`,
           value: perawat.user_id
@@ -143,6 +137,7 @@ export default function Dashboard() {
     try {
       const response = await axios.post("http://localhost:8080/ttv", requestData);
       console.log(response);
+      alert("Data berhasil disimpan");
 
     } catch (error) {
       console.error('Error sending data:', error);
