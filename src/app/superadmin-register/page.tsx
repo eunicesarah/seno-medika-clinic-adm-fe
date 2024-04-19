@@ -51,6 +51,12 @@ export default function Register() {
   const [dateTimeEnd, setDateTimeEnd] = useState<String>("");
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [selectedHari, setSelectedHari] = useState('');
+  const [selectedShift, setSelectedShift] = useState('');
+
+  const handleSaveSchedule = async () => {
+    const jadwal = `${selectedHari},${selectedShift}`;
+  }
 
   const handlePosisiChange = (value:any) => {
     setSelectedPosisi(value);
@@ -199,7 +205,7 @@ export default function Register() {
         <form className="space-y-4 md:space-y-6 flex flex-row" onSubmit={handleSubmit} method="post">
           <div className="flex flex-col gap-3">
             <div className="mx-16">
-              <label htmlFor="nama" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Nama
               </label>
               <input
@@ -215,7 +221,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16">
-              <label htmlFor="email" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 E-mail
               </label>
               <input
@@ -231,7 +237,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16 ">
-              <label htmlFor="password" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Kata Sandi
               </label>
               <input
@@ -247,7 +253,7 @@ export default function Register() {
               />
             </div>
             <div className="max-w-sm mx-16">
-              <label htmlFor="role" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Daftar Sebagai
               </label>
               <select
@@ -311,7 +317,7 @@ export default function Register() {
           {showAdditionalFields && (
             <div className="flex flex-col gap-3">
               <div className="mx-16">
-                <label htmlFor="no_lisensi" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                   Nomor Lisensi
                 </label>
                 <input
@@ -326,7 +332,7 @@ export default function Register() {
               <div className="max-w-sm mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label htmlFor="jenis_poli" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jenis Poli
                     </label>
                     <select
@@ -364,7 +370,7 @@ export default function Register() {
               <div className="mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label htmlFor="jadwal" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jadwal
                     </label>
                     <div>
@@ -402,6 +408,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="senin"
+                                checked={selectedHari === 'senin'}
+                                onChange={() => setSelectedHari('senin')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -420,6 +428,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="selasa"
+                                checked={selectedHari === 'selasa'}
+                                onChange={() => setSelectedHari('selasa')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -438,6 +448,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="rabu"
+                                checked={selectedHari === 'rabu'}
+                                onChange={() => setSelectedHari('rabu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -456,6 +468,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="kamis"
+                                checked={selectedHari === 'kamis'}
+                                onChange={() => setSelectedHari('kamis')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -474,6 +488,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="jumat"
+                                checked={selectedHari === 'jumat'}
+                                onChange={() => setSelectedHari('jumat')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -491,6 +507,8 @@ export default function Register() {
                                 className="peer sr-only"
                                 name="jadwal"
                                 value="sabtu"
+                                checked={selectedHari === 'sabtu'}
+                                onChange={() => setSelectedHari('sabtu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -509,6 +527,8 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="minggu"
+                                checked={selectedHari === 'minggu'}
+                                onChange={() => setSelectedHari('minggu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -522,28 +542,28 @@ export default function Register() {
                         </div>
                       </div>
                       <div className="flex flex-row gap-3">
-                        <label className="font-bold text-l">Waktu Mulai</label>
+                        <label className="font-bold text-l">Shift</label>
                         <input
-                          type="text"
-                          name="waktu_mulai"
-                          id="waktu_mulai"
-                          className="flex h-auto p-2 rounded-xl w-full"
-                          placeholder="JJ:MM"
+                        type="radio"
+                        name="shift"
+                        value="pagi"
+                        id="shift"
+                        checked={selectedShift === 'pagi'}
+                        onChange={() => setSelectedShift('pagi')}
                         />
-
-                        <label className="font-bold text-l">
-                          Waktu Selesai
-                        </label>
+                        <p>Pagi</p>
                         <input
-                          type="text"
-                          name="waktu_selesai"
-                          id="waktu_selesai"
-                          className="flex h-auto p-2 rounded-xl w-full"
-                          placeholder="JJ:MM"
+                        type="radio"
+                        name="shift"
+                        value="siang"
+                        id="shift"
+                        checked={selectedShift === 'siang'}
+                        onChange={() => setSelectedShift('siang')}
                         />
+                        <p>Siang</p>
                       </div>
                       <button
-                        // onClick={handleSimpanClick}
+                        onClick={handleSaveSchedule}
                         className="h-11 bg-primary1 rounded-2xl p-2.5 px-6 justify-center items-center inline-flex font-semibold text-tint7 hover:bg-tint6 hover:text-shade7"
                       >
                         Simpan
@@ -572,5 +592,6 @@ export default function Register() {
         </form>
       </div>
     </div>
+
   );
 }
