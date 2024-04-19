@@ -21,9 +21,9 @@ export function middleware(req: NextRequest) {
     // }
     const isLogin = req.cookies.get("token");
     // const decoded = isLogin ? jwtDecode(isLogin.value) : null;
-    // if (!isLogin) {
-    //     return NextResponse.redirect(new URL("/login", req.url));
-    // }
+    if (!isLogin) {
+        return NextResponse.redirect(new URL("/login", req.url));
+    }
 }
 
 export const config = {
