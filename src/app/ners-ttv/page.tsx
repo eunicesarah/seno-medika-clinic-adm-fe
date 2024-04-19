@@ -4,7 +4,6 @@ import Image from "next/image";
 import Arrow from "../../../public/right_arrow.svg";
 import Dropdown from "../components/dropdown";
 import axios from "axios";
-import { useSearchParams } from 'next/navigation'
 
 interface NurseStation {
   skrining_awal: SkriningAwal;
@@ -75,52 +74,6 @@ interface Anamnesis {
 }
 
 export default function Dashboard() {
-  const searchParams = useSearchParams();
-  const id = searchParams.get('pasien_id');
-  const poli = searchParams.get('poli');
-  const created_at = searchParams.get('created_at');
-  const [dokterOptions, setDokterOptions] = useState([]);
-  const [perawatOptions, setPerawatOptions] = useState([]);
-
-
-  useEffect(() => {
-    const fetchDokterOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/dokter?find_by=&target=');
-        const dokterData = response.data.data;
-        const options = dokterData.map((dokter: { nama: any; user_id: any}) => ({
-          label: `dr. ${dokter.nama}`,
-          value: dokter.user_id
-        }));
-        setDokterOptions(options);
-      } catch (error) {
-        console.error('Error fetching dokter data:', error);
-      }
-    };
-
-    fetchDokterOptions();
-  }, [dokterOptions]);
-
-  useEffect(() => {
-    const fetchPerawatOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/perawat?find_by=&target=');
-        const perawatData = response.data.data;
-        const options = perawatData.map((perawat: { nama: any; user_id: any}) => ({
-          label: `sus. ${perawat.nama}`,
-          value: perawat.user_id
-        }));
-        setPerawatOptions(options);
-        console.log(options);
-      } catch (error) {
-        console.error('Error fetching perawat data:', error);
-      }
-    }
-    fetchPerawatOptions();
-  }
-  , [perawatOptions]);
-
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -137,14 +90,12 @@ export default function Dashboard() {
     try {
       const response = await axios.post("http://localhost:8080/ttv", requestData);
       console.log(response);
-      alert("Data berhasil disimpan");
 
     } catch (error) {
       console.error('Error sending data:', error);
     }
   };
   const antrianId = "1";
-
 
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -230,10 +181,10 @@ export default function Dashboard() {
   }, []);
 
   const fetchDataPasien = async () => {
-
+    if (data) {
       try {
         const response = await axios.get(
-          `${additionalDataAPI}${id}`
+          `${additionalDataAPI}${data.pasien_id}`
         );
         const responseData = response.data;
         const fetchedData = responseData.data;
@@ -242,7 +193,7 @@ export default function Dashboard() {
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    
+    }
   };
 
   useEffect(() => {
@@ -442,7 +393,7 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                      {created_at}
+                      {data && <p>{data.created_at}</p>}
                     </p>
                   </td>
                 </tr>
@@ -454,7 +405,7 @@ export default function Dashboard() {
                   </td>
                   <td>
                     <p className="text-white font-poppins text-xl font-normal mb-3">
-                     {poli}
+                      {data && <p>{data.poli}</p>}
                     </p>
                   </td>
                 </tr>
@@ -610,7 +561,7 @@ export default function Dashboard() {
               <Dropdown
                 id="tenaga_medis"
                 className="w-2/3"
-                options={dokterOptions}
+                options={options}
                 onSelect={handleTenagaMedisDropdown}
                 required
               />
@@ -625,7 +576,7 @@ export default function Dashboard() {
               <Dropdown
                 id="asisten_perawat"
                 className="w-2/3"
-                options={perawatOptions}
+                options={options}
                 onSelect={handleAsistenPerawatDropdown}
               />
             </div>
