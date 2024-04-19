@@ -3,14 +3,18 @@ import { IoMdArrowBack } from "react-icons/io";
 import Dropdown from "../../components/dropdown";
 import { useState } from "react";
 
-const head = [
+const headObat = [
     "No",
-    "Obat/Tindakan",
+    "Obat",
     "Qyt",
     "Harga Persatuan",
     "Total",
     "Keterangan",
-    "    ",
+];
+const headTindakan = [
+    "No",
+    "Tindakan",
+    "Harga",
 ];
 
 const pembayaranOptions = [
@@ -28,10 +32,6 @@ export default function DetailPembayaran() {
         setSelectedPembayaran(option);
         console.log(option);
     };
-
-    const deleteFromList = () => {
-        console.log("delete");
-    }
 
     return (
         <div className="bg-tint6 h-screen flex flex-col font-Poppins">
@@ -136,9 +136,9 @@ export default function DetailPembayaran() {
                         <table className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
-                                    {head.map((head) => (
-                                        <th key={head} className="py-2">
-                                            {head}
+                                    {headObat.map((headObat) => (
+                                        <th key={headObat} className="py-2">
+                                            {headObat}
                                         </th>
                                     ))}
                                 </tr>
@@ -151,7 +151,6 @@ export default function DetailPembayaran() {
                                     <td className="p-2"><span>Rp</span>10.000,00</td>
                                     <td className="p-2"><span>Rp</span>20.000,00</td>
                                     <td className="p-2">2 Hari sekali</td>
-                                    <td className="underline underline-offset-1 text-[#A93B3B] p-2" onClick={deleteFromList}> <a>Delete</a></td>
                                 </tr>
                                 <tr className="">
                                     <td className="p-2">2</td>
@@ -160,7 +159,6 @@ export default function DetailPembayaran() {
                                     <td className="p-2"><span>Rp</span>10.000,00</td>
                                     <td className="p-2"><span>Rp</span>20.000,00</td>
                                     <td className="p-2">2 Hari sekali</td>
-                                    <td className="underline underline-offset-1 text-[#A93B3B] p-2" onClick={deleteFromList}> <a>Delete</a></td>
                                 </tr>
                                 <tr className="">
                                     <td className="p-2">3</td>
@@ -169,7 +167,6 @@ export default function DetailPembayaran() {
                                     <td className="p-2"><span>Rp</span>10.000,00</td>
                                     <td className="p-2"><span>Rp</span>20.000,00</td>
                                     <td className="p-2">2 Hari sekali</td>
-                                    <td className="underline underline-offset-1 text-[#A93B3B] p-2" onClick={deleteFromList}> <a>Delete</a></td>
                                 </tr>
                                 <tr className="">
                                     <td className="p-2">4</td>
@@ -178,7 +175,6 @@ export default function DetailPembayaran() {
                                     <td className="p-2"><span>Rp</span>10.000,00</td>
                                     <td className="p-2"><span>Rp</span>20.000,00</td>
                                     <td className="p-2">2 Hari sekali</td>
-                                    <td className="underline underline-offset-1 text-[#A93B3B] p-2" onClick={deleteFromList}> <a>Delete</a></td>
                                 </tr>
                                 <tr className="">
                                     <td className="p-2">5</td>
@@ -187,7 +183,36 @@ export default function DetailPembayaran() {
                                     <td className="p-2"><span>Rp</span>10.000,00</td>
                                     <td className="p-2"><span>Rp</span>20.000,00</td>
                                     <td className="p-2">2 Hari sekali</td>
-                                    <td className="underline underline-offset-1 text-[#A93B3B] p-2" onClick={deleteFromList}> <a>Delete</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className="rounded-2xl overflow-hidden mt-10">
+                        <table className="table-auto text-center w-full ">
+                            <thead className=" bg-shade5  ">
+                                <tr>
+                                    {headTindakan.map((headTindakan) => (
+                                        <th key={headTindakan} className="py-2">
+                                            {headTindakan}
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody className="bg-tint4 text-black">
+                                <tr className="">
+                                    <td className="p-2">1</td>
+                                    <td className="p-2">Jahit</td>
+                                    <td className="p-2"><span>Rp</span>500.000,00</td>
+                                </tr>
+                                <tr className="">
+                                    <td className="p-2">2</td>
+                                    <td className="p-2">Bedah</td>
+                                    <td className="p-2"><span>Rp</span>100.000.000,00</td>
+                                </tr>
+                                <tr className="">
+                                    <td className="p-2">3</td>
+                                    <td className="p-2">Anestesi</td>
+                                    <td className="p-2"><span>Rp</span>1.000.000,00</td>
                                 </tr>
                             </tbody>
                         </table>
