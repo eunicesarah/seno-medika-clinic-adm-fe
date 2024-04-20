@@ -20,65 +20,27 @@ const head = [
   "TTV",
 ];
 
-interface Antrian {
+interface TableData {
   nomor_antrian: number;
   poli: string;
   created_at: string;
-}
-
-interface PendaftaranPasien {
+  no_eRM: string;
   nik: string;
   nama_pasien: string;
   jenis_kelamin: string;
   tempat_tanggal_lahir: string;
   asuransi: string;
-  TTV: string;
 }
 
-interface TableData extends Antrian, PendaftaranPasien {
-    no_eRM: string;
-}
-
-interface IError{
-  nama: string;
-  email: string;
-  NIK: string;
-  no_KK: string;
-  no_erm: string;
-  goldar: string;
-  jenis_kelamin: string;
-  tempat_lahir: string;
-  tanggal_lahir: string;
-  provinsi: string;
-  kabupaten_kota: string;
-  kecamatan: string;
-  kelurahan: string;
-  alamat: string;
-  no_telpon: string;
-  warga_negara: string;
-  status_perkawinan: string;
-  pendidikan: string;
-  agama: string;
-  pekerjaan: string;
-  nama_kontak_darurat: string;
-  nomor_kontak_darurat: string;
-}
 function parseAndFormatDate(tanggal_lahir: string, tempat_lahir: string): string {
-  // Parse the date string
   const parsedDate: Date = new Date(tanggal_lahir);
-
-  // Format the date
   const formattedDate: string = `${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}`;
-
-  // Create the desired output
   const output: string = `${tempat_lahir}, ${formattedDate}`;
-
   return output;
 }
 export default function NurseDashboard() {
-    const initialData: TableData[] = [];
-    
-      const [tableData, setTableData] = useState<TableData[]>(initialData);
+  const initialData: TableData[] = [];
+  const [tableData, setTableData] = useState<TableData[]>(initialData);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedPasien, setSelectedPasien] = useState(null)
@@ -106,41 +68,28 @@ export default function NurseDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://localhost:8080/antrian")
-            .then(async (resAntrian) => {
-
-              for (const antrian of resAntrian.data.data) {
-                await axios.get(`http://localhost:8080/pasien?find_by=id&target=${antrian.pasien_id}`)
-                    .then((resPasien) => {
-                      console.log(resPasien.data);
-                      const pasien = resPasien.data.data;
-                      const dataPasien = {
-                        nomor_antrian: antrian.nomor_antrian,
-                        poli: antrian.poli,
-                        created_at: antrian.created_at,
-                        no_eRM: pasien.no_eRM,
-                        nik: pasien.nik,
-                        nama_pasien: pasien.nama,
-                        jenis_kelamin: pasien.jenis_kelamin,
-                        tempat_tanggal_lahir: parseAndFormatDate(pasien.tanggal_lahir, pasien.tempat_lahir),
-                        asuransi: pasien.penjamin,
-                        TTV: pasien.TTV,
-                      };
-                      const pasienIdExists = tableData.some(data => data.nik === dataPasien.nik);
-                      console.log(pasienIdExists);
-                      if (!pasienIdExists) {
-                        setTableData((prevData) => [...prevData, dataPasien]);
-                      }
-                    } )
-              }
-            });
-        // setTableData(data);
+        const responseAntrian = await axios.get("http://localhost:8080/antriannurse");
+        const antrian = responseAntrian.data.data;
+        const formattedAntrian = antrian.map((data: any) => {
+          return {
+            nomor_antrian: data.nomor_antrian,
+            poli: data.poli,
+            created_at: data.created_at,
+            no_eRM: data.no_erm,
+            nik: data.nik,
+            nama_pasien: data.nama,
+            jenis_kelamin: data.jenis_kelamin,
+            tempat_tanggal_lahir: parseAndFormatDate(data.tanggal_lahir, data.tempat_lahir),
+            asuransi: data.penjamin
+          };
+        });
+        setTableData(formattedAntrian);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
+    }
     fetchData();
-  }, [tableData])
+  }, []);
 
   const handleTTVButtonClick = async (nik: string, poli: string, created_at : string) => {
     try {
@@ -148,14 +97,12 @@ export default function NurseDashboard() {
       const pasienId = response.data.data.pasien_id;
       console.log(response.data.data);
       console.log(pasienId);
-      // Redirect to /ners-ttv page with the pasien_id parameter
       window.location.href = `/ners-ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
     } catch (error) {
       console.error("Error fetching pasien data:", error);
     }
   };
   
- 
   return (
     <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
       <div className="flex mr-20 mt-14 bg-tint6 items-center">
@@ -172,7 +119,7 @@ export default function NurseDashboard() {
               Isti
             </p>
             <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-              Super Admin
+              Nurse
             </p>
           </button>
         </div>
