@@ -5,7 +5,7 @@ import SMLogo from '../../../public/Logo_Seno_Medika.svg';
 import ExpandableContent from "../components/expandableContent";
 import SegitigaAtas from "../../../public/segitiga_atas.svg";
 import SegitigaBawah from "../../../public/segitiga_bawah.svg";
-
+import Diagnosa from './diagnosa'; 
 interface Tab {
     title: string;
     content: React.ReactNode;
@@ -19,7 +19,7 @@ export default function PemeriksaanDokter() {
     const tabs: Tab[] = [
         {
             title: 'Diagnosa',
-            content: <div>Content for Diagnosa</div>
+            content: <Diagnosa />
         },
         {
             title: 'Resep',
