@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Pattern from "../../../public/pattern.svg";
 import Modal from "react-modal";
@@ -189,8 +189,12 @@ export default function Register() {
     }
   }
 
+  useEffect(() => {
+    Modal.setAppElement('#register-superadmin');
+  }, []);
+
   return (
-    <div className="w-full h-screen bg-tint6 flex flex-row">
+    <div className="w-full h-screen bg-tint6 flex flex-row" id="register-superadmin">
       <div className="h-screen w-auto ">
         {selectedPosisi != "Dokter" &&
           selectedPosisi != "Suster" &&
@@ -394,6 +398,7 @@ export default function Register() {
                       isOpen={isModalOpen}
                       onRequestClose={handleCloseModal}
                       contentLabel="Schedule Modal"
+                      appElement={document.getElementById("register-superadmin") as HTMLElement}
                       className="text-shade8 font-Poppins items-center justify-center p-8 flex flex-col gap-5 bg-tint4 h-auto w-auto rounded-b-3xl"
                     >
                       <label className="font-bold ">Pilih Jadwal</label>
