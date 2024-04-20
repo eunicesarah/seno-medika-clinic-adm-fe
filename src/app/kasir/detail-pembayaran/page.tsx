@@ -34,7 +34,7 @@ export default function DetailPembayaran() {
     };
 
     return (
-        <div className="bg-tint6 h-screen flex flex-col font-Poppins">
+        <div className="bg-tint6 h-full flex flex-col font-Poppins">
             <div className=" mr-20 flex flex-row justify-end mt-14">
                 <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
                     <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
@@ -45,7 +45,10 @@ export default function DetailPembayaran() {
                     </p>
                 </button>
             </div>
-            <div className="flex flex-row ml-10 mt-14">
+            <div className="ml-10 text-black font-bold text-3xl mt-9" > 
+                DETAIL PEMBAYARAN 
+            </div>
+            <div className="flex flex-row ml-10 mt-5">
                 <div className="w-1/5 mr-5">
                     <div className=" bg-shade2 rounded-3xl px-10 py-10 mb-5">
                         <div className=" mb-7 text-3xl font-poppins font-semibold leading-10">
@@ -137,7 +140,7 @@ export default function DetailPembayaran() {
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headObat.map((headObat) => (
-                                        <th key={headObat} className="py-2">
+                                        <th key={headObat} className="py-3">
                                             {headObat}
                                         </th>
                                     ))}
@@ -192,7 +195,7 @@ export default function DetailPembayaran() {
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headTindakan.map((headTindakan) => (
-                                        <th key={headTindakan} className="py-2">
+                                        <th key={headTindakan} className="py-3">
                                             {headTindakan}
                                         </th>
                                     ))}
