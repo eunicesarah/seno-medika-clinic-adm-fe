@@ -6,6 +6,7 @@ import ExpandableContent from "../components/expandableContent";
 import SegitigaAtas from "../../../public/segitiga_atas.svg";
 import SegitigaBawah from "../../../public/segitiga_bawah.svg";
 import Diagnosa from './diagnosa'; 
+import Resep from './resep'
 interface Tab {
     title: string;
     content: React.ReactNode;
@@ -23,7 +24,7 @@ export default function PemeriksaanDokter() {
         },
         {
             title: 'Resep',
-            content: <div>Content for Resep</div>
+            content: <Resep />
         },
         {
             title: 'Keur',
@@ -32,7 +33,7 @@ export default function PemeriksaanDokter() {
     ];
 
     return (
-        <div className=" bg-tint6 h-full flex flex-col">
+        <div className=" bg-tint6 h-screen flex flex-col">
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
