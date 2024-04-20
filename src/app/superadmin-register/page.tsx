@@ -32,14 +32,21 @@ export default function Register() {
     apoteker_data: {
       nomor_lisensi:"",
     },
+    dokter_data: {
+      nomor_lisensi: "",
+      jaga_poli_mana: "",
+      list_jadwal_dokter: {
+      //   hari: "",
+      //   shift: "",
+      },
+    },
   });
   const [nomor_lisensi, setnomor_lisensi] = useState("");
   
   
   type Schedule = {
     hari: string;
-    waktuMulai: string;
-    waktuSelesai: string;
+    shift: string;
   };
   
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -53,9 +60,12 @@ export default function Register() {
   const [showSubmitButton, setShowSubmitButton] = useState(false);
   const [selectedHari, setSelectedHari] = useState('');
   const [selectedShift, setSelectedShift] = useState('');
+  const [selectedJadwal, setSelectedJadwal] = useState('');
 
-  const handleSaveSchedule = async () => {
+  const handleSaveSchedule = async() => {
     const jadwal = `${selectedHari},${selectedShift}`;
+    console.log(jadwal);
+    setSchedules([...schedules, { hari: selectedHari, shift: selectedShift }]);
   }
 
   const handlePosisiChange = (value:any) => {
@@ -107,6 +117,17 @@ export default function Register() {
     console.log(formData);
     console.log(nomor_lisensi);
     console.log(selectedPoli);
+    try {
+      const response = await axios.post("http://localhost:8080/dokter", formData);
+      console.log(response);
+      if (response.status === 200) {
+        console.log("User created");
+        location.href = "/bye";
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
   }
   const submitFormSuster = async () => {
     console.log(selectedPosisi);
@@ -147,6 +168,14 @@ export default function Register() {
     if(selectedPosisi === "Front Officer" || selectedPosisi === "Kasir") {
       submitForm1();
     }else if(selectedPosisi === "Dokter") {
+      setFormData({
+        ...formData,
+        dokter_data: {
+          nomor_lisensi: nomor_lisensi,
+          jaga_poli_mana: selectedPoli,
+          list_jadwal_dokter: schedules
+        }
+      });
       submitFormDokter();
     }else if(selectedPosisi === "Suster") {
       setFormData({
@@ -172,6 +201,14 @@ export default function Register() {
     setnomor_lisensi(event.target.value);
     if(selectedPosisi === "Dokter") {
       console.log("Dokter")
+      setFormData({
+        ...formData,
+        dokter_data: {
+          nomor_lisensi: event.target.value,
+          jaga_poli_mana: selectedPoli,
+          list_jadwal_dokter: schedules
+        }
+      });
     }else if(selectedPosisi === "Suster") {
       setFormData({
         ...formData,
@@ -378,13 +415,13 @@ export default function Register() {
                       Jadwal
                     </label>
                     <div>
-                    {schedules.map((schedule, index) => (
+                    {/* {schedules.map((schedule, index) => (
                 <Chip
                   key={index}
-                  label={`${schedule.hari}, ${schedule.waktuMulai} - ${schedule.waktuSelesai}`}
+                  label={`${schedule.hari}, ${schedule.shift}`}
                   // onDelete={handleDelete(schedule)}
                 />
-              ))}
+              ))} */}
                       <button
                         name="jadwal"
                         id="jadwal"
