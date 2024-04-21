@@ -2,6 +2,7 @@
 import { IoMdArrowBack } from "react-icons/io";
 import Dropdown from "../../components/dropdown";
 import { useState } from "react";
+import KonfirmasiPembayaranPopup from "./konfirmasi_pembayaran";
 
 const headObat = [
     "No",
@@ -27,7 +28,7 @@ const pembayaranOptions = [
 export default function DetailPembayaran() {
     const [selectedPembayaran, setSelectedPembayaran] = useState(null);
     const [tableData, setTableData] = useState(null);
-
+    const [showPopup, setShowPopup] = useState(false);
     const handlePembayaran = (option: any) => {
         setSelectedPembayaran(option);
         console.log(option);
@@ -251,12 +252,14 @@ export default function DetailPembayaran() {
                         </div>
                     </div>
                     <div className="flex justify-end my-7">
-                            <button className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6">
+                            <button className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
                                 Lanjutkan Pembayaran
                             </button>
                     </div>
                 </div>
             </div>
+            <KonfirmasiPembayaranPopup showPopup={showPopup} setShowPopup={setShowPopup} />
+            
         </div>
     );
 }
