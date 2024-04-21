@@ -53,7 +53,7 @@ export default function PemeriksaanDokter() {
             </div>
 
             <div className=" flex flex-row ml-10 mt-14">
-                <div className=" bg-shade2 rounded-3xl px-10 py-10 mr-14 mb-5">
+                <div className=" bg-shade2 rounded-3xl px-10 py-10 mr-14 mb-5 h-fit">
                     <div className=" mb-7 text-3xl font-poppins font-semibold leading-10">
                     Data Pasien
                     </div>
@@ -173,7 +173,7 @@ export default function PemeriksaanDokter() {
                 <form className="mr-10 flex-grow" onSubmit={(e) => e.preventDefault()}>
                     <div className=" flex flex-row w-full h-16">
                         <div className=" bg-tint3 flex-grow flex flex-row">
-                            <div className="w-72 text-black text-2xl font-semibold leading-10 ml-14 flex flex-row items-center">
+                            <div className="w-72 text-black text-2xl font-semibold leading-10 ml-8 flex flex-row items-center">
                                 Pemeriksaan Fisik
                             </div>
                             <button className=" flex flex-row items-center ml-auto mr-12" onClick={() => setShowPopup1(!showPopup1)}>
@@ -213,7 +213,7 @@ export default function PemeriksaanDokter() {
 
                     <div className=" flex flex-row w-full h-16 mt-8">
                         <div className=" bg-tint3 flex-grow flex flex-row">
-                            <div className="w-72 text-black text-2xl font-semibold leading-10 ml-14 flex flex-row items-center">
+                            <div className="w-72 text-black text-2xl font-semibold leading-10 ml-8 flex flex-row items-center">
                                 Riwayat Pengobatan
                             </div>
                             <button className=" flex flex-row items-center ml-auto mr-12" onClick={() => setShowPopup2(!showPopup2)}>
