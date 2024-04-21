@@ -7,6 +7,8 @@ import SegitigaAtas from "../../../public/segitiga_atas.svg";
 import SegitigaBawah from "../../../public/segitiga_bawah.svg";
 import Diagnosa from './diagnosa'; 
 import Resep from './resep'
+import Keur from './keur'
+
 interface Tab {
     title: string;
     content: React.ReactNode;
@@ -28,12 +30,12 @@ export default function PemeriksaanDokter() {
         },
         {
             title: 'Keur',
-            content: <div>Content for Keur</div>
+            content: <Keur tanggal="23/04/2024" dokter="dr. Upin" />
         }
     ];
 
     return (
-        <div className=" bg-tint6 h-screen flex flex-col">
+        <div className=" bg-tint6 h-full flex flex-col">
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
