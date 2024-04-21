@@ -169,8 +169,8 @@ export default function NurseDashboard() {
           </div>
           </div>
         </div>
-        <div className="p-16 h-full w-full">
-          <table className="w-full min-w-max table-auto text-center ">
+        <div className="p-16 h-full w-full" data-cy="table">
+          <table className="w-full min-w-max table-auto text-center " data-testid="table">
             <thead className=" bg-shade1 ">
               <tr>
                 {head.map((head) => (
