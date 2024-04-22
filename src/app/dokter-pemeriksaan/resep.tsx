@@ -38,6 +38,7 @@ export default function Resep() {
                                     backgroundColor: activeTab === index ? '#EDF4F2' : '#95BEAF',
                                     color: activeTab === index ? '#000000' : '#46846E'  
                                 }}
+                                title={`${tab.title}Content`}
                             >
                                 {tab.title}
                             </button>
