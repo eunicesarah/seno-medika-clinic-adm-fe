@@ -19,7 +19,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
     return (
         <div className=' flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md'>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor='tanggal' className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Tanggal
                 </label>
                 <div className='w-2/3'>
@@ -27,7 +27,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 </div>
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor='tenagaMedis'className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Dokter / Tenaga Medis
                     <span className='text-[#D66A63]'> *</span>
                 </label>
@@ -36,7 +36,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 </div>
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor='noSurat'className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     No. Surat
                     <span className='text-[#D66A63]'> *</span>
                 </label>
@@ -49,7 +49,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 />
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor="mulaiTanggal" className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Mulai Tanggal
                     <span className='text-[#D66A63]'> *</span>
                 </label>
@@ -62,7 +62,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 />
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor="sampaiTanggal"className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Sampai Tanggal
                     <span className='text-[#D66A63]'> *</span>
                 </label>
@@ -75,7 +75,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 />
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor="selama"className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Selama
                 </label>
                 <input
@@ -88,7 +88,7 @@ export default function Keur({tanggal, dokter}: {tanggal: string, dokter: string
                 />
             </div>
             <div className=' flex flex-row justify-between items-center mb-4'>
-                <label className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
+                <label htmlFor='catatan' className='w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold'>
                     Catatan
                 </label>
                 <textarea

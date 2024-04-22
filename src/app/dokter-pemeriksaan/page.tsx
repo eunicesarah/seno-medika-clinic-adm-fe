@@ -176,8 +176,8 @@ export default function PemeriksaanDokter() {
                             <div className="w-72 text-black text-2xl font-semibold leading-10 ml-8 flex flex-row items-center">
                                 Pemeriksaan Fisik
                             </div>
-                            <button className=" flex flex-row items-center ml-auto mr-12" onClick={() => setShowPopup1(!showPopup1)}>
-                                <div className=" w-44 text-black text-l font-semibold leading-9 text-right mr-2">
+                            <button className=" flex flex-row items-center ml-auto mr-12" onClick={() => setShowPopup1(!showPopup1)} id="showPemeriksaanFisik">
+                                <div className=" w-44 text-black text-l font-semibold leading-9 text-right mr-2" data-testid="tesFisik">
                                     {showPopup1 ? 'Sembunyikan' : 'Tampilkan'}
                                 </div>
                                 <Image
@@ -217,7 +217,7 @@ export default function PemeriksaanDokter() {
                                 Riwayat Pengobatan
                             </div>
                             <button className=" flex flex-row items-center ml-auto mr-12" onClick={() => setShowPopup2(!showPopup2)}>
-                                <div className=" w-44 text-black text-l font-semibold leading-9 text-right mr-2">
+                                <div className=" w-44 text-black text-l font-semibold leading-9 text-right mr-2" data-testid="riwayatPengobatan">
                                     {showPopup2 ? 'Sembunyikan' : 'Tampilkan'}
                                 </div>
                                 <Image
@@ -244,6 +244,8 @@ export default function PemeriksaanDokter() {
                                                     backgroundColor: activeTab === index ? '#EDF4F2' : '#95BEAF',
                                                     color: activeTab === index ? '#000000' : '#46846E'  
                                                 }}
+                                                title={tab.title}
+                                            
                                             >
                                                 {tab.title}
                                             </button>
