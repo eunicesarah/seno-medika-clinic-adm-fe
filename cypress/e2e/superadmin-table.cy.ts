@@ -4,13 +4,8 @@ describe('Superadmin Table', () => {
         cy.visit('http://localhost:3000/superadmin-table');
     })
 
-    // it('displays the header correctly', () => {
-    //     cy.get('[data-testid=title]').should('contain', 'TABEL SUPERADMIN');
-    // });
-
     it('displays the table correctly', () => {
         cy.get('[data-testid=table]').should('exist');
-        // check the table header
         cy.get('[data-testid=table] thead tr').within(() => {
             cy.get('th').should('have.length', 7);
             cy.get('th').eq(0).should('contain', 'Nama Pegawai');
