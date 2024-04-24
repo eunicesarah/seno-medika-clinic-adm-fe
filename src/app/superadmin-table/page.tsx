@@ -36,7 +36,7 @@ const Home = () => {
             );
             console.log("Response data:", response.data);
             if (response.data.status === "ok") {
-                setUsers(response.data.data); // Set users data if status is "ok"
+                setUsers(response.data.data);
             } else {
                 console.error("Error fetching users:", response.data.message);
             }
@@ -52,7 +52,7 @@ const Home = () => {
             );
             console.log("Response data:", response.data);
             if (response.data.status === "ok") {
-                setUsers(users.filter((user) => user.user_id !== id)); // Remove the deleted user from the local state
+                setUsers(users.filter((user) => user.user_id !== id));
             } else {
                 console.error("Error deleting user:", response.data.message);
             }
@@ -76,7 +76,7 @@ const Home = () => {
                 </div>
             </div>
             <div className="h-full w-full overflow-scroll p-16">
-                <table className="w-full min-w-max table-auto text-center ">
+                <table data-testid='table' className="w-full min-w-max table-auto text-center ">
                     <thead className=" bg-shade1 ">
                         <tr>
                             {head.map((heading) => (
@@ -126,7 +126,6 @@ const Home = () => {
                                         >
                                             Edit
                                         </a>
-
                                         <button
                                             className="font-medium hover:text-red-500 hover:underline ml-2"
                                             onClick={() => deleteUser(user_id)}

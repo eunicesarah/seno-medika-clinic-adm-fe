@@ -46,7 +46,7 @@ export default function DetailPembayaran() {
                     </p>
                 </button>
             </div>
-            <div className="ml-10 text-black font-bold text-3xl mt-9" > 
+            <div data-testid='title' className="ml-10 text-black font-bold text-3xl mt-9" > 
                 DETAIL PEMBAYARAN 
             </div>
             <div className="flex flex-row ml-10 mt-5">
@@ -137,7 +137,7 @@ export default function DetailPembayaran() {
                 </div>
                 <div className="w-4/5 ml-5 mr-10 flex flex-col ">
                     <div className="rounded-2xl overflow-hidden">
-                        <table className="table-auto text-center w-full ">
+                        <table data-testid='table-medicine' className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headObat.map((headObat) => (
@@ -192,7 +192,7 @@ export default function DetailPembayaran() {
                         </table>
                     </div>
                     <div className="rounded-2xl overflow-hidden mt-10">
-                        <table className="table-auto text-center w-full ">
+                        <table data-testid='table-action' className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headTindakan.map((headTindakan) => (
@@ -233,7 +233,7 @@ export default function DetailPembayaran() {
                             </div>
                             <div className="flex flex-row justify-between my-1">
                                 <div>Metode Pembayaran</div>
-                                <div className="w-1/2">
+                                <div className="w-1/2" data-testid='dropdown-payment'>
                                     <Dropdown
                                         options={pembayaranOptions}
                                         onSelect={(pembayaranOptions: any) =>
@@ -246,13 +246,13 @@ export default function DetailPembayaran() {
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between text-2xl font-bold mt-4">
-                                <div>Total</div>
+                                <div data-testid='total-price'>Total</div>
                                 <div><span>Rp</span>10.000.000</div>
                             </div>
                         </div>
                     </div>
                     <div className="flex justify-end my-7">
-                            <button className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
+                            <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
                                 Lanjutkan Pembayaran
                             </button>
                     </div>
