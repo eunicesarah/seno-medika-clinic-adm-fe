@@ -1,8 +1,11 @@
 "use client";
 import { IoMdArrowBack } from "react-icons/io";
 import Dropdown from "../../components/dropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KonfirmasiPembayaranPopup from "./konfirmasi_pembayaran";
+import axios from "axios";
+import { useSearchParams } from 'next/navigation'
+import { get } from "http";
 
 const headObat = [
     "No",
@@ -26,12 +29,105 @@ const pembayaranOptions = [
     { label: "QRIS", value: "qris" },
 ];
 export default function DetailPembayaran() {
+    const searchParams = useSearchParams();
+    const idPasien = searchParams.get('pasien_id');
     const [selectedPembayaran, setSelectedPembayaran] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
+    const [pasien, setPasien] = useState<any>(null);
+    const [antrian, setAntrian] = useState<any>(null);
+    const [nota, setNota] = useState<any>(null);
+    const [detailObat, setDetailObat] = useState<any>(null);
+
+    const pasienDataApi = "http://localhost:8080/pasien?find_by=id&target=";
+    const antrianDataAPI = "http://localhost:8080/antrian?find_by=pasienId&target=";
+    const kasirDataAPI = "http://localhost:8080/kasir?find_by=pasien_id&target=";
+    const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail&target=";
     const handlePembayaran = (option: any) => {
         setSelectedPembayaran(option);
         console.log(option);
+    };
+
+    const getUsia = (tanggalLahir: string) => {
+        const today = new Date();
+        const birthDate = new Date(tanggalLahir);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    const getDate = () =>{
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${day}-${month}-${year}`;
+    }
+
+    useEffect(() => {
+        fetchDataPasien();
+        fetchDataAntrian();
+        fetchDataNota();
+        
+      }, []);
+      
+    const fetchDataPasien = async () => {
+        try {
+          const response = await axios.get(
+            `${pasienDataApi}${idPasien}`
+          );
+          const responseData = response.data;
+          const fetchedData = responseData.data;
+          console.log(fetchedData);
+          setPasien(fetchedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+    };
+    const fetchDataAntrian = async () => {
+        try {
+          const response = await axios.get(
+            `${antrianDataAPI}${idPasien}`
+          );
+          const responseData = response.data;
+          const fetchedData = responseData.data;
+          console.log(fetchedData);
+          setAntrian(fetchedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+    };
+    const fetchDataNota = async () => {
+            try {
+                const response = await axios.get(
+                    `${kasirDataAPI}${idPasien}`
+                );
+                const responseData = response.data;
+                const fetchedData = responseData.data;
+                console.log(fetchedData);
+                setNota(fetchedData);
+                fetchDetailObat(fetchedData[0].nota_id);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+    };
+    const fetchDetailObat = async (nota_id : any) => {
+        console.log("1232131231231");
+        console.log(nota_id);
+        try {
+          const response = await axios.get(
+            `${detailObatDataAPI}${nota_id}`
+          );
+          const responseData = response.data;
+          const fetchedData = responseData.data;
+          console.log(fetchedData);
+          setDetailObat(fetchedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
     };
 
     return (
@@ -64,8 +160,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {created_at} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {getDate()}
                                         </p>
                                     </td>
                                 </tr>
@@ -76,8 +172,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {poli} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {antrian && <p>{antrian[0].poli}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -88,8 +184,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {pasien && <p>{pasien.no_erm}</p>} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3 ">
+                                            {pasien && <p>{pasien.no_erm}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -100,8 +196,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {pasien && <p>{pasien.nama}</p>} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {pasien && <p>{pasien.nama}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -112,7 +208,9 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3"></p>
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {pasien && <p>{getUsia(pasien.tanggal_lahir)}</p>}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -122,7 +220,9 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3"></p>
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {pasien && <p>{pasien.penjamin}</p>}
+                                        </p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -148,46 +248,17 @@ export default function DetailPembayaran() {
                                 </tr>
                             </thead>
                             <tbody className="bg-tint4 text-black">
-                                <tr className="">
-                                    <td className="p-2">1</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">2</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">3</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">4</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">5</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
+                                {detailObat && detailObat.map((obat: any, index: number) => (
+                                    <tr key={index} className="">
+                                        <td className="p-2">{index + 1}</td>
+                                        <td className="p-2">{obat.Obat.nama_obat}</td>
+                                        <td className="p-2">{obat.ListObat.jumlah}</td>
+                                        <td className="p-2"><span>Rp</span>{obat.Obat.harga}</td>
+                                        <td className="p-2"><span>Rp</span>{obat.Obat.harga * obat.ListObat.jumlah}</td>
+                                        <td className="p-2">{obat.ListObat.dosis}</td>
+                                    </tr>
+                                ))}
+                                
                             </tbody>
                         </table>
                     </div>
