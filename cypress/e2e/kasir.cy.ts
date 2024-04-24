@@ -39,4 +39,10 @@ describe('Kasir', () => {
         cy.get('[data-testid=total-price]').should('contain', 'Total');
     });
 
+    it('displays the payment confirmation', () => {
+        cy.get('[data-testid=popup-lanjutkan-pembayaran]').click();
+        cy.get('[data-testid=popup-lanjutkan-pembayaran]').should('be.visible');
+        cy.contains('Konfirmasi Pembayaran').should('be.visible');
+    });
+
 });

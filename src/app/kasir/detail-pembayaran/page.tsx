@@ -252,7 +252,7 @@ export default function DetailPembayaran() {
                         </div>
                     </div>
                     <div className="flex justify-end my-7">
-                            <button className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
+                            <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
                                 Lanjutkan Pembayaran
                             </button>
                     </div>
