@@ -7,6 +7,14 @@ import Cookies from "js-cookie";
 // import jwt_decode from 'jsonwebtoken';
 import { jwtDecode } from 'jwt-decode';
 
+interface JwtPayload {
+    email: string;
+    exp: number;
+    nama: string;
+    role: string;
+    user_id: number;
+    user_uuid: string;
+  }
 
 
 const loginPage = () => {
@@ -64,8 +72,32 @@ const validateForm = () => {
 
                 if (token) {
                     try {
-                        const decoded = jwtDecode(token);
-                        // console.log('Payload Data:', decoded);
+                        const decoded: JwtPayload = jwtDecode(token);
+                        console.log('Payload Data:', decoded);
+                        const { role } = decoded;
+                        console.log('Role:', role);
+
+                        switch (role) {
+                            case 'dokter':
+                                location.href = '/dokter-pemeriksaan';
+                                break;
+                            case 'apoteker':
+                                location.href = '/';
+                                break;
+                            case 'perawat':
+                                location.href = '/';
+                                break;
+                            case 'front officer':
+                                location.href = '/';
+                                break;
+                            case 'kasir':
+                                location.href = '/';
+                                break;
+                            default:
+                                location.href = '/';
+                                break;
+                        
+                        }
                         
                     } catch (error) {
                         console.error('Gagal mendekode token:', error);
