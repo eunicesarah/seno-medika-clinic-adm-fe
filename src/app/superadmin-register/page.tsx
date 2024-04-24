@@ -193,7 +193,7 @@ export default function Register() {
           )}
       </div>
       <div className="px-10 py-9 items-center flex flex-col w-full justify-center">
-        <h1 className="uppercase text-shade6 text-5xl font-Poppins font-bold leading-9 text-center m-5 ">
+        <h1 data-testid='title' className="uppercase text-shade6 text-5xl font-Poppins font-bold leading-9 text-center m-5 ">
           REGISTRASI
         </h1>
         <form className="space-y-4 md:space-y-6 flex flex-row" onSubmit={handleSubmit} method="post">
@@ -203,6 +203,7 @@ export default function Register() {
                 Nama
               </label>
               <input
+                data-testid="input-name"
                 type="text"
                 name="nama"
                 id="nama"
@@ -219,6 +220,7 @@ export default function Register() {
                 E-mail
               </label>
               <input
+                data-testid="input-email"
                 type="email"
                 name="email"
                 id="email"
@@ -235,6 +237,7 @@ export default function Register() {
                 Kata Sandi
               </label>
               <input
+                data-testid="input-password"
                 className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                 type="password"
                 name="password"
@@ -251,6 +254,7 @@ export default function Register() {
                 Daftar Sebagai
               </label>
               <select
+                data-testid="select-role"
                 id="role"
                 name="role"
                 className="font-Poppins font-semibold w-full  p-2 rounded-xl px-7 py-3.5 left-0 top-9 bg-gray-100  border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
