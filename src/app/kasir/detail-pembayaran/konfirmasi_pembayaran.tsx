@@ -61,7 +61,6 @@ export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup }:an
                     </div>
                     
             </Popup>
-           
 
         )}
         {showConfirm && (

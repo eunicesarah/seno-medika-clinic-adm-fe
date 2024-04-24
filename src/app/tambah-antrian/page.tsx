@@ -58,44 +58,50 @@ export default function TambahAntrian() {
     }
 
     return (
-        <div className='flex flex-row bg-tint6'>
+        <div className='flex flex-col md:flex-row bg-tint6'>
             <Image 
                 src={Background} 
                 alt="Background" 
-                className=" h-screen"
+                className="h-screen md:w-1/2"
             />
-            <div className=' text-shade6 font-poppins w-auto'>
-                <p className=' text-5xl font-extrabold mt-20 mb-4'>DAFTAR BEROBAT</p>
-                <p className=' text-2xl font-medium mr-10'>Jika baru pertama kali mendaftar, silahkan ke menu pendaftaran pasien</p>
-                <div className=' mt-14'>
+            <div className='text-shade6 font-poppins w-full md:w-auto'>
+                <p className='text-5xl font-extrabold mt-20 mb-4' data-testid="title">DAFTAR BEROBAT</p>
+                <p className='text-2xl font-medium mr-10' data-testid="desc">Jika baru pertama kali mendaftar, silahkan ke menu pendaftaran pasien</p>
+                <div className='mt-14'>
                     <div>
-                        <p className=' text-2xl '>Nama</p>
-                        <input value={name} 
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" 
-                        placeholder="Masukkan nama pasien"/>
+                        <p className='text-2xl'>Nama</p>
+                        <input 
+                            value={name}
+                            data-testid="input-name" 
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full md:w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" 
+                            placeholder="Masukkan nama pasien"
+                        />
                     </div>
                     <div>
-                        <p className=' text-2xl mt-4 '>NIK</p>
-                        <input value={nik}
-                        onChange={(e) => setNik(e.target.value)} 
-                        className="w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" 
-                        placeholder="Masukkan NIK pasien"/>
+                        <p className='text-2xl mt-4'>NIK</p>
+                        <input 
+                            value={nik}
+                            data-testid="input-nik"
+                            onChange={(e) => setNik(e.target.value)} 
+                            className="w-full md:w-96 h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" 
+                            placeholder="Masukkan NIK pasien"
+                        />
                     </div>
-                    <div>
-                        <p className=' text-2xl mt-4'>Poli</p>
+                    <div data-testid="dropdown-poli" className="w-full md:w-96">
+                        <p className='text-2xl mt-4'>Poli</p>
                         <Dropdown
-                        options={options}
-                        onSelect={handleOptionClick}
+                            options={options}
+                            onSelect={handleOptionClick}
                         />
                     </div>
                     <button 
-                    onClick={handleSubmit}
-                    className=' bg-primary1 h-11 w-36 rounded-3xl text-white font-poppins mt-4'>
+                        onClick={handleSubmit}
+                        className='bg-primary1 h-11 w-full md:w-36 rounded-3xl text-white font-poppins mt-4'>
                         Lanjut
                     </button>
                 </div>
             </div>
         </div>
     );
-}
+}    
