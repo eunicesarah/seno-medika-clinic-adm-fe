@@ -108,6 +108,7 @@ export default function Register() {
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
     const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
+    const [ermNumber, setErmNumber] = useState("");
 
     const [formValues, setFormValues] = useState({
         nama: "",
@@ -140,6 +141,10 @@ export default function Register() {
         created_by: "0",
         updated_by: "0",
     });
+
+    useEffect(() => {
+        randomizeNoErm();
+    }, []);
 
 
     const validateForm = () => {
@@ -429,7 +434,20 @@ export default function Register() {
             ...formValues,
             [name]: value,
         });
+        randomizeNoErm();
     };
+
+    const randomizeNoErm = () => {
+        const randomNoErm = Math.floor(1000000 + Math.random() * 900000);
+        console.log(randomNoErm);
+        const erm = "000000000"+randomNoErm;
+        console.log(erm);
+        setErmNumber(erm);
+        setFormValues({
+            ...formValues,
+            ["no_erm"]: erm,
+        });
+    }
 
     return (
         <main className="min-h-screen font-poppins bg-tint5">
@@ -515,7 +533,7 @@ export default function Register() {
                                 <label className="text-shade6 font-semibold text-2xl">
                                     No Rekam Medik *
                                 </label>
-                                <input
+                                {/* <input
                                     data-testid="input-no-erm"
                                     type="text"
                                     name="no_erm"
@@ -524,8 +542,10 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     placeholder="Masukkan No Rekam Medik Anda"
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
-                                />
-                                {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>} 
+                                /> */}
+                                <p className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" >{ermNumber}</p>
+                                {/* {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>}  */}
+                                
                             </div>
                         </div>
                           <div className="col-start-1 col-span-3 ">
