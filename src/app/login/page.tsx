@@ -6,8 +6,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from 'jwt-decode';
 
-
-
 const loginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -113,4 +111,4 @@ return (
 );
 }
 
-export default loginPage
+export default loginPage;
