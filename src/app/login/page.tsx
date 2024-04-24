@@ -15,6 +15,14 @@ interface JwtPayload {
     user_id: number;
     user_uuid: string;
   }
+interface JwtPayload {
+    email: string;
+    exp: number;
+    nama: string;
+    role: string;
+    user_id: number;
+    user_uuid: string;
+  }
 
 
 const loginPage = () => {
