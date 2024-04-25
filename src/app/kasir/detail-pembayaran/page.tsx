@@ -329,7 +329,14 @@ export default function DetailPembayaran() {
                     </div>
                 </div>
             </div>
-            <KonfirmasiPembayaranPopup showPopup={showPopup} setShowPopup={setShowPopup} />
+            <KonfirmasiPembayaranPopup 
+            showPopup={showPopup} 
+            setShowPopup={setShowPopup} 
+            poli={antrian && antrian.length > 0 ? antrian[0].poli : undefined} 
+            noERM={pasien?.no_erm}
+            namaPasien={pasien?.nama} 
+            metodePembayaran={selectedPembayaran} 
+            />
             
         </div>
     );
