@@ -108,6 +108,7 @@ export default function Register() {
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
     const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
+    const [ermNumber, setErmNumber] = useState("");
 
     const [formValues, setFormValues] = useState({
         nama: "",
@@ -140,6 +141,10 @@ export default function Register() {
         created_by: "0",
         updated_by: "0",
     });
+
+    useEffect(() => {
+        randomizeNoErm();
+    }, []);
 
 
     const validateForm = () => {
@@ -429,7 +434,20 @@ export default function Register() {
             ...formValues,
             [name]: value,
         });
+        randomizeNoErm();
     };
+
+    const randomizeNoErm = () => {
+        const randomNoErm = Math.floor(1000000 + Math.random() * 900000);
+        console.log(randomNoErm);
+        const erm = "000000000"+randomNoErm;
+        console.log(erm);
+        setErmNumber(erm);
+        setFormValues({
+            ...formValues,
+            ["no_erm"]: erm,
+        });
+    }
 
     return (
         <main className="min-h-screen font-poppins bg-tint5">
@@ -439,9 +457,10 @@ export default function Register() {
                     alt="Logo Seno Medika"
                     height={153}
                     width={153}
+                    data-testid="logo"
                 />
                 <div className="flex flex-col">
-                    <h1 className="text-shade6 font-bold text-5xl">
+                    <h1 className="text-shade6 font-bold text-5xl" data-testid="title">
                         REGISTRASI PASIEN
                     </h1>
                     <h2 className="text-2xl font-semibold text-shade7">
@@ -467,6 +486,7 @@ export default function Register() {
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
                                     value={formValues.nama}
                                     onChange={handleInputChange}
+                                    data-testid="input-name"
                                 />
                                 {errors.nama && <p style={styles.error}>{errors.nama}</p>} 
                             </div>
@@ -477,6 +497,7 @@ export default function Register() {
                                     NIK *
                                 </label>
                                 <input
+                                    data-testid="input-nik"
                                     type="text"
                                     name="NIK"
                                     id="NIK"
@@ -495,6 +516,7 @@ export default function Register() {
                                     No KK *
                                 </label>
                                 <input
+                                    data-testid="input-no-kk"
                                     type="text"
                                     name="no_KK"
                                     id="no_KK"
@@ -511,7 +533,8 @@ export default function Register() {
                                 <label className="text-shade6 font-semibold text-2xl">
                                     No Rekam Medik *
                                 </label>
-                                <input
+                                {/* <input
+                                    data-testid="input-no-erm"
                                     type="text"
                                     name="no_erm"
                                     id="no_erm"
@@ -519,16 +542,19 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     placeholder="Masukkan No Rekam Medik Anda"
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
-                                />
-                                {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>} 
+                                /> */}
+                                <p className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" >{ermNumber}</p>
+                                {/* {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>}  */}
+                                
                             </div>
                         </div>
                           <div className="col-start-1 col-span-3 ">
                               <label className="text-shade6 font-semibold text-2xl">
                                   Golongan Darah *
                               </label>
-                              <div>
+                              <div data-testid="dropdown-goldar">
                                 <Dropdown
+                                    data-testid="select-goldar"
                                     options={goldarOption}
                                     onSelect={(goldarOption: any) =>
                                         handleDropdownChange(
@@ -544,7 +570,7 @@ export default function Register() {
                               <label className="text-shade6 font-semibold text-2xl">
                                   Jenis Kelamin *
                               </label>
-                              <div className="flex flex-row space-x-7">
+                              <div className="flex flex-row space-x-7" data-testid="gender">
                                   {genderOptions.map((option) => (
                                       <label
                                           key={option.value}
@@ -582,7 +608,7 @@ export default function Register() {
                               >
                                   Tempat Lahir *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-tempat-lahir">
                                   <input
                                       type="text"
                                       name="tempat_lahir"
@@ -602,7 +628,7 @@ export default function Register() {
                               >
                                   Tanggal Lahir *
                               </label>
-                              <div className="mt-2 w-full">
+                              <div className="mt-2 w-full" data-testid="input-tanggal-lahir">
                                   <CustomDatePicker
                                       selectedDate={selectedDate}
                                       onDateChange={handleDateChange} 
@@ -618,7 +644,7 @@ export default function Register() {
                               >
                                   Email *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-email">
                                   <input
                                       type="email"
                                       name="email"
@@ -639,7 +665,7 @@ export default function Register() {
                               >
                                   No HP / Telepon *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-phone">
                                   <input
                                       type="text"
                                       name="no_telpon"
@@ -660,7 +686,7 @@ export default function Register() {
                               >
                                   Provinsi *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-provinsi">
                                   <Dropdown
                                       options={provinceOptions}
                                       onSelect={handleProvinsiSelect}
@@ -676,7 +702,7 @@ export default function Register() {
                               >
                                   Kabupaten / Kota *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-kabupaten-kota">
                                   <Dropdown
                                       options={kotaOptions}
                                       onSelect={handleCitySelect}
@@ -692,7 +718,7 @@ export default function Register() {
                               >
                                   Kecamatan *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-kecamatan">
                                   <Dropdown
                                       options={kecamatanOptions}
                                       onSelect={handleKecamatanSelect}
@@ -708,7 +734,7 @@ export default function Register() {
                               >
                                   Kelurahan *
                               </label>
-                              <div className="mt-2">
+                              <div className="mt-2" data-testid="input-kelurahan">
                                   <Dropdown
                                       options={kelurahanOptions}
                                       onSelect={handleKelurahanSelect}
@@ -720,7 +746,7 @@ export default function Register() {
                             <label className="text-shade6 font-semibold text-2xl">
                                 Alamat Lengkap *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-alamat">
                                 <input
                                     type="text"
                                     name="alamat"
@@ -741,7 +767,7 @@ export default function Register() {
                             >
                                 Warga Negara *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-warga-negara">
                                 <Dropdown
                                     options={wargaNegaraOptions}
                                     onSelect={(wargaNegaraOptions: any) =>
@@ -762,7 +788,7 @@ export default function Register() {
                             >
                                 Status Perkawinan *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-status-perkawinan">
                                 <Dropdown
                                     options={kawinOptions}
                                     onSelect={(kawinOptions: any) =>
@@ -783,7 +809,7 @@ export default function Register() {
                             >
                                 Pendidikan Terakhir *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-pendidikan">
                                 <Dropdown
                                     options={pendidikanOptions}
                                     onSelect={(pendidikanOptions: any) =>
@@ -804,7 +830,7 @@ export default function Register() {
                             >
                                 Agama *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-agama">
                                 <Dropdown
                                     options={agamaOptions}
                                     onSelect={(agamaOptions: any) =>
@@ -826,7 +852,7 @@ export default function Register() {
                             >
                                 Pekerjaan *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-pekerjaan">
                                 <input
                                     type="text"
                                     name="pekerjaan"
@@ -847,7 +873,7 @@ export default function Register() {
                             >
                                 Nama Kontak Darurat *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-nama-kontak-darurat">
                                 <input
                                     type="text"
                                     name="nama_kontak_darurat"
@@ -868,7 +894,7 @@ export default function Register() {
                             >
                                 No Kontak Darurat *
                             </label>
-                            <div className="mt-2">
+                            <div className="mt-2" data-testid="input-nomor-kontak-darurat">
                                 <input
                                     type="text"
                                     name="nomor_kontak_darurat"
@@ -882,7 +908,7 @@ export default function Register() {
                             </div>
                         </div>
                         
-                        <div className="col-start-1 col-span-12">
+                        <div className="col-start-1 col-span-12" data-testid="input-asuransi">
                             <label
                                 htmlFor="city"
                                 className="text-shade6 font-semibold text-2xl"
