@@ -38,13 +38,22 @@ export default function DetailPembayaran() {
     const [antrian, setAntrian] = useState<any>(null);
     const [nota, setNota] = useState<any>(null);
     const [detailObat, setDetailObat] = useState<any>(null);
+    const [detailTindakan, setDetailTindakan] = useState<any>(null);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [totalPriceTindakan, setTotalPriceTindakan] = useState(0);    
+    const [totalQuantityTindakan, setTotalQuantityTindakan] = useState(0);
+    const [totalPriceObat, setTotalPriceObat] = useState(0);
+    const [totalQuantityObat, setTotalQuantityObat] = useState(0);
 
     const pasienDataApi = "http://localhost:8080/pasien?find_by=id&target=";
     const antrianDataAPI = "http://localhost:8080/antrian?find_by=pasienId&target=";
     const kasirDataAPI = "http://localhost:8080/kasir?find_by=pasien_id&target=";
-    const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail&target=";
+    const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail_resep&target=";
+    const detailTindakanDataAPI = "http://localhost:8080/kasir?find_by=detail_tindakan&target=";
     const handlePembayaran = (option: any) => {
         setSelectedPembayaran(option);
+        console.log(detailObat);
         console.log(option);
     };
 
@@ -71,8 +80,12 @@ export default function DetailPembayaran() {
         fetchDataPasien();
         fetchDataAntrian();
         fetchDataNota();
-        
       }, []);
+
+    useEffect(() => {
+        setTotalPrice(totalPriceObat + totalPriceTindakan);
+        setTotalQuantity(totalQuantityObat + totalQuantityTindakan);  
+    }, [totalPriceObat, totalPriceTindakan]);
       
     const fetchDataPasien = async () => {
         try {
@@ -110,6 +123,7 @@ export default function DetailPembayaran() {
                 console.log(fetchedData);
                 setNota(fetchedData);
                 fetchDetailObat(fetchedData[0].nota_id);
+                fetchDetailTindakan(fetchedData[0].nota_id);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -117,18 +131,46 @@ export default function DetailPembayaran() {
     const fetchDetailObat = async (nota_id : any) => {
         console.log("1232131231231");
         console.log(nota_id);
-        try {
-          const response = await axios.get(
-            `${detailObatDataAPI}${nota_id}`
-          );
-          const responseData = response.data;
-          const fetchedData = responseData.data;
-          console.log(fetchedData);
-          setDetailObat(fetchedData);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+        let totalPricee = 0;
+        let totalQuantityy = 0;
+        await axios.get(`${detailObatDataAPI}${nota_id}`).then((response) => {
+            const responseData = response.data;
+            const fetchedData = responseData.data;
+            console.log(fetchedData);
+            setDetailObat(fetchedData);
+            fetchedData.forEach((obat: any) => {
+                    totalPricee += obat.Obat.harga * obat.ListObat.jumlah;
+                    totalQuantityy += obat.ListObat.jumlah;
+            });
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        }).finally(() => {
+            setTotalPriceObat(totalPricee);
+            setTotalQuantityObat(totalQuantityy);
+        });
     };
+    const fetchDetailTindakan = async (nota_id : any) => {
+        console.log("1232131231231");
+        console.log(nota_id);
+        let totalPricee = 0;
+        let totalQuantityy = 0;
+        await axios.get(`${detailTindakanDataAPI}${nota_id}`).then((response) => {
+            const responseData = response.data;
+            const fetchedData = responseData.data;
+            console.log(fetchedData);
+            setDetailTindakan(fetchedData);
+            fetchedData.forEach((tindakan: any) => {
+                totalPricee += tindakan.harga_tindakan;
+                totalQuantityy += 1;
+            });
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        }).finally(() => {
+            setTotalPriceTindakan(totalPricee);
+            setTotalQuantityTindakan(totalQuantityy);
+        });
+    };
+
 
     return (
         <div className="bg-tint6 h-full flex flex-col font-Poppins">
@@ -274,33 +316,25 @@ export default function DetailPembayaran() {
                                 </tr>
                             </thead>
                             <tbody className="bg-tint4 text-black">
-                                <tr className="">
-                                    <td className="p-2">1</td>
-                                    <td className="p-2">Jahit</td>
-                                    <td className="p-2"><span>Rp</span>500.000,00</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">2</td>
-                                    <td className="p-2">Bedah</td>
-                                    <td className="p-2"><span>Rp</span>100.000.000,00</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">3</td>
-                                    <td className="p-2">Anestesi</td>
-                                    <td className="p-2"><span>Rp</span>1.000.000,00</td>
-                                </tr>
+                                {detailTindakan && detailTindakan.map((tindakan: any, index: number) => (
+                                    <tr key={index} className="">
+                                        <td className="p-2">{index + 1}</td>
+                                        <td className="p-2">{tindakan.nama_tindakan}</td>
+                                        <td className="p-2"><span>Rp</span>{tindakan.harga_tindakan}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div className="flex flex-row justify-end">
                         <div className="bg-shade2 mt-7 rounded-2xl w-1/2 px-5 py-5 flex flex-col text-base">
                             <div className="flex flex-row justify-between my-1 ">
-                                <div>Items (20 Qyt)</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div>Items ({totalQuantity} Qyt)</div>
+                                <div><span>Rp</span>{totalPrice}</div>
                             </div>
                             <div className="flex flex-row justify-between my-1">
                                 <div>Tax (10%)</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div><span>Rp</span>{totalPrice*0.1}</div>
                             </div>
                             <div className="flex flex-row justify-between my-1">
                                 <div>Metode Pembayaran</div>
@@ -318,7 +352,7 @@ export default function DetailPembayaran() {
                             </div>
                             <div className="flex flex-row justify-between text-2xl font-bold mt-4">
                                 <div data-testid='total-price'>Total</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div><span>Rp</span>{totalPrice+totalPrice*0.1}</div>
                             </div>
                         </div>
                     </div>
