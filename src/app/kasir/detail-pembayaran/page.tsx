@@ -239,7 +239,7 @@ export default function DetailPembayaran() {
                                     </td>
                                     <td>
                                         <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
-                                            {pasien && <p>{pasien.nama}</p>}
+                                        {pasien && <p>{pasien.jenis_kelamin === 'laki-laki' ? 'Tuan' : (pasien.status_perkawinan === 'belum-kawin' ? 'Nona' : 'Nyonya')} {pasien.nama}</p>}
                                         </p>
                                     </td>
                                 </tr>
