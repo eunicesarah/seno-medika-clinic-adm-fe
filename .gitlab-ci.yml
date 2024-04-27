@@ -6,7 +6,7 @@ default:
 
 stages:         
   - build
-  # - test
+  - test
   # - deploy
 
 
@@ -29,13 +29,13 @@ test:
   dependencies:
     - build
   script:
-    - yarn test:ci
+    - jest --coverage
   artifacts:
     when: always
     reports:
       junit:
-        - junit.xml
-      cobertura: coverage/cobertura-coverage.xml
+        - junit.xml 
+  
 
 
 # unit-test-job:   
