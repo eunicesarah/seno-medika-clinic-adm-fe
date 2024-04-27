@@ -40,6 +40,7 @@ test:
   stage: test
   before_script:
     - npm install
+  script:
     - npm ci
     # start the server in the background
     - npm start &
