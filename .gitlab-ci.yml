@@ -40,8 +40,17 @@ test:
   stage: test
   before_script:
     - npm install
-  script:
-    - npm run test
+    - npm ci
+    # start the server in the background
+    - npm start &
+    # run Cypress tests
+    - npx cypress run --browser firefox
+  artifacts:
+    when: always
+    paths:
+      - cypress/videos/**/*.mp4
+      - cypress/screenshots/**/*.png
+    expire_in: 1 day
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   
 
