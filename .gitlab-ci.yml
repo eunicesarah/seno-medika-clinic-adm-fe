@@ -13,6 +13,8 @@ stages:
 install:
    stage: install
    script:
+      - node -v
+      - npm -v
       - npm install
    artifacts:
       name: "artifacts"
