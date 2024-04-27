@@ -1,4 +1,4 @@
-image: docker
+image: node:22
 
 default:
   tags: 
@@ -10,22 +10,32 @@ stages:
   # - deploy
 
 
-build-job:       
+build:
   stage: build
-  when: on_success
-  only: 
-    - main
-  image: docker:stable
-
-  services:
-      - name: docker:dind
-        command: ["--tls=false"]
-
-  
   script:
-    - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
-    - docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
-    - docker push gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe
+    - yarn
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    expire_in: 1 days
+    when: on_success
+    paths:
+      - node_modules/
+
+test:
+  stage: test
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  dependencies:
+    - build
+  script:
+    - yarn test:ci
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+      cobertura: coverage/cobertura-coverage.xml
 
 
 # unit-test-job:   
