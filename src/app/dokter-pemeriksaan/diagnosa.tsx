@@ -28,7 +28,7 @@ export default function Diagnosa() {
     return (
         <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+              <label htmlFor='diagnosa' title="DiagnosaContent" className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
                 Diagnosa
                 <span className="text-[#D66A63]"> *</span>
               </label>
@@ -42,11 +42,11 @@ export default function Diagnosa() {
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+              <label htmlFor='jenis' className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
                 Jenis
               </label>
               <Dropdown
-                id="diagnosa"
+                id="jenis"
                 className="w-2/3"
                 options={jenisOptions}
                 value={diagnosa}
@@ -54,11 +54,11 @@ export default function Diagnosa() {
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+              <label htmlFor='kasus' className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
                 Kasus
               </label>
               <Dropdown
-                id="diagnosa"
+                id="kasus"
                 className="w-2/3"
                 options={kasusOptions}
                 value={diagnosa}
@@ -66,11 +66,11 @@ export default function Diagnosa() {
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
-              <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+              <label htmlFor='status' className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
                 Status Diagnosis
               </label>
               <Dropdown
-                id="diagnosa"
+                id="statusDiagnosa"
                 className="w-2/3"
                 options={statusDiagnosaOptions}
                 value={diagnosa}

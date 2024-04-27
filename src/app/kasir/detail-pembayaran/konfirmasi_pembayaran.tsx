@@ -3,11 +3,18 @@ import Popup from "@/app/components/popup";
 import { useState } from 'react';
 import Image from 'next/image';
 import SuccessLogo from '../../../../public/ok.svg';
-export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup }:any) {
+export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup, poli, noERM, namaPasien, metodePembayaran }:any) {
     const [showConfirm, setShowConfirm] = useState(false);
     const handleConfirm = () => {
         setShowPopup(false);
         setShowConfirm(true);
+    }
+    const getDate = () =>{
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${day}-${month}-${year}`;
     }
     return (
         <div>
@@ -26,21 +33,21 @@ export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup }:an
 
                             </div>
                             <div>
-                            <p>24-02-2024 07:00:13</p>
+                            <p>{getDate()}</p>
 
                             </div>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Poli</p>
-                            <p>Bidan</p>
+                            <p>{poli}</p>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>No eRM</p>
-                            <p>123432943201</p>
+                            <p>{noERM}</p>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Nama Pasien</p>
-                            <p>Afnan Edsa Ramadhan</p>
+                            <p>{namaPasien}</p>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Total</p>
@@ -48,7 +55,7 @@ export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup }:an
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Metode Pembayaran</p>
-                            <p>BCA</p>
+                            <p>{metodePembayaran}</p>
                         </div>
                         <div className="flex justify-between pt-6">
                             <button className="bg-shade6 w-1/3 px-3 py-3 font-bold rounded-2xl items-center hover:bg-tint6 hover:text-shade6" onClick={() => setShowPopup(false)}>
@@ -61,7 +68,6 @@ export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup }:an
                     </div>
                     
             </Popup>
-           
 
         )}
         {showConfirm && (

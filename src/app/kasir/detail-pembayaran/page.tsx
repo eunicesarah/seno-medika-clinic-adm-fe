@@ -1,8 +1,11 @@
 "use client";
 import { IoMdArrowBack } from "react-icons/io";
 import Dropdown from "../../components/dropdown";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KonfirmasiPembayaranPopup from "./konfirmasi_pembayaran";
+import axios from "axios";
+import { useSearchParams } from 'next/navigation'
+import { get } from "http";
 
 const headObat = [
     "No",
@@ -26,13 +29,148 @@ const pembayaranOptions = [
     { label: "QRIS", value: "qris" },
 ];
 export default function DetailPembayaran() {
+    const searchParams = useSearchParams();
+    const idPasien = searchParams.get('pasien_id');
     const [selectedPembayaran, setSelectedPembayaran] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
+    const [pasien, setPasien] = useState<any>(null);
+    const [antrian, setAntrian] = useState<any>(null);
+    const [nota, setNota] = useState<any>(null);
+    const [detailObat, setDetailObat] = useState<any>(null);
+    const [detailTindakan, setDetailTindakan] = useState<any>(null);
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [totalQuantity, setTotalQuantity] = useState(0);
+    const [totalPriceTindakan, setTotalPriceTindakan] = useState(0);    
+    const [totalQuantityTindakan, setTotalQuantityTindakan] = useState(0);
+    const [totalPriceObat, setTotalPriceObat] = useState(0);
+    const [totalQuantityObat, setTotalQuantityObat] = useState(0);
+
+    const pasienDataApi = "http://localhost:8080/pasien?find_by=id&target=";
+    const antrianDataAPI = "http://localhost:8080/antrian?find_by=pasienId&target=";
+    const kasirDataAPI = "http://localhost:8080/kasir?find_by=pasien_id&target=";
+    const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail_resep&target=";
+    const detailTindakanDataAPI = "http://localhost:8080/kasir?find_by=detail_tindakan&target=";
     const handlePembayaran = (option: any) => {
         setSelectedPembayaran(option);
+        console.log(detailObat);
         console.log(option);
     };
+
+    const getUsia = (tanggalLahir: string) => {
+        const today = new Date();
+        const birthDate = new Date(tanggalLahir);
+        var age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
+
+    const getDate = () =>{
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+        const day = date.getDate();
+        return `${day}-${month}-${year}`;
+    }
+
+    useEffect(() => {
+        fetchDataPasien();
+        fetchDataAntrian();
+        fetchDataNota();
+      }, []);
+
+    useEffect(() => {
+        setTotalPrice(totalPriceObat + totalPriceTindakan);
+        setTotalQuantity(totalQuantityObat + totalQuantityTindakan);  
+    }, [totalPriceObat, totalPriceTindakan]);
+      
+    const fetchDataPasien = async () => {
+        try {
+          const response = await axios.get(
+            `${pasienDataApi}${idPasien}`
+          );
+          const responseData = response.data;
+          const fetchedData = responseData.data;
+          console.log(fetchedData);
+          setPasien(fetchedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+    };
+    const fetchDataAntrian = async () => {
+        try {
+          const response = await axios.get(
+            `${antrianDataAPI}${idPasien}`
+          );
+          const responseData = response.data;
+          const fetchedData = responseData.data;
+          console.log(fetchedData);
+          setAntrian(fetchedData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+    };
+    const fetchDataNota = async () => {
+            try {
+                const response = await axios.get(
+                    `${kasirDataAPI}${idPasien}`
+                );
+                const responseData = response.data;
+                const fetchedData = responseData.data;
+                console.log(fetchedData);
+                setNota(fetchedData);
+                fetchDetailObat(fetchedData[0].nota_id);
+                fetchDetailTindakan(fetchedData[0].nota_id);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+    };
+    const fetchDetailObat = async (nota_id : any) => {
+        console.log("1232131231231");
+        console.log(nota_id);
+        let totalPricee = 0;
+        let totalQuantityy = 0;
+        await axios.get(`${detailObatDataAPI}${nota_id}`).then((response) => {
+            const responseData = response.data;
+            const fetchedData = responseData.data;
+            console.log(fetchedData);
+            setDetailObat(fetchedData);
+            fetchedData.forEach((obat: any) => {
+                    totalPricee += obat.Obat.harga * obat.ListObat.jumlah;
+                    totalQuantityy += obat.ListObat.jumlah;
+            });
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        }).finally(() => {
+            setTotalPriceObat(totalPricee);
+            setTotalQuantityObat(totalQuantityy);
+        });
+    };
+    const fetchDetailTindakan = async (nota_id : any) => {
+        console.log("1232131231231");
+        console.log(nota_id);
+        let totalPricee = 0;
+        let totalQuantityy = 0;
+        await axios.get(`${detailTindakanDataAPI}${nota_id}`).then((response) => {
+            const responseData = response.data;
+            const fetchedData = responseData.data;
+            console.log(fetchedData);
+            setDetailTindakan(fetchedData);
+            fetchedData.forEach((tindakan: any) => {
+                totalPricee += tindakan.harga_tindakan;
+                totalQuantityy += 1;
+            });
+        }).catch((error) => {
+            console.error("Error fetching data:", error);
+        }).finally(() => {
+            setTotalPriceTindakan(totalPricee);
+            setTotalQuantityTindakan(totalQuantityy);
+        });
+    };
+
 
     return (
         <div className="bg-tint6 h-full flex flex-col font-Poppins">
@@ -46,7 +184,7 @@ export default function DetailPembayaran() {
                     </p>
                 </button>
             </div>
-            <div className="ml-10 text-black font-bold text-3xl mt-9" > 
+            <div data-testid='title' className="ml-10 text-black font-bold text-3xl mt-9" > 
                 DETAIL PEMBAYARAN 
             </div>
             <div className="flex flex-row ml-10 mt-5">
@@ -64,8 +202,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {created_at} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {getDate()}
                                         </p>
                                     </td>
                                 </tr>
@@ -76,8 +214,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {poli} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {antrian && <p>{antrian[0].poli}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -88,8 +226,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {pasien && <p>{pasien.no_erm}</p>} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3 ">
+                                            {pasien && <p>{pasien.no_erm}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -100,8 +238,8 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3">
-                                            {/* {pasien && <p>{pasien.nama}</p>} */}
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                        {pasien && <p>{pasien.jenis_kelamin === 'laki-laki' ? 'Tuan' : (pasien.status_perkawinan === 'belum-kawin' ? 'Nona' : 'Nyonya')} {pasien.nama}</p>}
                                         </p>
                                     </td>
                                 </tr>
@@ -112,7 +250,9 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3"></p>
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {pasien && <p>{getUsia(pasien.tanggal_lahir)}</p>}
+                                        </p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -122,7 +262,9 @@ export default function DetailPembayaran() {
                                         </p>
                                     </td>
                                     <td>
-                                        <p className="text-white font-poppins text-xl font-normal mb-3"></p>
+                                        <p className="text-white font-poppins text-xl font-normal mb-3 ml-3">
+                                            {pasien && <p>{pasien.penjamin}</p>}
+                                        </p>
                                     </td>
                                 </tr>
                             </tbody>
@@ -137,7 +279,7 @@ export default function DetailPembayaran() {
                 </div>
                 <div className="w-4/5 ml-5 mr-10 flex flex-col ">
                     <div className="rounded-2xl overflow-hidden">
-                        <table className="table-auto text-center w-full ">
+                        <table data-testid='table-medicine' className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headObat.map((headObat) => (
@@ -148,51 +290,22 @@ export default function DetailPembayaran() {
                                 </tr>
                             </thead>
                             <tbody className="bg-tint4 text-black">
-                                <tr className="">
-                                    <td className="p-2">1</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">2</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">3</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">4</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">5</td>
-                                    <td className="p-2">Paracetamol</td>
-                                    <td className="p-2">2</td>
-                                    <td className="p-2"><span>Rp</span>10.000,00</td>
-                                    <td className="p-2"><span>Rp</span>20.000,00</td>
-                                    <td className="p-2">2 Hari sekali</td>
-                                </tr>
+                                {detailObat && detailObat.map((obat: any, index: number) => (
+                                    <tr key={index} className="">
+                                        <td className="p-2">{index + 1}</td>
+                                        <td className="p-2">{obat.Obat.nama_obat}</td>
+                                        <td className="p-2">{obat.ListObat.jumlah}</td>
+                                        <td className="p-2"><span>Rp</span>{obat.Obat.harga}</td>
+                                        <td className="p-2"><span>Rp</span>{obat.Obat.harga * obat.ListObat.jumlah}</td>
+                                        <td className="p-2">{obat.ListObat.dosis}</td>
+                                    </tr>
+                                ))}
+                                
                             </tbody>
                         </table>
                     </div>
                     <div className="rounded-2xl overflow-hidden mt-10">
-                        <table className="table-auto text-center w-full ">
+                        <table data-testid='table-action' className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
                                     {headTindakan.map((headTindakan) => (
@@ -203,37 +316,29 @@ export default function DetailPembayaran() {
                                 </tr>
                             </thead>
                             <tbody className="bg-tint4 text-black">
-                                <tr className="">
-                                    <td className="p-2">1</td>
-                                    <td className="p-2">Jahit</td>
-                                    <td className="p-2"><span>Rp</span>500.000,00</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">2</td>
-                                    <td className="p-2">Bedah</td>
-                                    <td className="p-2"><span>Rp</span>100.000.000,00</td>
-                                </tr>
-                                <tr className="">
-                                    <td className="p-2">3</td>
-                                    <td className="p-2">Anestesi</td>
-                                    <td className="p-2"><span>Rp</span>1.000.000,00</td>
-                                </tr>
+                                {detailTindakan && detailTindakan.map((tindakan: any, index: number) => (
+                                    <tr key={index} className="">
+                                        <td className="p-2">{index + 1}</td>
+                                        <td className="p-2">{tindakan.nama_tindakan}</td>
+                                        <td className="p-2"><span>Rp</span>{tindakan.harga_tindakan}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
                     <div className="flex flex-row justify-end">
                         <div className="bg-shade2 mt-7 rounded-2xl w-1/2 px-5 py-5 flex flex-col text-base">
                             <div className="flex flex-row justify-between my-1 ">
-                                <div>Items (20 Qyt)</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div>Items ({totalQuantity} Qyt)</div>
+                                <div><span>Rp</span>{totalPrice}</div>
                             </div>
                             <div className="flex flex-row justify-between my-1">
                                 <div>Tax (10%)</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div><span>Rp</span>{totalPrice*0.1}</div>
                             </div>
                             <div className="flex flex-row justify-between my-1">
                                 <div>Metode Pembayaran</div>
-                                <div className="w-1/2">
+                                <div className="w-1/2" data-testid='dropdown-payment'>
                                     <Dropdown
                                         options={pembayaranOptions}
                                         onSelect={(pembayaranOptions: any) =>
@@ -246,19 +351,26 @@ export default function DetailPembayaran() {
                                 </div>
                             </div>
                             <div className="flex flex-row justify-between text-2xl font-bold mt-4">
-                                <div>Total</div>
-                                <div><span>Rp</span>10.000.000</div>
+                                <div data-testid='total-price'>Total</div>
+                                <div><span>Rp</span>{totalPrice+totalPrice*0.1}</div>
                             </div>
                         </div>
                     </div>
                     <div className="flex justify-end my-7">
-                            <button className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
+                            <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
                                 Lanjutkan Pembayaran
                             </button>
                     </div>
                 </div>
             </div>
-            <KonfirmasiPembayaranPopup showPopup={showPopup} setShowPopup={setShowPopup} />
+            <KonfirmasiPembayaranPopup 
+            showPopup={showPopup} 
+            setShowPopup={setShowPopup} 
+            poli={antrian && antrian.length > 0 ? antrian[0].poli : undefined} 
+            noERM={pasien?.no_erm}
+            namaPasien={pasien?.nama} 
+            metodePembayaran={selectedPembayaran} 
+            />
             
         </div>
     );

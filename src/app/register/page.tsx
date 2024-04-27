@@ -108,6 +108,7 @@ export default function Register() {
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
     const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
+    const [ermNumber, setErmNumber] = useState("");
 
     const [formValues, setFormValues] = useState({
         nama: "",
@@ -140,6 +141,10 @@ export default function Register() {
         created_by: "0",
         updated_by: "0",
     });
+
+    useEffect(() => {
+        randomizeNoErm();
+    }, []);
 
 
     const validateForm = () => {
@@ -424,12 +429,62 @@ export default function Register() {
             [e.target.name]: e.target.value,
         });
     };
-    const handleDropdownChange = (name: any, value: any) => {
+    const handleDropdownChange = (name: string, value: any) => {
+        console.log(name, value);
         setFormValues({
             ...formValues,
             [name]: value,
         });
+        randomizeNoErm();
     };
+
+    const handleGoldarChange = (value: any) => {
+        setFormValues({
+            ...formValues,
+            ["golongan_darah"]: value,
+        });
+    }
+
+    const handleAgamaChange = (value: any) => {
+        setFormValues({
+            ...formValues,
+            ["agama"]: value,
+        });
+    }
+
+    const handleStatusKawinChange = (value: any) => {
+        setFormValues({
+            ...formValues,
+            ["status_perkawinan"]: value,
+        });
+    }
+
+    const handlePendidikanChange = (value: any) => {
+        setFormValues({
+            ...formValues,
+            ["pendidikan"]: value,
+        });
+    }
+
+    const handleWargaNegaraChange = (value: any) => {
+        setFormValues({
+            ...formValues,
+            ["warga_negara"]: value,
+        });
+    }
+
+
+    const randomizeNoErm = () => {
+        const randomNoErm = Math.floor(1000000 + Math.random() * 900000);
+        console.log(randomNoErm);
+        const erm = "000000000"+randomNoErm;
+        console.log(erm);
+        setErmNumber(erm);
+        setFormValues({
+            ...formValues,
+            ["no_erm"]: erm,
+        });
+    }
 
     return (
         <main className="min-h-screen font-poppins bg-tint5">
@@ -515,7 +570,7 @@ export default function Register() {
                                 <label className="text-shade6 font-semibold text-2xl">
                                     No Rekam Medik *
                                 </label>
-                                <input
+                                {/* <input
                                     data-testid="input-no-erm"
                                     type="text"
                                     name="no_erm"
@@ -524,8 +579,10 @@ export default function Register() {
                                     onChange={handleInputChange}
                                     placeholder="Masukkan No Rekam Medik Anda"
                                     className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
-                                />
-                                {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>} 
+                                /> */}
+                                <p className="w-full h-12 px-7 py-3.5 left-0 top-9 bg-gray-100 rounded-2xl border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7" >{ermNumber}</p>
+                                {/* {errors.no_erm && <p style={styles.error}>{errors.no_erm}</p>}  */}
+                                
                             </div>
                         </div>
                           <div className="col-start-1 col-span-3 ">
@@ -537,10 +594,11 @@ export default function Register() {
                                     data-testid="select-goldar"
                                     options={goldarOption}
                                     onSelect={(goldarOption: any) =>
-                                        handleDropdownChange(
-                                            "golongan_darah",
-                                            goldarOption.value
-                                        )
+                                        // handleDropdownChange(
+                                        //     "golongan_darah",
+                                        //     goldarOption.value
+                                        // )
+                                        handleGoldarChange(goldarOption.value)
                                     }
                                 />
                                 {errors.goldar && <p style={styles.error}>{errors.goldar}</p>} 
@@ -751,10 +809,11 @@ export default function Register() {
                                 <Dropdown
                                     options={wargaNegaraOptions}
                                     onSelect={(wargaNegaraOptions: any) =>
-                                        handleDropdownChange(
-                                            "warga_negara",
-                                            wargaNegaraOptions.value
-                                        )
+                                        // handleDropdownChange(
+                                        //     "warga_negara",
+                                        //     wargaNegaraOptions.value
+                                        // )
+                                        handleWargaNegaraChange(wargaNegaraOptions.value)
                                     }
                                 />
                                 {errors.warga_negara && <p style={styles.error}>{errors.warga_negara}</p>} 
@@ -772,10 +831,11 @@ export default function Register() {
                                 <Dropdown
                                     options={kawinOptions}
                                     onSelect={(kawinOptions: any) =>
-                                        handleDropdownChange(
-                                            "status_perkawinan",
-                                            kawinOptions.value
-                                        )
+                                        // handleDropdownChange(
+                                        //     "status_perkawinan",
+                                        //     kawinOptions.value
+                                        // )
+                                        handleStatusKawinChange(kawinOptions.value)
                                     }
                                 />
                                 {errors.status_perkawinan && <p style={styles.error}>{errors.status_perkawinan}</p>} 
@@ -793,10 +853,11 @@ export default function Register() {
                                 <Dropdown
                                     options={pendidikanOptions}
                                     onSelect={(pendidikanOptions: any) =>
-                                        handleDropdownChange(
-                                            "pendidikan",
-                                            pendidikanOptions.value
-                                        )
+                                        // handleDropdownChange(
+                                        //     "pendidikan",
+                                        //     pendidikanOptions.value
+                                        // )
+                                        handlePendidikanChange(pendidikanOptions.value)
                                     }
                                 />
                                 {errors.pendidikan && <p style={styles.error}>{errors.pendidikan}</p>} 
@@ -814,10 +875,11 @@ export default function Register() {
                                 <Dropdown
                                     options={agamaOptions}
                                     onSelect={(agamaOptions: any) =>
-                                        handleDropdownChange(
-                                            "agama",
-                                            agamaOptions.value
-                                        )
+                                        // handleDropdownChange(
+                                        //     "agama",
+                                        //     agamaOptions.value
+                                        // )
+                                        handleAgamaChange(agamaOptions.value)
                                     }
                                 />
                                 {errors.agama && <p style={styles.error}>{errors.agama}</p>} 

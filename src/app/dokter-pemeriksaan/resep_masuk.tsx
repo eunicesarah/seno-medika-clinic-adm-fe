@@ -24,6 +24,7 @@ export default function ResepMasuk() {
                 options={ruangTujuanOpt}
                 value={ruangTujuan}
                 placeholder="Pilih Ruang Tujuan"
+                data-testid="ruang_tujuan"
                 required
               />
             </div>
@@ -38,6 +39,7 @@ export default function ResepMasuk() {
                 options={statusObatOpt}
                 value={statusObat}
                 placeholder="Status Obat"
+                data-testid="status_obat"
                 required
               />
             </div>
