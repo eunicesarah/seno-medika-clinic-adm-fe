@@ -13,7 +13,6 @@ describe('Register Pasien', () => {
     cy.get('[data-testid="input-name"]').type('Ahmad Nadil');
     cy.get('[data-testid="input-nik"]').type('330299110022992');
     cy.get('[data-testid="input-no-kk"]').type('3399112200');
-    cy.get('[data-testid="input-no-erm"]').type('1111111');
     cy.get('[data-testid=dropdown-goldar]').click();
     cy.get('[data-testid=dropdown-goldar]').contains('AB').click();
     cy.get('[data-testid=gender]').contains('Laki-laki').click();

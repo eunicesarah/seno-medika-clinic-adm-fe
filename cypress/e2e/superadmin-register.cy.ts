@@ -9,8 +9,8 @@ describe('Superadmin Register', () => {
     });
 
     it('fill form submission', () => {
-        cy.get('[data-testid="input-name"]').type('Ahmad Nadil');
-        cy.get('[data-testid="input-email"]').type('ahmada@gmail.com');
+        cy.get('[data-testid="input-name"]').type('FO Ahmad Nadil');
+        cy.get('[data-testid="input-email"]').type('foahmada@gmail.com');
         cy.get('[data-testid="input-password"]').type('123123qw');
         cy.get('[data-testid="select-role"]').select('Front Officer');
     });
