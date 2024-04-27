@@ -13,6 +13,7 @@ stages:
 install:
    stage: install
    script:
+      - rm -rf node_modules
       - npm install
    cache:
     key: ${CI_BUILD_REF_NAME}
