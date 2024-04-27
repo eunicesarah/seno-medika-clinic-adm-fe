@@ -17,6 +17,4 @@ describe('Superadmin Table', () => {
             cy.get('th').eq(6).should('contain', 'Aksi');
         });
     });
-
-
 });
