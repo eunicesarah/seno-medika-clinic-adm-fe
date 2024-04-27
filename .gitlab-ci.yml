@@ -4,37 +4,42 @@ default:
   tags: 
     - test-runner
 
-stages:         
+stages:     
+  - install    
   - build
   - test
   # - deploy
 
+install:
+   stage: install
+   script:
+      - npm install
+   artifacts:
+      name: "artifacts"
+      untracked: true
+      expire_in: 30 mins
+      paths:
+        - .npm/
+        - node_modules
 
 build:
-  stage: build
-  script:
-    - yarn
-  cache:
-    paths:
-      - node_modules/
-  artifacts:
-    expire_in: 1 days
-    when: on_success
-    paths:
-      - node_modules/
+   stage: build
+   script:
+      - CI=false npm run build
+   artifacts:
+      paths:
+         - build
+      expire_in: 30 mins
+   dependencies:
+      - install
 
 test:
   stage: test
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   dependencies:
-    - build
+    - install
   script:
     - jest --coverage
-  artifacts:
-    when: always
-    reports:
-      junit:
-        - junit.xml 
   
 
 
