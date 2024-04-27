@@ -36,10 +36,20 @@ stages:
 #       - install
 
 test:
+  image: node:latest
   stage: test
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  before_script:
+    - npm install
   script:
-    - jest --coverage
+    - npm run test:ci
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - coverage/
+    when: always
+    reports:
+      junit:
+        - junit.xml
   
 
 
