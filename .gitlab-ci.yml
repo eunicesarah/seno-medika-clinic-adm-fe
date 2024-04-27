@@ -45,7 +45,7 @@ test:
     # start the server in the background
     - npm start &
     # run Cypress tests
-    - npx cypress run --browser firefox
+    - npx cypress run --browser chrome
   artifacts:
     when: always
     paths:
