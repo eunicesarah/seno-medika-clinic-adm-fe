@@ -1,9 +1,10 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Pattern from "../../../public/pattern.svg";
+import Pattern from "../../../../public/pattern.svg";
 import Modal from "react-modal";
 import Chip from "react-chip"
+import { useRouter } from 'next/navigation';
 import axios from "axios";
 
 
@@ -19,6 +20,7 @@ interface PerawatData{
 }
 
 export default function Register() {
+  const router = useRouter();
   const [selectedPosisi, setSelectedPosisi] = useState("");
   const [selectedPoli, setSelectedPoli] = useState("");
   const [formData, setFormData] = useState({
@@ -117,7 +119,8 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        location.href = "/bye";
+        alert("User created");
+        router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
@@ -135,7 +138,8 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        location.href = "/bye";
+        alert("User created");
+        router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
@@ -151,7 +155,8 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        location.href = "/bye";
+        alert("User created");
+        router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
@@ -169,7 +174,8 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        location.href = "/bye";
+        alert("User created");
+        router.push('/superadmin/dashboard');
       }
     }
     catch (error) {

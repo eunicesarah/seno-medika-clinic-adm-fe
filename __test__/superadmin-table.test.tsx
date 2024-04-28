@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Home from '@/app/superadmin-table/page'; // replace with your actual component path
+import Home from '@/app/superadmin/dashboard/page'; // replace with your actual component path
 import axios from 'axios';
 import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';

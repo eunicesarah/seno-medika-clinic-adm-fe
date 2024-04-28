@@ -29,7 +29,7 @@ export default function Home() {
             <div className=" flex flex-col items-center pt-8">
               <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center font-bold text-tint7">PELAYANAN KESEHATAN <span className="text-tint6">RAMAH</span> DAN <span className="text-tint6">BERKUALITAS</span></h1>
               <h3 className="text-xl md:text-2xl xl:text-3xl text-center font-semibold my-10 text-tint7">Keselamatan dan kenyamanan pasien adalah prioritas utama kami. Dipandu oleh tenaga profesional yang berpengalaman, kami siap memberikan pelayanan medis yang aman dan berkualitas.</h3>
-              <button className="text-base md:text-xl xl:text-2xl bg-shade4 py-5 px-7 text-white rounded-3xl font-semibold">BUAT JANJI</button>
+              {/* <button className="text-base md:text-xl xl:text-2xl bg-shade4 py-5 px-7 text-white rounded-3xl font-semibold">BUAT JANJI</button> */}
             </div>
             <Image
             src={mba_depan}
