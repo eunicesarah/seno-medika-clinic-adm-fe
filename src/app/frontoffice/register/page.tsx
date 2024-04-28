@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import logo from "../../../public/logo.svg";
-import CustomDatePicker from "../../components/Datepicker";
+import logo from "../../../../public/logo.svg";
+import CustomDatePicker from "../../../components/Datepicker";
 import Dropdown from "../../components/Dropdown";
-import CustomDropdown from "../../components/CustomDropdown";
+import CustomDropdown from "../../../components/CustomDropdown";
 import axios from 'axios';
 
 const genderOptions = [
