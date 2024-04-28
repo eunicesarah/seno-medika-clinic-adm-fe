@@ -177,13 +177,13 @@ export default function Dashboard() {
 
             <Popup isvisible={showPopup} onClose={() => setShowPopup(false)}>
                 <div className="flex">
-                    <Link href="/tambah-antrian" className=" ml-auto mr-2 mt-4 w-1/2 h-48 bg-primary1 rounded-3xl  font-poppins text-2xl hover:bg-shade6"> 
+                    <Link href="/frontoffice/tambah-antrian" className=" ml-auto mr-2 mt-4 w-1/2 h-48 bg-primary1 rounded-3xl  font-poppins text-2xl hover:bg-shade6"> 
                         <div className="flex flex-col items-center h-full justify-center text-white">
                             <p>Pasien Sudah Terdaftar</p>
                             <p>(Pasien Lama)</p>
                         </div>
                     </Link>
-                    <Link href="/#" className="mr-auto ml-2 mt-4 w-1/2 h-48 bg-tint6 rounded-3xl font-poppins text-2xl hover:bg-shade6 hover:text-white">
+                    <Link href="/frontoffice/register" className="mr-auto ml-2 mt-4 w-1/2 h-48 bg-tint6 rounded-3xl font-poppins text-2xl hover:bg-shade6 hover:text-white">
                         <div className=" flex flex-col items-center h-full justify-center ">
                             <p>Pasien Belum Terdaftar</p>
                             <p>(Pasien Baru)</p>

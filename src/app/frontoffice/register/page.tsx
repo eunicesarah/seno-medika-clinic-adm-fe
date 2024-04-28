@@ -3,8 +3,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import logo from "../../../../public/logo.svg";
 import CustomDatePicker from "../../../components/Datepicker";
-import Dropdown from "../../components/Dropdown";
+import Dropdown from "../../components/dropdown";
 import CustomDropdown from "../../../components/CustomDropdown";
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const genderOptions = [
@@ -109,6 +110,7 @@ export default function Register() {
     const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
     const [ermNumber, setErmNumber] = useState("");
+    const router = useRouter();
 
     const [formValues, setFormValues] = useState({
         nama: "",
@@ -411,6 +413,7 @@ export default function Register() {
                 console.log(response)
                 if(response.status < 400){
                     alert('Data berhasil disimpan')
+                    router.push('/frontoffice/dashboard'); 
                     // location.href = '/frontoffice-dashboard'
                 }else(
                     alert(response.data.message)

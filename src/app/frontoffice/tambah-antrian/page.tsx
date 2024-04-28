@@ -2,8 +2,8 @@
 
 import axios from 'axios';
 import Image from 'next/image';
-import Background from '../../../public/pattern.svg';
-import Dropdown from '../components/dropdown';
+import Background from '../../../../public/pattern.svg';
+import Dropdown from '../../components/dropdown';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -39,7 +39,7 @@ export default function TambahAntrian() {
           if (response.status >= 200 && response.status < 300) {
             console.log('API Response:', response.data);
             alert("Berhasil menambahkan antrian")
-            router.push('/frontoffice-dashboard'); 
+            router.push('/frontoffice/dashboard'); 
           } else {
             alert('Error:'+ response.status + response.statusText);
           }
