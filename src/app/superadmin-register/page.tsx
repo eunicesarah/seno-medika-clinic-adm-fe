@@ -32,21 +32,19 @@ export default function Register() {
     apoteker_data: {
       nomor_lisensi:"",
     },
-    dokter_data: {
-      nomor_lisensi: "",
+    dokter_data:{
+      nomor_lisensi:"",
       jaga_poli_mana: "",
-      list_jadwal_dokter: {
-      //   hari: "",
-      //   shift: "",
-      },
-    },
+      jadwal_jaga:"",
+      list_jadwal_dokter: [],
+    }
   });
   const [nomor_lisensi, setnomor_lisensi] = useState("");
   
   
   type Schedule = {
     hari: string;
-    shift: string;
+    shift: number;
   };
   
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -65,7 +63,13 @@ export default function Register() {
   const handleSaveSchedule = async() => {
     const jadwal = `${selectedHari},${selectedShift}`;
     console.log(jadwal);
-    setSchedules([...schedules, { hari: selectedHari, shift: selectedShift }]);
+    var shift = 0;
+    if(selectedShift === 'pagi') {
+      shift = 1;
+    }else{
+      shift = 2;
+    }
+    setSchedules([...schedules, { hari: selectedHari, shift: shift }]);
   }
 
   const handlePosisiChange = (value:any) => {
@@ -79,6 +83,15 @@ export default function Register() {
 
   const handlePoliChange = (value: any) => {
     setSelectedPoli(value);
+    setFormData({
+      ...formData,
+      dokter_data: {
+        nomor_lisensi: nomor_lisensi,
+        jaga_poli_mana: value,
+        jadwal_jaga: "Senin-Jumat, Pagi-Siang",
+        list_jadwal_dokter: schedules
+      }
+    });
   };
 
   const handleOpenModal = (e:any) => {
@@ -150,7 +163,9 @@ export default function Register() {
     console.log(nomor_lisensi);
     console.log(formData);
     try {
+      console.log("masuk apoteker3")
       const response = await axios.post("http://localhost:8080/apoteker", formData);
+      console.log("asdfasdfasfasf");
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
@@ -173,6 +188,7 @@ export default function Register() {
         dokter_data: {
           nomor_lisensi: nomor_lisensi,
           jaga_poli_mana: selectedPoli,
+          jadwal_jaga: "Senin-Jumat, Pagi-Siang",
           list_jadwal_dokter: schedules
         }
       });
@@ -185,7 +201,8 @@ export default function Register() {
         }
       });
       submitFormSuster();
-    }else{
+    }else if(selectedPosisi === "Apoteker"){
+      console.log("masuk apoteker2")
       setFormData({
         ...formData,
         apoteker_data: {
@@ -206,6 +223,7 @@ export default function Register() {
         dokter_data: {
           nomor_lisensi: event.target.value,
           jaga_poli_mana: selectedPoli,
+          jadwal_jaga: "Senin-Jumat, Pagi-Siang",
           list_jadwal_dokter: schedules
         }
       });
@@ -217,6 +235,7 @@ export default function Register() {
         }
       });
     }else if(selectedPosisi === "Apoteker"){
+      console.log("masuk apoteker1")
       setFormData({
         ...formData,
         apoteker_data: {
