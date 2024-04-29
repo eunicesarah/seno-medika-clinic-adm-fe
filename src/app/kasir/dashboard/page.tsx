@@ -188,7 +188,7 @@ export default function KasirDashboard(){
                         {data && data.length > 0 ? (
                             data.map((item: any, index: number) => (
                                 <tr className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
-                                    <td>1</td>
+                                    <td>{index+1}</td>
                                     <td>{item.nomor_antrian}</td>
                                     <td>{item.poli}</td>
                                     <td>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
