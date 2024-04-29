@@ -1,21 +1,21 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SMLogo from "../../../../public/Logo_Seno_Medika.svg";
-import Dropdown from "@/components/Dropdown";
+import Dropdown from "@/app/components/dropdown";
 import CustomDatePicker from "../../../components/Datepicker";
 import Image from "next/image";
+import axios from "axios";
 
 const head = [
   "No",
-  "Nomor Antrian",
+  "No Antrian",
   "Poli/ Ruangan",
   "Tanggal Resep",
   "No. eRM",
-  "NIK",
   "Nama Pasien",
   "Jenis Kelamin",
   "Tempat & Tanggal Lahir",
-  "Metode Pembayaran",
+  // "Metode Pembayaran",
   "Resep",
 ];
 
@@ -23,14 +23,15 @@ interface TableData {
   nomor_antrian: number;
   poli: string;
   created_at: string;
-  no_eRM: string;
+  no_erm: string;
   nik: string;
-  nama_pasien: string;
+  nama: string;
   jenis_kelamin: string;
-  tempat_tanggal_lahir: string;
+  tanggal_lahir: string;
+  tempat_lahir: string;
   metode_pembayaran: string;
   resep: string;
-  status: string;
+  status_obat: string;
 }
 
 export default function ApotekerDashboard() {
@@ -46,6 +47,21 @@ export default function ApotekerDashboard() {
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
   };
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/apotek?find_by=today"
+      );
+      const data1 = response.data;
+      const data = data1.data;
+      console.log(data);
+      setTableData(data);
+    } catch (error) {
+      console.error("Error");
+    }
+  };
+
   const options = [
     { label: "10", value: "10" },
     { label: "20", value: "20" },
@@ -66,8 +82,26 @@ export default function ApotekerDashboard() {
     console.log(no_erm, poli, created_at);
   };
 
+  const filterDate = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/apotek?find_by=date&target=${selectedDate}`
+      );
+      const data1 = response.data;
+      const data = data1.data;
+      console.log(data);
+      setTableData(data);
+    } catch (error) {
+      console.error("Error");
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
+    <div className=" bg-tint6 flex-col flex h-screen font-Poppins w-screen">
       <div className="flex mr-20 mt-14 bg-tint6 items-center">
         <div>
           <Image
@@ -95,55 +129,54 @@ export default function ApotekerDashboard() {
           DATA RESEP
         </label>
         <div className="flex items-center justify-between ml-20 mt-4 flex-row">
-          <div className="flex w-70 h-auto">
-            <p className="text-black mr-2 w-auto">Tampilkan</p>
-            <div className="w-50">
-              <Dropdown
-                options={options}
-                onSelect={handleOptionClick}
-              />
+          <div className="flex flex-row w-full justify-between items-center">
+            <div className="flex flex-row items-center">
+              <p className="text-black mr-2">Tampilkan</p>
+              <div className="w-12">
+                <Dropdown options={options} onSelect={handleOptionClick} />
+              </div>
+              <p className="text-black ml-2">Data</p>
             </div>
-            <p className="text-black ml-2 w-auto">Data</p>
-          </div>
-          <div className="flex flex-row gap-2 mr-16">
-            <div className="flex w-auto h-auto">
-              <p className="text-black w-auto">Tampilkan Data</p>
-              <Dropdown
-                options={statusOptions}
-                onSelect={handleOptionClick}
-                className="w-1/2"
-              />
-            </div>
-            <div className="w-auto">
-              <CustomDatePicker
-                selectedDate={selectedDate}
-                onDateChange={handleDateChange}
-                className="w-full"
-              />
-            </div>
-            <div className="flex flex-row gap-2">
-              <input
-                type="text"
-                name="search"
-                id="search"
-                className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                placeholder="Pencarian"
-              />
-              <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold hover:bg-shade7">
-                Cari
-              </button>
+            <div className="flex flex-row gap-2 items-center">
+              <div className="flex items-center">
+                <p className="text-black">Tampilkan Data</p>
+                <div className="w-40">
+                  <Dropdown
+                    options={statusOptions}
+                    onSelect={handleOptionClick}
+                  />
+                </div>
+              </div>
+              <div className="w-20">
+                <CustomDatePicker
+                  selectedDate={selectedDate}
+                  onDateChange={handleDateChange}
+                />
+              </div>
+              <div className="flex flex-row gap-2 items-center">
+                <input
+                  type="text"
+                  name="search"
+                  id="search"
+                  className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  placeholder="Pencarian"
+                />
+                <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold hover:bg-shade7">
+                  Cari
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        <div className="p-16 h-full w-full" data-cy="table">
+        <div className="p-4 h-full w-full" data-cy="table">
           <table
-            className="w-full min-w-max table-auto text-center "
+            className="w-full min-w-max table-auto text-center"
             data-testid="table"
           >
             <thead className=" bg-shade1 ">
               <tr>
                 {head.map((head) => (
-                  <th key={head} className="px-4 py-2">
+                  <th key={head} className="px-2 py-2">
                     {head}
                   </th>
                 ))}
@@ -155,27 +188,44 @@ export default function ApotekerDashboard() {
                   <tr
                     key={data.nomor_antrian}
                     className={`text-shade7 text-center hover:bg-shade4 hover:text-tint7 
-                    ${data.status === "belum_diberikan" ? "bg-white" : ""} 
-                    ${data.status === "obat_tidakdiambil" ? "bg-[#D66A63]" : ""}
-                    ${data.status === "obat_disiapkan" ? "bg-shade4" : ""}
-                    ${data.status === "sudah_diberikan" ? "bg-tint5" : ""}`}
+                    ${data.status_obat === "belum_diberikan" ? "bg-white" : ""} 
+                    ${
+                      data.status_obat === "obat_tidakdiambil"
+                        ? "bg-[#D66A63]"
+                        : ""
+                    }
+                    ${data.status_obat === "obat_disiapkan" ? "bg-shade4" : ""}
+                    ${
+                      data.status_obat === "sudah_diberikan" ? "bg-tint5" : ""
+                    }`}
                   >
-                    <td className="p-2">{index + 1}</td>
-                    <td className="p-2">{data.nomor_antrian}</td>
-                    <td className="p-2">{data.poli}</td>
-                    <td className="p-2">{data.created_at}</td>
-                    <td className="p-2">{data.no_eRM}</td>
-                    <td className="p-2">{data.nik}</td>
-                    <td className="p-2">{data.nama_pasien}</td>
-                    <td className="p-2">{data.jenis_kelamin}</td>
-                    <td className="p-2">{data.tempat_tanggal_lahir}</td>
-                    <td className="p-2">{data.metode_pembayaran}</td>
-                    <td className="p-2">{data.resep}</td>
-                    <a
-                      className="p-2 justify-center font-medium hover:text-blue-500 hover:underline"
-                      onClick={() => handleResepButtonClick(data.no_eRM, data.poli, data.created_at)}>
-                      Detail
-                    </a>
+                    <td className="py-2 w-12">{index + 1}</td>
+                    <td className="py-2 w-12">{data.nomor_antrian}</td>
+                    <td className="py-2 w-20">{data.poli}</td>
+                    <td className="py-2 w-30">{data.created_at}</td>
+                    <td className="py-2 w-32">{data.no_erm}</td>
+                    <td className="py-2 w-60">{data.nama}</td>
+                    <td className="py-2 w-20">{data.jenis_kelamin}</td>
+                    <td className="py-2 w-40">
+                      {data.tempat_lahir +
+                        ", " +
+                        data.tanggal_lahir.slice(0, 10)}
+                    </td>
+                    {/* <td className="py-2 w-20">{data.metode_pembayaran}</td> */}
+                    <td className="py-2 w-30">
+                      <a
+                        className="p-2 justify-center font-medium hover:text-blue-500 hover:underline"
+                        onClick={() =>
+                          handleResepButtonClick(
+                            data.no_erm,
+                            data.poli,
+                            data.created_at
+                          )
+                        }
+                      >
+                        Detail
+                      </a>
+                    </td>
                   </tr>
                 ))}
             </tbody>
