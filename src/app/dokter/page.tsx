@@ -8,6 +8,7 @@ import axios from "axios";
 interface pasienData {
     pasien_id: number;
     no_erm: string;
+    nik: string;
     nama: string;
     jenis_kelamin: string;
     penjamin: string;
@@ -37,24 +38,31 @@ export default function DokterDashboard() {
 
     useEffect(() => {
         const fetchDataDetails = async () => {
-            const promises = data.map(async (item: any) => {
-                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
-                const hasil = response.data.data;
-                console.log(response)
-                const convert: pasienData = {} as pasienData;
-                convert.pasien_id = hasil.pasien_id;
-                convert.no_erm = hasil.no_erm;
-                convert.nama = hasil.nama;
-                convert.jenis_kelamin = hasil.jenis_kelamin;
-                convert.penjamin = hasil.penjamin;
-                convert.tempat_lahir = hasil.tempat_lahir;
-                convert.tanggal_lahir = hasil.tanggal_lahir;
-                return convert;
-            });
-
-            const results = await Promise.all(promises);
-            // console.log(results);
-            setPasien(results);
+            if (data === null) {
+                return;
+              }
+              else {
+                const promises = data.map(async (item: any) => {
+                  const response = await axios.get(
+                    `${additionalDataAPI}${item.pasien_id}`
+                  );
+                  const hasil = response.data.data;
+                  console.log(response);
+                  const convert: pasienData = {} as pasienData;
+                  convert.pasien_id = hasil.pasien_id;
+                  convert.no_erm = hasil.no_erm;
+                  convert.nik = hasil.nik;
+                  convert.nama = hasil.nama;
+                  convert.jenis_kelamin = hasil.jenis_kelamin;
+                  convert.penjamin = hasil.penjamin;
+                  convert.tempat_lahir = hasil.tempat_lahir;
+                  convert.tanggal_lahir = hasil.tanggal_lahir;
+                  return convert;
+                });
+                const result = await Promise.all(promises);
+                console.log
+                setPasien(result);
+              }
         };
 
         fetchDataDetails();
@@ -95,15 +103,25 @@ export default function DokterDashboard() {
       ];
 
     const shiftOptions = [
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
+        { label: 'Poli Umum Shift Pagi', value: 'Poli Umum Shift Pagi' },
+        { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
       ];
 
-      const handlePeriksaClick =  async (id: string) => {
+    const handlePeriksaClick =  async (id: string) => {
         window.location.href = `/dokter-pemeriksaan?antrianID=${id}`;
     }
+
+    const handleTTVButtonClick = async (nik: string, poli: string, created_at : string) => {
+        try {
+          const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+          const pasienId = response.data.data.pasien_id;
+          console.log(response.data.data);
+          console.log(pasienId);
+          window.location.href = `/ners-ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
+        } catch (error) {
+          console.error("Error fetching pasien data:", error);
+        }
+      };
 
     return (
         <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
@@ -185,6 +203,7 @@ export default function DokterDashboard() {
                             <th className="w-20">Jenis Kelamin</th>
                             <th className="w-50">Tempat & Tanggal Lahir</th>
                             <th className="w-24">Asuransi</th>
+                            <th className="w-20"></th>
                             <th className="w-16"></th>
                         </tr>
                     </thead>
@@ -199,18 +218,24 @@ export default function DokterDashboard() {
                                 <td>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
                                 <td>{pasien[index]?.no_erm}</td>
                                 <td>{pasien[index]?.nama}</td>
-                                <td>{pasien[index]?.jenis_kelamin}</td>
-                                <td>{pasien[index]?.tempat_lahir}, {formatUpdatedAtToDDMMYYYY(pasien[index]?.tanggal_lahir)}</td>
+                                {pasien[index]?.jenis_kelamin === 'laki-laki' ? <td>L</td> : <td>P</td>}
+                                <td><div>
+                                    <p>{pasien[index]?.tempat_lahir}, </p>
+                                    <p>{formatUpdatedAtToDDMMYYYY(pasien[index]?.tanggal_lahir)}</p>    
+                                </div></td>
                                 <td>{pasien[index]?.penjamin}</td>
                                 <td>
-                                    <button className="text-blue-700" onClick={() => handlePeriksaClick(item.antrian_id)}>Periksa</button>
+                                    <button className=" text-blue-700 hover:underline hover:text-white" onClick={() => handleTTVButtonClick(pasien[index]?.nik, item.poli, item.created_at)}>Buka TTV</button>
+                                </td>
+                                <td>
+                                    <button className="text-blue-700 hover:underline hover:text-white" onClick={() => handlePeriksaClick(item.antrian_id)}>Periksa</button>
                                 </td>
                             </tr>
                         ))
                         ) : (
                             <tr>
-                                <td colSpan={10} className="text-center">
-                                    Tidak ada data
+                                <td colSpan={11} className="text-center text-black hover:bg-shade4 hover:text-tint7">
+                                    Tidak ada data.
                                 </td>
                             </tr>
                         )}
