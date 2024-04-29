@@ -1,6 +1,6 @@
 import { render, fireEvent, screen, waitFor, getByText } from '@testing-library/react';
 import '@testing-library/jest-dom'
-import TambahAntrian from '@/app/frontoffice/tambah-antrian/page';
+import TambahAntrian from '@/app/tambah-antrian/page';
 import { useRouter } from 'next/navigation';
 import { act } from 'react-dom/test-utils';
 import axios from 'axios';

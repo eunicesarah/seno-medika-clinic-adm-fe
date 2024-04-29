@@ -1,10 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import Pattern from "../../../../public/pattern.svg";
+import Pattern from "../../../public/pattern.svg";
 import Modal from "react-modal";
 import Chip from "react-chip"
-import { useRouter } from 'next/navigation';
 import axios from "axios";
 
 
@@ -20,7 +19,6 @@ interface PerawatData{
 }
 
 export default function Register() {
-  const router = useRouter();
   const [selectedPosisi, setSelectedPosisi] = useState("");
   const [selectedPoli, setSelectedPoli] = useState("");
   const [formData, setFormData] = useState({
@@ -34,19 +32,14 @@ export default function Register() {
     apoteker_data: {
       nomor_lisensi:"",
     },
-    dokter_data:{
-      nomor_lisensi:"",
-      jaga_poli_mana: "",
-      jadwal_jaga:"",
-      list_jadwal_dokter: [],
-    }
   });
   const [nomor_lisensi, setnomor_lisensi] = useState("");
   
   
   type Schedule = {
     hari: string;
-    shift: number;
+    waktuMulai: string;
+    waktuSelesai: string;
   };
   
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -58,21 +51,6 @@ export default function Register() {
   const [dateTimeEnd, setDateTimeEnd] = useState<String>("");
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
-  const [selectedHari, setSelectedHari] = useState('');
-  const [selectedShift, setSelectedShift] = useState('');
-  const [selectedJadwal, setSelectedJadwal] = useState('');
-
-  const handleSaveSchedule = async() => {
-    const jadwal = `${selectedHari},${selectedShift}`;
-    console.log(jadwal);
-    var shift = 0;
-    if(selectedShift === 'pagi') {
-      shift = 1;
-    }else{
-      shift = 2;
-    }
-    setSchedules([...schedules, { hari: selectedHari, shift: shift }]);
-  }
 
   const handlePosisiChange = (value:any) => {
     setSelectedPosisi(value);
@@ -85,15 +63,6 @@ export default function Register() {
 
   const handlePoliChange = (value: any) => {
     setSelectedPoli(value);
-    setFormData({
-      ...formData,
-      dokter_data: {
-        nomor_lisensi: nomor_lisensi,
-        jaga_poli_mana: value,
-        jadwal_jaga: "Senin-Jumat, Pagi-Siang",
-        list_jadwal_dokter: schedules
-      }
-    });
   };
 
   const handleOpenModal = (e:any) => {
@@ -119,8 +88,7 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
-        router.push('/superadmin/dashboard');
+        location.href = "/bye";
       }
     }
     catch (error) {
@@ -133,18 +101,6 @@ export default function Register() {
     console.log(formData);
     console.log(nomor_lisensi);
     console.log(selectedPoli);
-    try {
-      const response = await axios.post("http://localhost:8080/dokter", formData);
-      console.log(response);
-      if (response.status === 200) {
-        console.log("User created");
-        alert("User created");
-        router.push('/superadmin/dashboard');
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
   }
   const submitFormSuster = async () => {
     console.log(selectedPosisi);
@@ -155,8 +111,7 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
-        router.push('/superadmin/dashboard');
+        location.href = "/bye";
       }
     }
     catch (error) {
@@ -168,14 +123,11 @@ export default function Register() {
     console.log(nomor_lisensi);
     console.log(formData);
     try {
-      console.log("masuk apoteker3")
       const response = await axios.post("http://localhost:8080/apoteker", formData);
-      console.log("asdfasdfasfasf");
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
-        router.push('/superadmin/dashboard');
+        location.href = "/bye";
       }
     }
     catch (error) {
@@ -189,15 +141,6 @@ export default function Register() {
     if(selectedPosisi === "Front Officer" || selectedPosisi === "Kasir") {
       submitForm1();
     }else if(selectedPosisi === "Dokter") {
-      setFormData({
-        ...formData,
-        dokter_data: {
-          nomor_lisensi: nomor_lisensi,
-          jaga_poli_mana: selectedPoli,
-          jadwal_jaga: "Senin-Jumat, Pagi-Siang",
-          list_jadwal_dokter: schedules
-        }
-      });
       submitFormDokter();
     }else if(selectedPosisi === "Suster") {
       setFormData({
@@ -207,8 +150,7 @@ export default function Register() {
         }
       });
       submitFormSuster();
-    }else if(selectedPosisi === "Apoteker"){
-      console.log("masuk apoteker2")
+    }else{
       setFormData({
         ...formData,
         apoteker_data: {
@@ -224,15 +166,6 @@ export default function Register() {
     setnomor_lisensi(event.target.value);
     if(selectedPosisi === "Dokter") {
       console.log("Dokter")
-      setFormData({
-        ...formData,
-        dokter_data: {
-          nomor_lisensi: event.target.value,
-          jaga_poli_mana: selectedPoli,
-          jadwal_jaga: "Senin-Jumat, Pagi-Siang",
-          list_jadwal_dokter: schedules
-        }
-      });
     }else if(selectedPosisi === "Suster") {
       setFormData({
         ...formData,
@@ -241,7 +174,6 @@ export default function Register() {
         }
       });
     }else if(selectedPosisi === "Apoteker"){
-      console.log("masuk apoteker1")
       setFormData({
         ...formData,
         apoteker_data: {
@@ -251,12 +183,8 @@ export default function Register() {
     }
   }
 
-  useEffect(() => {
-    Modal.setAppElement('#register-superadmin');
-  }, []);
-
   return (
-    <div className="w-full h-screen bg-tint6 flex flex-row" id="register-superadmin">
+    <div className="w-full h-screen bg-tint6 flex flex-row">
       <div className="h-screen w-auto ">
         {selectedPosisi != "Dokter" &&
           selectedPosisi != "Suster" &&
@@ -271,7 +199,7 @@ export default function Register() {
         <form className="space-y-4 md:space-y-6 flex flex-row" onSubmit={handleSubmit} method="post">
           <div className="flex flex-col gap-3">
             <div className="mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="nama" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Nama
               </label>
               <input
@@ -288,7 +216,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="email" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 E-mail
               </label>
               <input
@@ -305,7 +233,7 @@ export default function Register() {
               />
             </div>
             <div className="mx-16 ">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="password" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Kata Sandi
               </label>
               <input
@@ -322,7 +250,7 @@ export default function Register() {
               />
             </div>
             <div className="max-w-sm mx-16">
-              <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+              <label htmlFor="role" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                 Daftar Sebagai
               </label>
               <select
@@ -387,7 +315,7 @@ export default function Register() {
           {showAdditionalFields && (
             <div className="flex flex-col gap-3">
               <div className="mx-16">
-                <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                <label htmlFor="no_lisensi" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                   Nomor Lisensi
                 </label>
                 <input
@@ -402,7 +330,7 @@ export default function Register() {
               <div className="max-w-sm mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label htmlFor="jenis_poli" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jenis Poli
                     </label>
                     <select
@@ -440,17 +368,17 @@ export default function Register() {
               <div className="mx-16">
                 {selectedPosisi === "Dokter" && (
                   <div>
-                    <label className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
+                    <label htmlFor="jadwal" className="pl-4 mb-1 block text-l text-shade6 font-Poppins font-semibold">
                       Jadwal
                     </label>
                     <div>
-                    {/* {schedules.map((schedule, index) => (
+                    {schedules.map((schedule, index) => (
                 <Chip
                   key={index}
-                  label={`${schedule.hari}, ${schedule.shift}`}
+                  label={`${schedule.hari}, ${schedule.waktuMulai} - ${schedule.waktuSelesai}`}
                   // onDelete={handleDelete(schedule)}
                 />
-              ))} */}
+              ))}
                       <button
                         name="jadwal"
                         id="jadwal"
@@ -464,7 +392,6 @@ export default function Register() {
                       isOpen={isModalOpen}
                       onRequestClose={handleCloseModal}
                       contentLabel="Schedule Modal"
-                      appElement={document.getElementById("register-superadmin") as HTMLElement}
                       className="text-shade8 font-Poppins items-center justify-center p-8 flex flex-col gap-5 bg-tint4 h-auto w-auto rounded-b-3xl"
                     >
                       <label className="font-bold ">Pilih Jadwal</label>
@@ -479,8 +406,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="senin"
-                                checked={selectedHari === 'senin'}
-                                onChange={() => setSelectedHari('senin')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -499,8 +424,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="selasa"
-                                checked={selectedHari === 'selasa'}
-                                onChange={() => setSelectedHari('selasa')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -519,8 +442,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="rabu"
-                                checked={selectedHari === 'rabu'}
-                                onChange={() => setSelectedHari('rabu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -539,8 +460,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="kamis"
-                                checked={selectedHari === 'kamis'}
-                                onChange={() => setSelectedHari('kamis')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -559,8 +478,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="jumat"
-                                checked={selectedHari === 'jumat'}
-                                onChange={() => setSelectedHari('jumat')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -578,8 +495,6 @@ export default function Register() {
                                 className="peer sr-only"
                                 name="jadwal"
                                 value="sabtu"
-                                checked={selectedHari === 'sabtu'}
-                                onChange={() => setSelectedHari('sabtu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -598,8 +513,6 @@ export default function Register() {
                                 name="hari_jadwal"
                                 id="hari_jadwal"
                                 value="minggu"
-                                checked={selectedHari === 'minggu'}
-                                onChange={() => setSelectedHari('minggu')}
                               />
                               <div className="justify-center overflow-hidden rounded-xl bg-tint6 shadow-md ring ring-transparent peer-checked:bg-shade6 peer-checked:text-tint7 transition-all active:scale-95 peer-checked:ring-shade8">
                                 <header className="px-2.5 py-2.5 items-center justify-center">
@@ -613,28 +526,28 @@ export default function Register() {
                         </div>
                       </div>
                       <div className="flex flex-row gap-3">
-                        <label className="font-bold text-l">Shift</label>
+                        <label className="font-bold text-l">Waktu Mulai</label>
                         <input
-                        type="radio"
-                        name="shift"
-                        value="pagi"
-                        id="shift"
-                        checked={selectedShift === 'pagi'}
-                        onChange={() => setSelectedShift('pagi')}
+                          type="text"
+                          name="waktu_mulai"
+                          id="waktu_mulai"
+                          className="flex h-auto p-2 rounded-xl w-full"
+                          placeholder="JJ:MM"
                         />
-                        <p>Pagi</p>
+
+                        <label className="font-bold text-l">
+                          Waktu Selesai
+                        </label>
                         <input
-                        type="radio"
-                        name="shift"
-                        value="siang"
-                        id="shift"
-                        checked={selectedShift === 'siang'}
-                        onChange={() => setSelectedShift('siang')}
+                          type="text"
+                          name="waktu_selesai"
+                          id="waktu_selesai"
+                          className="flex h-auto p-2 rounded-xl w-full"
+                          placeholder="JJ:MM"
                         />
-                        <p>Siang</p>
                       </div>
                       <button
-                        onClick={handleSaveSchedule}
+                        // onClick={handleSimpanClick}
                         className="h-11 bg-primary1 rounded-2xl p-2.5 px-6 justify-center items-center inline-flex font-semibold text-tint7 hover:bg-tint6 hover:text-shade7"
                       >
                         Simpan
@@ -663,6 +576,5 @@ export default function Register() {
         </form>
       </div>
     </div>
-
   );
 }

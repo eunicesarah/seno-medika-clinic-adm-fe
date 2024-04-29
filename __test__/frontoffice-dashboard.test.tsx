@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import axios from 'axios';
-import Dashboard from '@/app/frontoffice/dashboard/page';
+import Dashboard from '@/app/frontoffice-dashboard/page';
 import { act } from 'react-dom/test-utils';
 
 jest.mock('axios');
