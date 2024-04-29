@@ -1,10 +1,11 @@
 "use client";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import logo from "../../../public/logo.svg";
-import CustomDatePicker from "../../components/Datepicker";
-import Dropdown from "../../components/Dropdown";
-import CustomDropdown from "../../components/CustomDropdown";
+import logo from "../../../../public/logo.svg";
+import CustomDatePicker from "../../../components/Datepicker";
+import Dropdown from "../../components/dropdown";
+import CustomDropdown from "../../../components/CustomDropdown";
+import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
 const genderOptions = [
@@ -109,6 +110,7 @@ export default function Register() {
     const [errors , setErrors] = useState({} as IError);
     const [isFormValid, setIsFormValid] = useState(false);
     const [ermNumber, setErmNumber] = useState("");
+    const router = useRouter();
 
     const [formValues, setFormValues] = useState({
         nama: "",
@@ -411,6 +413,7 @@ export default function Register() {
                 console.log(response)
                 if(response.status < 400){
                     alert('Data berhasil disimpan')
+                    router.push('/frontoffice/dashboard'); 
                     // location.href = '/frontoffice-dashboard'
                 }else(
                     alert(response.data.message)
@@ -487,16 +490,15 @@ export default function Register() {
     }
 
     return (
-        <main className="min-h-screen font-poppins bg-tint5">
-            <div className="flex flex-row ">
+        <main className="min-h-screen font-Poppins bg-tint5 p-4">
+            <div className="flex flex-row m-4">
                 <Image
                     src={logo}
                     alt="Logo Seno Medika"
-                    height={153}
-                    width={153}
+                    className="w-32 h-32 ml-28"
                     data-testid="logo"
                 />
-                <div className="flex flex-col">
+                <div className="flex flex-col p-4">
                     <h1 className="text-shade6 font-bold text-5xl" data-testid="title">
                         REGISTRASI PASIEN
                     </h1>
@@ -506,7 +508,7 @@ export default function Register() {
                     </h2>
                 </div>
             </div>
-            <div className="bg-tint4 font-poppins mx-16 rounded-3xl">
+            <div className="bg-tint4 font-Poppins mx-16 rounded-3xl">
                 <form className="" onSubmit={handleSubmit}>
                     <div className="px-10 py-5 gap-y-4 grid grid-cols-12 gap-5">
                         <div className="col-start-1 col-span-12">

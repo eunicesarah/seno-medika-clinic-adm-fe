@@ -38,7 +38,7 @@ interface TableProps {
     return (
       <table className='ml-20 mr-20 w-11/12 mb-14'>
         <thead>
-          <tr className='bg-shade1 h-16 font-poppins font-semibold text-shade8 text-left'>
+          <tr className='bg-shade1 h-16 font-Poppins font-semibold text-white text-center'>
             <th className='text-center'>No</th>
             <th>Tanggal Masuk</th>
             <th>Id Pasien</th>
@@ -54,7 +54,7 @@ interface TableProps {
           data.map((item, index) => (
             <tr
               key={item.antrian_id}
-              className={`h-16 font-poppins text-shade8 text-left font-medium hover:bg-shade4 ${
+              className={`h-16 font-Poppins text-shade8 text-center font-medium hover:bg-shade4 hover:text-white ${
                 item.antrian_id % 2 === 0 ? 'bg-tint4' : 'bg-tint5'
               }`}
             >
@@ -70,7 +70,7 @@ interface TableProps {
           ))
         ) : (
           <tr>
-            <td colSpan={7} className='text-center h-16 font-poppins text-shade8 font-medium hover:bg-shade4'>
+            <td colSpan={9} className='text-center h-16 font-Poppins text-shade8 font-medium hover:bg-shade4 hover:text-white'>
               Tidak ada data.
             </td>
           </tr>
