@@ -3,8 +3,79 @@ import Image from "next/image";
 import SMLogo from "../../../public/Logo_Seno_Medika.svg";
 import Dropdown from "../components/dropdown";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
+interface pasienData {
+    pasien_id: number;
+    no_erm: string;
+    nama: string;
+    jenis_kelamin: string;
+    penjamin: string;
+    tempat_lahir: string;
+    tanggal_lahir: string;
+}
 
 export default function DokterDashboard() {
+    const antrianAPI = "http://localhost:8080/antrian";
+    const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
+    const [data, setData] = useState([]);
+    const [pasien, setPasien] = useState([] as pasienData[]);
+
+    const fetchData = async () => {
+        let arr: Array<any> = [];
+
+        try {
+            const response = await axios.get(antrianAPI);
+            const data1 = response.data;
+            const data = data1.data;
+            setData(data);
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    useEffect(() => {
+        const fetchDataDetails = async () => {
+            const promises = data.map(async (item: any) => {
+                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
+                const hasil = response.data.data;
+                console.log(response)
+                const convert: pasienData = {} as pasienData;
+                convert.pasien_id = hasil.pasien_id;
+                convert.no_erm = hasil.no_erm;
+                convert.nama = hasil.nama;
+                convert.jenis_kelamin = hasil.jenis_kelamin;
+                convert.penjamin = hasil.penjamin;
+                convert.tempat_lahir = hasil.tempat_lahir;
+                convert.tanggal_lahir = hasil.tanggal_lahir;
+                return convert;
+            });
+
+            const results = await Promise.all(promises);
+            // console.log(results);
+            setPasien(results);
+        };
+
+        fetchDataDetails();
+    }, [data]);
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    console.log(data);
+    console.log(pasien);
+
+    function formatUpdatedAtToDDMMYYYY(timestamp:string) {
+        const updatedAtDate = new Date(timestamp);
+        const day = updatedAtDate.getDate().toString().padStart(2, '0');
+        const month = (updatedAtDate.getMonth() + 1).toString().padStart(2, '0');
+        const year = updatedAtDate.getFullYear();
+      
+        return `${day}/${month}/${year}`;
+    }
+
     const [selectedOption, setSelectedOption] = useState(null);
     const [selectedDate, setSelectedDate] = useState(null);
     const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
@@ -29,6 +100,10 @@ export default function DokterDashboard() {
         { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
         { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
       ];
+
+      const handlePeriksaClick =  async (id: string) => {
+        window.location.href = `/dokter-pemeriksaan?antrianID=${id}`;
+    }
 
     return (
         <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
@@ -115,20 +190,30 @@ export default function DokterDashboard() {
                     </thead>
 
                     <tbody>
-                        <tr className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
-                            <td>1</td>
-                            <td>001</td>
-                            <td>Ruang Dokter Umum Pagi</td>
-                            <td>12-12-2021</td>
-                            <td>0000000003784924</td>
-                            <td>Gustavo Lemiarto Sugeng</td>
-                            <td>L</td>
-                            <td>Banyumas, 02/03/1998</td>
-                            <td>BPJS</td>
-                            <td>
-                                <button className="text-blue-700">Periksa</button>
-                            </td>
-                        </tr>
+                        {data && data.length > 0 ? (
+                            data.map((item: any, index: number) => (
+                            <tr key={index} className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
+                                <td>{index + 1}</td>
+                                <td>{item.nomor_antrian}</td>
+                                <td>{item.poli}</td>
+                                <td>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
+                                <td>{pasien[index]?.no_erm}</td>
+                                <td>{pasien[index]?.nama}</td>
+                                <td>{pasien[index]?.jenis_kelamin}</td>
+                                <td>{pasien[index]?.tempat_lahir}, {formatUpdatedAtToDDMMYYYY(pasien[index]?.tanggal_lahir)}</td>
+                                <td>{pasien[index]?.penjamin}</td>
+                                <td>
+                                    <button className="text-blue-700" onClick={() => handlePeriksaClick(item.antrian_id)}>Periksa</button>
+                                </td>
+                            </tr>
+                        ))
+                        ) : (
+                            <tr>
+                                <td colSpan={10} className="text-center">
+                                    Tidak ada data
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
 
