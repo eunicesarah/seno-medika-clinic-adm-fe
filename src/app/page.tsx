@@ -29,7 +29,7 @@ export default function Home() {
             <div className=" flex flex-col items-center pt-8">
               <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-center font-bold text-tint7">PELAYANAN KESEHATAN <span className="text-tint6">RAMAH</span> DAN <span className="text-tint6">BERKUALITAS</span></h1>
               <h3 className="text-xl md:text-2xl xl:text-3xl text-center font-semibold my-10 text-tint7">Keselamatan dan kenyamanan pasien adalah prioritas utama kami. Dipandu oleh tenaga profesional yang berpengalaman, kami siap memberikan pelayanan medis yang aman dan berkualitas.</h3>
-              {/* <button className="text-base md:text-xl xl:text-2xl bg-shade4 py-5 px-7 text-white rounded-3xl font-semibold">BUAT JANJI</button> */}
+              <button className="text-base md:text-xl xl:text-2xl bg-shade4 py-5 px-7 text-white rounded-3xl font-semibold">BUAT JANJI</button>
             </div>
             <Image
             src={mba_depan}
@@ -88,8 +88,8 @@ export default function Home() {
                   alt="parkir"
                   className="w-40 shadow-lg"
                   />
-                <p className="absolute font-Poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Photobooth</p>
-                <p className="absolute font-Poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Yuk Abadikan Momen Khitan Anak Anda Bersama Keluarga Di Photobooth Klinik Seno Medika.</p>
+                <p className="absolute font-poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Photobooth</p>
+                <p className="absolute font-poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Yuk Abadikan Momen Khitan Anak Anda Bersama Keluarga Di Photobooth Klinik Seno Medika.</p>
               </div>
               <div className="relative">
                 <Image
@@ -97,8 +97,8 @@ export default function Home() {
                   alt="parkir"
                   className="w-40 shadow-lg"
                   />
-                <p className="absolute font-Poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Parkir Luas</p>
-                <p className="absolute font-Poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Kami Memiliki Tempat Parkir Yang Luas, Anda Tidak Perlu Khawatir Dalam Menyimpan Kendaraan Anda.</p>
+                <p className="absolute font-poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Parkir Luas</p>
+                <p className="absolute font-poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Kami Memiliki Tempat Parkir Yang Luas, Anda Tidak Perlu Khawatir Dalam Menyimpan Kendaraan Anda.</p>
               </div>
               <div className="relative">
                 <Image
@@ -106,8 +106,8 @@ export default function Home() {
                   alt="parkir"
                   className="w-40 shadow-lg"
                   />
-                <p className="absolute font-Poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Ruang VIP</p>
-                <p className="absolute font-Poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Kami Menyediakan Fasilitas Ruang VIP Untuk Menunjang Pelayanan Kami Demi Kebutuhan Anda.</p>
+                <p className="absolute font-poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Ruang VIP</p>
+                <p className="absolute font-poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Kami Menyediakan Fasilitas Ruang VIP Untuk Menunjang Pelayanan Kami Demi Kebutuhan Anda.</p>
               </div>
               <div className="relative">
                 <Image
@@ -115,8 +115,8 @@ export default function Home() {
                   alt="parkir"
                   className="w-40 shadow-lg"
                   />
-                <p className="absolute font-Poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Toko Kami</p>
-                <p className="absolute font-Poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Yuk Ayah Bunda Bagi Yang Ingin Membelikan Hadiah Untuk Anda Bisa Di Toko Kami.</p>
+                <p className="absolute font-poppins text-shade4 font-semibold left-10 top-11 text-base lg:text-2xl">Toko Kami</p>
+                <p className="absolute font-poppins text-shade4 left-2 right-2 top-16 text-xs lg:text-xl text-center">Yuk Ayah Bunda Bagi Yang Ingin Membelikan Hadiah Untuk Anda Bisa Di Toko Kami.</p>
               </div>
 
             </div>
@@ -139,8 +139,8 @@ export default function Home() {
               alt="parkir"
               className="h-60 xl:h-80"
             />
-            <p className="absolute top-24  xl:top-32 left-28 font-Poppins text-shade4 font-semibold text-2xl">Photobooth</p>
-            <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-Poppins text-shade4 text-lg xl:text-xl text-center">Yuk Abadikan Momen Khitan Anak Anda Bersama Keluarga Di Photobooth Klinik Seno Medika</p>
+            <p className="absolute top-24  xl:top-32 left-28 font-poppins text-shade4 font-semibold text-2xl">Photobooth</p>
+            <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-poppins text-shade4 text-lg xl:text-xl text-center">Yuk Abadikan Momen Khitan Anak Anda Bersama Keluarga Di Photobooth Klinik Seno Medika</p>
           </div>
           <div className="relative">
             <Image
@@ -148,8 +148,8 @@ export default function Home() {
               alt="parkir"
               className="h-60 xl:h-80"
             />
-            <p className="absolute top-24  xl:top-32 left-28 font-Poppins text-shade4 font-semibold text-2xl">Parkir Luas</p>
-            <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-Poppins text-shade4 text-lg xl:text-xl text-center">Kami Memiliki Tempat Parkir Yang Luas Sehingga Anda Tidak Perlu Khawatir Dalam Menyimpan Kendaraan Anda.</p>
+            <p className="absolute top-24  xl:top-32 left-28 font-poppins text-shade4 font-semibold text-2xl">Parkir Luas</p>
+            <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-poppins text-shade4 text-lg xl:text-xl text-center">Kami Memiliki Tempat Parkir Yang Luas Sehingga Anda Tidak Perlu Khawatir Dalam Menyimpan Kendaraan Anda.</p>
           </div>
           </div>
           <div className="flex flex-row space-x-20 xl:space-x-40 ">
@@ -159,8 +159,8 @@ export default function Home() {
                 alt="parkir"
                 className="h-60 xl:h-80"
               />
-              <p className="absolute top-24  xl:top-32 left-28 font-Poppins text-shade4 font-semibold text-2xl">Ruang VIP</p>
-              <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-Poppins text-shade4 text-lg xl:text-xl text-center">Kami Menyediakan Fasilitas Ruang VIP Untuk Menunjang Pelayanan Kami Demi Kebutuhan Anda.</p>
+              <p className="absolute top-24  xl:top-32 left-28 font-poppins text-shade4 font-semibold text-2xl">Ruang VIP</p>
+              <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-poppins text-shade4 text-lg xl:text-xl text-center">Kami Menyediakan Fasilitas Ruang VIP Untuk Menunjang Pelayanan Kami Demi Kebutuhan Anda.</p>
             </div>
               <Image
                 src={dokter}
@@ -173,8 +173,8 @@ export default function Home() {
                 alt="parkir"
                 className="h-60 xl:h-80"
               />
-              <p className="absolute top-24  xl:top-32 left-28 font-Poppins text-shade4 font-semibold text-2xl">Toko Kami</p>
-              <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-Poppins text-shade4 text-lg xl:text-xl text-center">Yuk Ayah Bunda Bagi Yang Ingin Membelikan Hadiah Untuk Anda Bisa Di Toko Kami.</p>
+              <p className="absolute top-24  xl:top-32 left-28 font-poppins text-shade4 font-semibold text-2xl">Toko Kami</p>
+              <p className="absolute top-32 left-11 right-11 xl:top-44 xl:left-7 xl:right-7 font-poppins text-shade4 text-lg xl:text-xl text-center">Yuk Ayah Bunda Bagi Yang Ingin Membelikan Hadiah Untuk Anda Bisa Di Toko Kami.</p>
             </div>
 
           </div>
