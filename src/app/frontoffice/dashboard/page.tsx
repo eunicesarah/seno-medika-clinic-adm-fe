@@ -46,21 +46,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchDataDetails = async () => {
-      const promises = data.map(async (item: any) => {
-        const response = await axios.get(
-          `${additionalDataAPI}${item.pasien_id}`
-        );
-        const hasil = response.data.data;
-        console.log(response);
-        const convert: pasienData = {} as pasienData;
-        convert.pasien_id = hasil.pasien_id;
-        convert.nama = hasil.nama;
-        convert.penjamin = hasil.penjamin;
-        return convert;
-      });
-
-      const result = await Promise.all(promises);
-      setPasien(result);
+      if (data === null) {
+        return;
+      }
+      else {
+        const promises = data.map(async (item: any) => {
+          const response = await axios.get(
+            `${additionalDataAPI}${item.pasien_id}`
+          );
+          const hasil = response.data.data;
+          console.log(response);
+          const convert: pasienData = {} as pasienData;
+          convert.pasien_id = hasil.pasien_id;
+          convert.nama = hasil.nama;
+          convert.penjamin = hasil.penjamin;
+          return convert;
+        });
+        const result = await Promise.all(promises);
+        setPasien(result);
+      }
     };
 
     fetchDataDetails();
@@ -78,8 +82,15 @@ export default function Dashboard() {
 
   const fetchFinishedDataLength = async () => {
     const notaLength = await axios.get("http://localhost:8080/kasir");
-    const countNota = notaLength.data.data.length;
-    setTotalFinished(countNota);
+    if (notaLength.data.data === null) {
+      const countNota = 0;
+      setTotalFinished(countNota);
+    }
+    else{
+      const countNota = notaLength.data.data.length;
+      setTotalFinished(countNota);
+    }
+
   };
 
   const calculateFinishedDataLength = () => {
