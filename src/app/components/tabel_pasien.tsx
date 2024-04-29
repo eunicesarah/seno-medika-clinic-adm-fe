@@ -70,7 +70,7 @@ interface TableProps {
           ))
         ) : (
           <tr>
-            <td colSpan={7} className='text-center h-16 font-Poppins text-shade8 font-medium hover:bg-shade4 hover:text-white'>
+            <td colSpan={9} className='text-center h-16 font-Poppins text-shade8 font-medium hover:bg-shade4 hover:text-white'>
               Tidak ada data.
             </td>
           </tr>
