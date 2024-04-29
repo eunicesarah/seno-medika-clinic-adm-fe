@@ -58,18 +58,18 @@ export default function TambahAntrian() {
     }
 
     return (
-        <div className='flex flex-col md:flex-row bg-tint6'>
+        <div className='flex flex-col md:flex-row bg-tint6 p-4'>
             <Image 
                 src={Background} 
                 alt="Background" 
                 className="h-screen md:w-1/2"
             />
-            <div className='text-shade6 font-poppins w-full md:w-auto'>
+            <div className='text-shade6 font-Poppins w-full md:w-auto'>
                 <p className='text-5xl font-extrabold mt-20 mb-4' data-testid="title">DAFTAR BEROBAT</p>
                 <p className='text-2xl font-medium mr-10' data-testid="desc">Jika baru pertama kali mendaftar, silahkan ke menu pendaftaran pasien</p>
                 <div className='mt-14'>
                     <div>
-                        <p className='text-2xl'>Nama</p>
+                        <p className='text-xl font-Poppins'>Nama</p>
                         <input 
                             value={name}
                             data-testid="input-name" 
@@ -79,7 +79,7 @@ export default function TambahAntrian() {
                         />
                     </div>
                     <div>
-                        <p className='text-2xl mt-4'>NIK</p>
+                        <p className='text-xl mt-4 font-Poppins'>NIK</p>
                         <input 
                             value={nik}
                             data-testid="input-nik"
@@ -89,7 +89,7 @@ export default function TambahAntrian() {
                         />
                     </div>
                     <div data-testid="dropdown-poli" className="w-full md:w-96">
-                        <p className='text-2xl mt-4'>Poli</p>
+                        <p className='text-xl mt-4 font-Poppins'>Poli</p>
                         <Dropdown
                             options={options}
                             onSelect={handleOptionClick}
@@ -97,11 +97,11 @@ export default function TambahAntrian() {
                     </div>
                     <button 
                         onClick={handleSubmit}
-                        className='bg-primary1 h-11 w-full md:w-36 rounded-3xl text-white font-poppins mt-4'>
+                        className='bg-primary1 h-11 w-full md:w-36 rounded-3xl text-white font-Poppins mt-4 hover:bg-shade6'>
                         Lanjut
                     </button>
                 </div>
             </div>
         </div>
     );
-}    
+}
