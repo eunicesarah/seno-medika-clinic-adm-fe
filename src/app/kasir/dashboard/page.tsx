@@ -36,22 +36,28 @@ export default function KasirDashboard(){
 
     useEffect(() => {
         const fetchDataDetails = async () => {
-            const promises = data.map(async (item: any) => {
-                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
-                const hasil = response.data.data;
-                console.log(response)
-                const convert: pasienData = {} as pasienData;
-                convert.pasien_id = hasil.pasien_id;
-                convert.no_erm = hasil.no_erm;
-                convert.nama = hasil.nama;
-                convert.jenis_kelamin = hasil.jenis_kelamin;
-                convert.penjamin = hasil.penjamin;
-                return convert;
-            });
-
-            const results = await Promise.all(promises);
-            // console.log(results);
-            setPasien(results);
+            if (data === null) {
+                return;
+              }
+              else {
+                const promises = data.map(async (item: any) => {
+                  const response = await axios.get(
+                    `${additionalDataAPI}${item.pasien_id}`
+                  );
+                  const hasil = response.data.data;
+                //   console.log(response);
+                  const convert: pasienData = {} as pasienData;
+                  convert.pasien_id = hasil.pasien_id;
+                  convert.no_erm = hasil.no_erm;
+                  convert.nama = hasil.nama;
+                  convert.jenis_kelamin = hasil.jenis_kelamin;
+                  convert.penjamin = hasil.penjamin;
+                  return convert;
+                });
+                const result = await Promise.all(promises);
+                console.log
+                setPasien(result);
+              }
         };
 
         fetchDataDetails();
@@ -61,8 +67,8 @@ export default function KasirDashboard(){
         fetchData();
     }, []);
 
-    console.log(data);
-    console.log(pasien);
+    // console.log(data);
+    // console.log(pasien);
 
     function formatUpdatedAtToDDMMYYYY(timestamp:string) {
         const updatedAtDate = new Date(timestamp);
@@ -92,10 +98,8 @@ export default function KasirDashboard(){
       ];
 
     const shiftOptions = [
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
+        { label: 'Poli Umum Shift Pagi', value: 'Poli Umum Shift Pagi' },
+        { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
       ];
 
     const handleDetailClick =  async (id: string) => {
@@ -110,6 +114,7 @@ export default function KasirDashboard(){
                         src={SMLogo} 
                         alt="Logo Seno Medika" 
                         className="w-32 h-32 ml-28"
+                        priority={true}
                     />    
                 </div>
                 <div className="ml-auto">
@@ -187,7 +192,7 @@ export default function KasirDashboard(){
                     <tbody>
                         {data && data.length > 0 ? (
                             data.map((item: any, index: number) => (
-                                <tr className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
+                                <tr key={item.antrian_id} className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
                                     <td>{index+1}</td>
                                     <td>{item.nomor_antrian}</td>
                                     <td>{item.poli}</td>
