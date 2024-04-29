@@ -84,11 +84,8 @@ export default function Dashboard() {
 
   const calculateFinishedDataLength = () => {
     fetchFinishedDataLength();
-    console.log("data " + data);
-    console.log("total finish " + totalFinished);
-    console.log("data length " + data.length);
     if (data && data.length > 0) {
-      return data.length - totalFinished;
+      return totalFinished;
     } else {
       return 0;
     }
