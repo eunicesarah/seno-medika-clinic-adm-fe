@@ -68,7 +68,7 @@ export default function NurseDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const responseAntrian = await axios.get("http://localhost:8080/antriannurse");
+        const responseAntrian = await axios.get("http://localhost:8080/antrian?find_by=dashboard");
         const antrian = responseAntrian.data.data;
         const formattedAntrian = antrian.map((data: any) => {
           return {
