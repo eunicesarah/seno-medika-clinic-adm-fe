@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import SMLogo from "../../../public/Logo_Seno_Medika.svg";
 import ExpandableContent from "../components/expandableContent";
@@ -9,6 +9,8 @@ import Diagnosa from "./diagnosa";
 import Resep from "./resep";
 import Keur from "./keur";
 import Head from "next/head";
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
 
 interface Tab {
   title: string;
@@ -22,6 +24,91 @@ export default function PemeriksaanDokter() {
   const [showPopup1, setShowPopup1] = useState(false);
   const [showPopup2, setShowPopup2] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get("antrianID");
+
+  const antrianAPI = "http://localhost:8080/antrian?find_by=id&target=";
+  const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
+  const [data, setData] = useState<any>(null);
+  const [pasien, setPasien] = useState<any>(null);
+
+  const fetchData = async () => {
+    let arr: Array<any> = [];
+
+    try {
+      const response = await axios.get(`${antrianAPI}${id}`);
+      const data1 = response.data;
+      const data = data1.data;
+      console.log(data);
+      setData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchDataPasien = async () => {
+
+    try {
+      const response = await axios.get(
+        `${additionalDataAPI}${data.pasien_id}`
+      );
+      const responseData = response.data;
+      const fetchedData = responseData.data;
+      console.log(fetchedData);
+      setPasien(fetchedData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  
+  };
+
+  useEffect(() => {
+    fetchDataPasien();
+  }, [data]);
+
+  console.log(data);
+  console.log(pasien);
+
+  function calculateAge(dateOfBirth: string) {
+    const dob = new Date(dateOfBirth);
+    const today = new Date();
+
+    let age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+
+    const years = age;
+
+    let months;
+    if (today.getMonth() < dob.getMonth()) {
+      months = 12 - dob.getMonth() + today.getMonth();
+    } else {
+      months = today.getMonth() - dob.getMonth();
+    }
+
+    if (today.getDate() < dob.getDate()) {
+      months--;
+    }
+
+    let days;
+    if (today.getDate() < dob.getDate()) {
+      const tempDate = new Date(today.getFullYear(), today.getMonth(), 0);
+      const daysInMonth = tempDate.getDate();
+      days = daysInMonth - dob.getDate() + today.getDate();
+    } else {
+      days = today.getDate() - dob.getDate();
+    }
+    
+    return { years, months, days };
+  }
 
   const tabs: Tab[] = [
     {
@@ -75,7 +162,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    15/04/2024
+                    {data?.created_at}
                   </p>
                 </td>
               </tr>
@@ -87,7 +174,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    Umum
+                    {data?.poli}
                   </p>
                 </td>
               </tr>
@@ -99,7 +186,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    123456
+                    {pasien?.no_erm}
                   </p>
                 </td>
               </tr>
@@ -111,7 +198,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    3174010101010001
+                    {pasien?.nik}
                   </p>
                 </td>
               </tr>
@@ -123,7 +210,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    Agus
+                    {pasien?.nama}
                   </p>
                 </td>
               </tr>
@@ -135,7 +222,13 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    22 Tahun 2 Bulan 9 Hari
+                  {pasien && (
+                        <p>
+                          {calculateAge(pasien.tanggal_lahir).years} tahun{" "}
+                          {calculateAge(pasien.tanggal_lahir).months} bulan{" "}
+                          {calculateAge(pasien.tanggal_lahir).days} hari{" "}
+                        </p>
+                      )}
                   </p>
                 </td>
               </tr>
@@ -147,7 +240,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    AB
+                    {pasien?.golongan_darah}
                   </p>
                 </td>
               </tr>
@@ -159,7 +252,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    Tunai
+                    {pasien?.penjamin}
                   </p>
                 </td>
               </tr>
@@ -171,7 +264,7 @@ export default function PemeriksaanDokter() {
                 </td>
                 <td>
                   <p className="text-white font-Poppins text-xl font-normal mb-3">
-                    Jl. Mangga no. 12
+                    {pasien?.alamat}
                   </p>
                 </td>
               </tr>
