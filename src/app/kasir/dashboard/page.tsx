@@ -224,11 +224,11 @@ export default function KasirDashboard(){
 
             <div className=" ml-12 mt-4 mr-12 min-h-96">
                 <table className=" table-auto text-center w-full">
-                    <thead className=" bg-shade1 text-shade8 font-Poppins">
+                    <thead className=" bg-shade1 text-white font-Poppins">
                         <tr>
                             <th className="w-10">No</th>
                             <th className="w-20">Nomor Antrean</th>
-                            <th className="w-32">Poli/Ruangan</th>
+                            <th className="w-36">Poli/Ruangan</th>
                             <th className="w-28">Tanggal Masuk</th>
                             <th className="w-48">No. eRM</th>
                             <th className="w-52">Nama Pasien</th>
