@@ -15,10 +15,13 @@ interface pasienData {
 }
 
 export default function KasirDashboard(){
-    const antrianAPI = "http://localhost:8080/antrian";
+    const antrianAPI = "http://localhost:8080/antrian?find_by=dashboard";
     const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
     const [data, setData] = useState([]);
     const [pasien, setPasien] = useState([] as pasienData[]);
+    const [size, setSize] = useState(0);
+    const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchData = async () => {
         let arr: Array<any> = [];
@@ -27,7 +30,12 @@ export default function KasirDashboard(){
             const response = await axios.get(antrianAPI);
             const data1 = response.data;
             const data = data1.data;
-            setData(data);
+            const size = data.size;
+            const antrian = data.antrian;   
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -55,7 +63,6 @@ export default function KasirDashboard(){
                   return convert;
                 });
                 const result = await Promise.all(promises);
-                console.log
                 setPasien(result);
               }
         };
@@ -67,9 +74,6 @@ export default function KasirDashboard(){
         fetchData();
     }, []);
 
-    // console.log(data);
-    // console.log(pasien);
-
     function formatUpdatedAtToDDMMYYYY(timestamp:string) {
         const updatedAtDate = new Date(timestamp);
         const day = updatedAtDate.getDate().toString().padStart(2, '0');
@@ -79,17 +83,56 @@ export default function KasirDashboard(){
         return `${day}/${month}/${year}`;
       }
 
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedOption, setSelectedOption] = useState("10");
+    const [selectedPoli, setSelectedPoli] = useState("");
     const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
+    const [search, setSearch] = useState('');
+    // console.log("option", selectedOption, "poli", selectedPoli, "mulai tanggal", mulaiTanggal, "search", search);
 
     const handleOptionClick = (option: any) => {
         setSelectedOption(option.value);
       };
 
-    const handleDateChange = (date: any) => {
-        setSelectedDate(date);
+    const handlePoliClick = (poli: any) => {
+        setSelectedPoli(poli.value);
     };
+
+    const totalPage = (size: any) => {
+        const total = Math.ceil(size/parseInt(selectedOption));
+        setPage(total);
+    }
+
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error searching data:', error);
+        }
+    };
+
+    const handlePageChange = async (page: number) => {
+        setCurrentPage(page);
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}&page=${page}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error searching data:', error);
+        }
+    };
+    
 
     const options = [
         { label: "10", value: "10" },
@@ -106,8 +149,12 @@ export default function KasirDashboard(){
         window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
     }
 
+    console.log("page", page);
+    console.log("current page", currentPage);
+
+
     return (
-        <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
+        <div className={` bg-tint6 flex flex-col h-full font-Poppins `}>
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
@@ -147,7 +194,7 @@ export default function KasirDashboard(){
                     <div className=" w-52 mr-2">
                         <Dropdown
                             options={shiftOptions}
-                            onSelect={handleOptionClick}
+                            onSelect={handlePoliClick}
                             required
                         />
                     </div>
@@ -168,13 +215,14 @@ export default function KasirDashboard(){
                         id="search"
                         className="w-full h-12 px-7 py-3.5 rounded-2xl border text-shade7 placeholder:text-gray-500"
                         placeholder="Pencarian"
+                        onChange={(e) => setSearch(e.target.value)}
                         />
-                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold">Cari</button>
+                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold" onClick={handleSearch}>Cari</button>
                     </div>
                 </div>
             </div>
 
-            <div className=" ml-12 mt-4 mr-12">
+            <div className=" ml-12 mt-4 mr-12 min-h-96">
                 <table className=" table-auto text-center w-full">
                     <thead className=" bg-shade1 text-shade8 font-Poppins">
                         <tr>
@@ -213,6 +261,37 @@ export default function KasirDashboard(){
                         )}
                     </tbody>
                 </table>
+                <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
         </div>
     )
