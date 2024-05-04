@@ -39,7 +39,7 @@ export default function PemeriksaanDokter() {
   ];
 
   return (
-    <div className=" bg-tint6 h-full flex flex-col font-Poppins">
+    <div className=" bg-tint6 min-h-screen flex flex-col font-Poppins">
       <div className="flex mr-20 mt-14 bg-tint6">
         <div>
           <Image
