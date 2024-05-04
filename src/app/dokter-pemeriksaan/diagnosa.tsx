@@ -1,11 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Dropdown from "../components/dropdown";
+import RemoveButton from "../../../public/remove_button.svg";
+import Image from "next/image";
+import axios from "axios";
+
+interface Diagnosa {
+  diagnosa: string;
+  jenis: string;
+  kasus: string;
+  statusDiagnosa: string;
+  pemeriksaanDokter: number;
+}
 
 export default function Diagnosa() {
+    const [diagnosaData, setDiagnosaData] = useState<Diagnosa[]>([]);
     const [diagnosa, setDiagnosa] = useState('');
     const [jenis, setJenis] = useState('');
     const [kasus, setKasus] = useState('');
     const [statusDiagnosa, setStatusDiagnosa] = useState('');
+    const [pemeriksaanDokter, setPemeriksaanDokter] = useState(11);
     const options = [
         { label: "Diagnosa1", value: "Diagnosa1" },
         { label: "Diagnosa2", value: "Diagnosa2" },
@@ -25,6 +38,40 @@ export default function Diagnosa() {
         { label: "StatusDiagnosa2", value: "StatusDiagnosa2" },
         { label: "StatusDiagnosa3", value: "StatusDiagnosa3" },
       ];
+    const addDiagnosa = () => {
+      const newDiagnosaData: Diagnosa = {
+        diagnosa: diagnosa,
+        jenis: jenis,
+        kasus: kasus,
+        statusDiagnosa: statusDiagnosa,
+        pemeriksaanDokter: pemeriksaanDokter,
+      };
+      setDiagnosaData([...diagnosaData, newDiagnosaData]);
+      console.log(diagnosaData);
+    };
+    const removeDiagnosa = (index: number) => {
+      const newDiagnosaData = diagnosaData.filter((_, i) => i !== index);
+      setDiagnosaData(newDiagnosaData);
+      console.log(diagnosaData);
+    };
+
+    useEffect(() => {
+      // setDiagnosa(exampleDiagnosa);
+    }, []);
+
+  // const handleSave = async(e:any) => {
+  //   e.preventDefault();
+  //   console.log(diagnosaData);
+  //   try{
+  //     const response = await axios.post("http://localhost:8080/diagnosa", diagnosaData); {
+
+  //     console.log(response);
+    
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
     return (
         <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
             <div className="flex flex-row justify-between items-center mb-4">
@@ -37,6 +84,7 @@ export default function Diagnosa() {
                 className="w-2/3"
                 options={options}
                 value={diagnosa}
+                onSelect={(selectedOption:any) => setDiagnosa(selectedOption.value)}
                 placeholder="Cari Diagnosa"
                 required
               />
@@ -49,7 +97,8 @@ export default function Diagnosa() {
                 id="jenis"
                 className="w-2/3"
                 options={jenisOptions}
-                value={diagnosa}
+                value={jenis}
+                onSelect={(selectedOption:any) => setJenis(selectedOption.value)}
                 required
               />
             </div>
@@ -61,7 +110,8 @@ export default function Diagnosa() {
                 id="kasus"
                 className="w-2/3"
                 options={kasusOptions}
-                value={diagnosa}
+                value={kasus}
+                onSelect={(selectedOption:any) => setKasus(selectedOption.value)}
                 required
               />
             </div>
@@ -73,14 +123,36 @@ export default function Diagnosa() {
                 id="statusDiagnosa"
                 className="w-2/3"
                 options={statusDiagnosaOptions}
-                value={diagnosa}
+                value={statusDiagnosa}
+                onSelect={(selectedOption:any) => setStatusDiagnosa(selectedOption.value)}
                 required
               />
             </div>
             <div className='flex justify-end'>
-                <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold">
+                <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
+                        onClick={addDiagnosa} >
                     Tambahkan Diagnosa
                 </button>
+            </div>
+            
+            <div className="flex flex-col justify-between items-center my-3 gap-4 w-full">
+              {diagnosaData.map((obat, index) => (
+                <div key={index} className="w-full">
+                  <hr className="h-px bg-shade6 border-0 w-full" />
+                  <div className="flex justify-between items-center w-full">
+                    <div className="flex-grow">
+                      <p className="font-bold">{obat.diagnosa}</p>
+                      <p>Jenis: {obat.jenis}</p>
+                      <p>Kasus: {obat.kasus}</p>
+                      <p>Status Diagnosa: {obat.statusDiagnosa}</p>
+                    </div>
+                    <button className="w-10 h-10" onClick={() => removeDiagnosa(index)}>
+                      {/* <Image src={RemoveButton} alt="Remove Button" /> */}
+                      delete
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
         </div>
     );
