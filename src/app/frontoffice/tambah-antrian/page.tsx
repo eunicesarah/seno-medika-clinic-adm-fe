@@ -7,8 +7,14 @@ import Dropdown from '../../components/dropdown';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import AlertSuccess from "../../components/alert_success";
+import AlertFailed from "../../components/alert_failed";
+
 export default function TambahAntrian() {
     const antrianAPI = "http://localhost:8080/antrian";
+
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [showAlertFailed, setShowAlertFailed] = useState(false);
 
     const [name, setName] = useState('');
     const [no_erm, setNo_erm] = useState('');
@@ -22,6 +28,9 @@ export default function TambahAntrian() {
     };
 
     const router = useRouter();
+    const delay = (delayInms : any) => {
+        return new Promise(resolve => setTimeout(resolve, delayInms));
+      };
 
     const sendDataToApi = async (name: string, no_erm: string, poli: string) => {
         const requestBody = {
@@ -36,14 +45,17 @@ export default function TambahAntrian() {
       
           if (response.status >= 200 && response.status < 300) {
             console.log('API Response:', response.data);
-            alert("Berhasil menambahkan antrian")
+            // alert("Berhasil menambahkan antrian")
+            setShowAlertSuccess(true);
+            await delay(3000);
             router.push('/frontoffice/dashboard'); 
           } else {
             alert('Error:'+ response.status + response.statusText);
           }
         } catch (error:any) {
           console.log('API Error:', error);
-          alert("Error: " + error.response.data.message + "!")
+            setShowAlertFailed(true);
+        //   alert("Error: " + error.response.data.message + "!")
         }
     };
       
@@ -100,6 +112,8 @@ export default function TambahAntrian() {
                     </button>
                 </div>
             </div>
+            <AlertSuccess isvisible={showAlertSuccess} onClose={() => setShowAlertSuccess(false)} message="Antrian Pasien Berhasil Ditambahkan"/> 
+      <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="Antrian Pasien Gagal Ditambahkan" bottomMessage="Data tidak dapat ditambahkan karena terjadi kesalahan pada server."/>
         </div>
     );
 }

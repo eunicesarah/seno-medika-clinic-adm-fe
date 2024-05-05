@@ -6,6 +6,9 @@ import Modal from "react-modal";
 import Chip from "react-chip"
 import { useRouter } from 'next/navigation';
 import axios from "axios";
+import AlertSuccess from "../../components/alert_success";
+import AlertFailed from "../../components/alert_failed";
+
 
 
 interface Perawat{
@@ -21,6 +24,8 @@ interface PerawatData{
 
 export default function Register() {
   const router = useRouter();
+  const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+  const [showAlertFailed, setShowAlertFailed] = useState(false);
   const [selectedPosisi, setSelectedPosisi] = useState("");
   const [selectedPoli, setSelectedPoli] = useState("");
   const [formData, setFormData] = useState({
@@ -110,6 +115,9 @@ export default function Register() {
   const handleJenisPoliChange = (value:any) => {
     setJenisPoli(value);
   };
+  const delay = (delayInms : any) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
+  };
 
   const submitForm1 = async () => {
     console.log("submitting form");
@@ -119,11 +127,14 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
+        setShowAlertSuccess(true);
+        await delay(3000);
+        
         router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
+      setShowAlertFailed(true);
       console.log(error);
     }
   }
@@ -138,11 +149,13 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
+        setShowAlertSuccess(true);
+        await delay(3000);
         router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
+      setShowAlertFailed(true);
       console.log(error);
     }
   }
@@ -155,11 +168,13 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
+        setShowAlertSuccess(true);
+        await delay(3000);
         router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
+      setShowAlertFailed(true);
       console.log(error);
     }
   }
@@ -174,11 +189,13 @@ export default function Register() {
       console.log(response);
       if (response.status === 200) {
         console.log("User created");
-        alert("User created");
+        setShowAlertSuccess(true);
+        await delay(3000);
         router.push('/superadmin/dashboard');
       }
     }
     catch (error) {
+      setShowAlertFailed(true);
       console.log(error);
     }
     
@@ -662,6 +679,8 @@ export default function Register() {
           </div>
         </form>
       </div>
+      <AlertSuccess isvisible={showAlertSuccess} onClose={() => setShowAlertSuccess(false)} message="User Berhasil Ditambahkan"/> 
+      <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="User Gagal Ditambahkan" bottomMessage="Data tidak dapat ditambahkan karena terjadi kesalahan pada server."/>
     </div>
 
   );
