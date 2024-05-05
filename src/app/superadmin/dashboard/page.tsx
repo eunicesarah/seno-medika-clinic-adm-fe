@@ -24,6 +24,9 @@ type User = {
 
 const Home = () => {
     const [users, setUsers] = useState<User[]>([]);
+    const [size, setSize] = useState(0);
+    const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         fetchUsers();
@@ -32,11 +35,13 @@ const Home = () => {
     const fetchUsers = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:8080/user?find_by=all&target=all"
+                "http://localhost:8080/user?find_by=dashboard"
             );
             console.log("Response data:", response.data);
             if (response.data.status === "ok") {
-                setUsers(response.data.data);
+                setUsers(response.data.data.user);
+                setSize(response.data.data.size);
+                totalPage(response.data.data.size);
             } else {
                 console.error("Error fetching users:", response.data.message);
             }
@@ -44,6 +49,30 @@ const Home = () => {
             console.error("Error fetching users:", error);
         }
     };
+
+    const totalPage = (size: number) => {
+        const totalPage = Math.ceil(size / 10);
+        setPage(totalPage);
+    };
+
+    const handlePageChange = async (page: number) => {
+        setCurrentPage(page);
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/user?find_by=dashboard&page=${page}`
+            );
+            console.log("Response data:", response.data);
+            if (response.data.status === "ok") {
+                setUsers(response.data.data.user);
+                setSize(response.data.data.size);
+                totalPage(response.data.data.size);
+            } else {
+                console.error("Error fetching users:", response.data.message);
+            }
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    }
 
     const deleteUser = async (id: any) => {
         try {
@@ -87,7 +116,7 @@ const Home = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map(
+                        {users && users.map(
                             ({
                                 user_id,
                                 nomor_lisensi,
@@ -138,6 +167,37 @@ const Home = () => {
                         )}
                     </tbody>
                 </table>
+                <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
         </div>
     );
