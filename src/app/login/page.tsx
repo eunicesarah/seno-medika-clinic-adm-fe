@@ -5,6 +5,8 @@ import Pattern from '../../../public/images/pattern.svg';
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from 'jwt-decode';
+import AlertSuccess from "../components/alert_success";
+import AlertFailed from "../components/alert_failed";
 
 interface JwtPayload {
     email: string;
@@ -18,6 +20,8 @@ interface JwtPayload {
   
 const loginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [showAlertFailed, setShowAlertFailed] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -105,6 +109,7 @@ const validateForm = () => {
                     }
                     catch (error) {
                         console.log(error);
+                        setShowAlertFailed(true);
                     }
                 }
 };
@@ -146,6 +151,7 @@ return (
                 </form>
             </div>
         </div>
+        <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="Gagal Login" bottomMessage="Email atau Password Salah"/>
     </div>
 );
 }

@@ -145,8 +145,8 @@ export default function KasirDashboard(){
         { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
       ];
 
-    const handleDetailClick =  async (id: string) => {
-        window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+    const handleDetailClick =  async (id: string, antrian_id:string) => {
+        window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}&antrian_id=${antrian_id}`;
     }
 
     console.log("page", page);
@@ -249,7 +249,7 @@ export default function KasirDashboard(){
                                     <td>{pasien[index]?.nama}</td>
                                     <td>{pasien[index]?.jenis_kelamin}</td>
                                     <td>{pasien[index]?.penjamin}</td>
-                                    <td><button onClick={() => handleDetailClick(item.pasien_id)} className=" text-blue-700">Detail</button></td>
+                                    <td><button onClick={() => handleDetailClick(item.pasien_id, item.antrian_id)} className=" text-blue-700">Detail</button></td>
                                 </tr>
                             ))
                         ) : (

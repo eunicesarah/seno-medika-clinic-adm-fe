@@ -31,6 +31,7 @@ const pembayaranOptions = [
 export default function DetailPembayaran() {
     const searchParams = useSearchParams();
     const idPasien = searchParams.get('pasien_id');
+    const antrianId = searchParams.get('antrian_id');
     const [selectedPembayaran, setSelectedPembayaran] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
@@ -319,7 +320,7 @@ export default function DetailPembayaran() {
                                 {detailTindakan && detailTindakan.map((tindakan: any, index: number) => (
                                     <tr key={index} className="">
                                         <td className="p-2">{index + 1}</td>
-                                        <td className="p-2">{tindakan.nama_tindakan}</td>
+                                        <td className="p-2">{tindakan.jenis_tindakan}</td>
                                         <td className="p-2"><span>Rp</span>{tindakan.harga_tindakan}</td>
                                     </tr>
                                 ))}
