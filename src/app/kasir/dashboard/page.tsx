@@ -223,7 +223,7 @@ export default function KasirDashboard(){
             </div>
 
             <div className=" ml-12 mt-4 mr-12 min-h-96">
-                <table className=" table-auto text-center w-full">
+                <table className=" table-auto text-center w-full" data-testid="table">
                     <thead className=" bg-shade1 text-white font-Poppins">
                         <tr>
                             <th className="w-10">No</th>
