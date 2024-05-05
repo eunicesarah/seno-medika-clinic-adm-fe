@@ -154,7 +154,7 @@ export default function KasirDashboard(){
 
 
     return (
-        <div className={` bg-tint6 flex flex-col h-full font-Poppins `}>
+        <div className={` bg-tint6 flex flex-col min-h-screen font-Poppins `}>
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 

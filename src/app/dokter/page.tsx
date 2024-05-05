@@ -162,7 +162,7 @@ export default function DokterDashboard() {
       };
 
     return (
-        <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
+        <div className=" bg-tint6 flex flex-col min-h-screen font-Poppins">
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 

@@ -174,7 +174,7 @@ export default function DetailPembayaran() {
 
 
     return (
-        <div className="bg-tint6 h-full flex flex-col font-Poppins">
+        <div className="bg-tint6 min-h-screen flex flex-col font-Poppins">
             <div className=" mr-20 flex flex-row justify-end mt-14">
                 <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
                     <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
@@ -371,6 +371,8 @@ export default function DetailPembayaran() {
             noERM={pasien?.no_erm}
             namaPasien={pasien?.nama} 
             metodePembayaran={selectedPembayaran} 
+            total = {totalPrice+totalPrice*0.1}
+            antrian_id = {antrianId}
             />
             
         </div>

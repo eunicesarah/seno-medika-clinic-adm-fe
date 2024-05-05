@@ -174,7 +174,7 @@ const shiftOptions = [
 };
 
   return (
-    <div className=" bg-tint6 flex-col flex h-full w-screen">
+    <div className=" bg-tint6 flex-col flex min-h-screen w-screen">
       <div className="flex mr-20 mt-14 bg-tint6">
         <div>
           <Image

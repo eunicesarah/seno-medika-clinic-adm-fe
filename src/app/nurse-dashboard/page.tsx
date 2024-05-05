@@ -164,7 +164,7 @@ export default function NurseDashboard() {
   };
   
   return (
-    <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
+    <div className=" bg-tint6 flex-col flex min-h-screen font-Poppins">
       <div className="flex mr-20 mt-14 bg-tint6 items-center">
         <div>
           <Image

@@ -62,7 +62,7 @@ const Home = () => {
     };
 
     return (
-        <div className="bg-tint6 w-full h-screen flex flex-col">
+        <div className="bg-tint6 w-full min-h-screen flex flex-col">
             <div className="flex mr-20 mt-14">
                 <div className="ml-auto">
                     <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
