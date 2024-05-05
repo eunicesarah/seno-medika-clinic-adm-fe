@@ -1,7 +1,7 @@
-describe('Superadmin Table', () => {
+describe('Superadmin Dashboard', () => {
     beforeEach(() => {
         cy.viewport(1920, 1080);
-        cy.visit('http://localhost:3000/superadmin-table');
+        cy.visit('http://localhost:3000/superadmin/dashboard');
     })
 
     it('displays the table correctly', () => {

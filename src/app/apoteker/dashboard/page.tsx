@@ -82,13 +82,22 @@ export default function ApotekerDashboard() {
     { label: "Obat Sudah Diberikan", value: "obat_sudah_diberikan" },
     { label: "Obat Tidak Diambil", value: "obat_tidak_diambil" },
   ];
-  const handleResepButtonClick = (
-    no_erm: string,
-    poli: string,
-    created_at: string
-  ) => {
-    console.log(no_erm, poli, created_at);
-  };
+  // const handleResepButtonClick = (
+  //   no_erm: string,
+  //   poli: string,
+  //   created_at: string
+  // ) => {
+  //   // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+  // };
+  const handleDetailClick =  async (nik:string) => {
+    // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+    const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+      const id = response.data.data.pasien_id;
+      console.log(response.data.data);
+      console.log(id);
+      window.location.href = `/apoteker/detail-resep?pasien_id=${id}`;
+
+}
 
   const handleSearch = async () => {
     try {
@@ -258,13 +267,7 @@ const handlePageChange = async (page: number) => {
                     <td className="py-2 w-30">
                       <a
                         className="p-2 justify-center font-medium hover:text-blue-500 hover:underline"
-                        onClick={() =>
-                          handleResepButtonClick(
-                            data.no_erm,
-                            data.poli,
-                            data.created_at
-                          )
-                        }
+                        onClick={() => handleDetailClick(data.nik)}
                       >
                         Detail
                       </a>

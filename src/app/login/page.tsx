@@ -6,6 +6,16 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from 'jwt-decode';
 
+interface JwtPayload {
+    email: string;
+    exp: number;
+    nama: string;
+    role: string;
+    user_id: number;
+    user_uuid: string;
+  }
+
+  
 const loginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
@@ -55,7 +65,36 @@ const validateForm = () => {
 
                 if (token) {
                     try {
-                        const decoded = jwtDecode(token);
+                        const decoded: JwtPayload = jwtDecode(token);
+                        console.log('Payload Data:', decoded);
+                        const { role } = decoded;
+                        console.log('Role:', role);
+
+                        switch (role) {
+                            case 'dokter':
+                                location.href = '/dokter';
+                                break;
+                            case 'apoteker':
+                                location.href = '/apoteker/dashboard';
+                                break;
+                            case 'perawat':
+                                location.href = '/nurse-dashboard';
+                                break;
+                            case 'front officer':
+                                location.href = '/frontoffice/dashboard';
+                                break;
+                            case 'kasir':
+                                location.href = '/kasir/dashboard';
+                                break;
+                            case 'super admin':
+                                location.href = '/superadmin/dashboard';
+                                break;
+                            default:
+                                location.href = '/';
+                                break;
+                        
+                        }
+                        
                     } catch (error) {
                         console.error('Gagal mendekode token:', error);
                     }
