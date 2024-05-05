@@ -1,10 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Arrow from "../../../public/right_arrow.svg";
-import Dropdown from "../components/dropdown";
+import Arrow from "../../../../public/right_arrow.svg";
+import Dropdown from "../../components/dropdown";
 import axios from "axios";
 import { useSearchParams } from 'next/navigation'
+
+import { useRouter } from 'next/navigation';
+
+import AlertSuccess from "../../components/alert_success";
+import AlertFailed from "../../components/alert_failed";
 
 interface NurseStation {
   skrining_awal: SkriningAwal;
@@ -81,6 +86,10 @@ export default function Dashboard() {
   const created_at = searchParams.get('created_at');
   const [dokterOptions, setDokterOptions] = useState([]);
   const [perawatOptions, setPerawatOptions] = useState([]);
+  
+  const router = useRouter();
+  const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+  const [showAlertFailed, setShowAlertFailed] = useState(false);
 
 
   useEffect(() => {
@@ -120,6 +129,9 @@ export default function Dashboard() {
   }
   , [perawatOptions]);
 
+  const delay = (delayInms : any) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -137,10 +149,13 @@ export default function Dashboard() {
     try {
       const response = await axios.post("http://localhost:8080/ttv", requestData);
       console.log(response);
-      alert("Data berhasil disimpan");
+      // alert("Data berhasil disimpan");
+      setShowAlertSuccess(true);
+      await delay(3000);
 
     } catch (error) {
       console.error('Error sending data:', error);
+      setShowAlertFailed(true);
     }
   };
   const antrianId = "1";
@@ -1620,6 +1635,8 @@ export default function Dashboard() {
           </div>
         </form>
       </div>
+      <AlertSuccess isvisible={showAlertSuccess} onClose={() => setShowAlertSuccess(false)} message="TTV Berhasil Ditambahkan"/> 
+      <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="TTV Gagal Ditambahkan" bottomMessage="Data tidak dapat ditambahkan karena terjadi kesalahan pada server."/>
     </div>
   );
 }
