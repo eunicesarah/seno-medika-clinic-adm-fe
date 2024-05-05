@@ -150,7 +150,7 @@ const Home = () => {
                                     </td>
                                     <td className="px-4 py-2">
                                         <a
-                                            href={`/superadmin/edit?${user_id}`} // Include user ID in the URL
+                                            href={`superadmin-edit?${user_id}`} // Include user ID in the URL
                                             className="font-medium hover:text-blue-500 hover:underline mr-2"
                                         >
                                             Edit
