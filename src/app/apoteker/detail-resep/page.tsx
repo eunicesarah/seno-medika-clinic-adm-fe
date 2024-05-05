@@ -27,8 +27,7 @@ export default function DetailResep() {
 
     const pasienDataApi = "http://localhost:8080/pasien?find_by=id&target=";
     const antrianDataAPI = "http://localhost:8080/antrian?find_by=pasienId&target=";
-    const kasirDataAPI = "http://localhost:8080/kasir?find_by=pasien_id&target=";
-    const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail_resep&target=";
+    const detailObatDataAPI = "http://localhost:8080/apotek?find_by=detail_antrian&target=";
 
    
       
@@ -58,20 +57,7 @@ export default function DetailResep() {
           console.error("Error fetching data:", error);
         }
     };
-    const fetchDataNota = async () => {
-            try {
-                const response = await axios.get(
-                    `${kasirDataAPI}${idPasien}`
-                );
-                const responseData = response.data;
-                const fetchedData = responseData.data;
-                console.log(fetchedData);
-                setNota(fetchedData);
-                fetchDetailObat(fetchedData[0].nota_id);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-    };
+    
     const fetchDetailObat = async (nota_id : any) => {
         console.log(nota_id);
         await axios.get(`${detailObatDataAPI}${nota_id}`).then((response) => {
@@ -88,7 +74,7 @@ export default function DetailResep() {
     useEffect(() => {
         fetchDataPasien();
         fetchDataAntrian();
-        fetchDataNota();
+        fetchDetailObat(idPasien);
       }, []);
     
       const handleBackButton = () => {
