@@ -83,6 +83,47 @@ export default function DetailResep() {
     //TODO : Add popup component
     //TODO : Add button tidak diambil
     //TODO : Add button selesai
+    const handleUpdateStockObat = async (obat_id: number, nama_obat:string, jenis_asuransi: string, harga: number, satuan:string, jumlahObat: number) => {
+        try {
+            const jumlah = {
+                nama_obat: nama_obat,
+                stock: jumlahObat,
+                jenis_asuransi: jenis_asuransi,
+                harga: harga,
+                satuan: satuan,
+
+            }
+            console.log(jumlah);
+            const response = await axios.put(
+              `http://localhost:8080/obat?update_by=id&target=${obat_id}`,
+            jumlah
+        
+            );
+            console.log(response);
+          }
+            catch (error) {
+                console.error("Error fetching data:", error);
+            }
+      }
+
+    const handleSelesaiButton =  () => {
+
+        const obatArray = detailObat.map((obat:any) => ({
+            obat_id: obat.Obat.obat_id,
+            nama_obat: obat.Obat.nama_obat,
+            jenis_asuransi: obat.Obat.jenis_asuransi,
+            harga: obat.Obat.harga,
+            stock: obat.Obat.stock,
+            satuan: obat.Obat.satuan,
+            jumlah: obat.ListObat.jumlah,
+          }));
+        console.log(obatArray);
+        obatArray.forEach((item:any) => {
+            const newStock = item.stock - item.jumlah;
+            console.log(newStock);
+            handleUpdateStockObat(item.obat_id, item.nama_obat, item.jenis_asuransi, item.harga, item.satuan, newStock);
+          });
+    }
 
     return (
         <div className="bg-tint6 w-screen h-screen flex flex-col font-Poppins">
@@ -157,7 +198,7 @@ export default function DetailResep() {
                     </button>
                 </div>
                 <div className="flex  my-7">
-                    <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4  px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
+                    <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4  px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => handleSelesaiButton()}>
                         Selesai
                     </button>
                 </div>
