@@ -27,7 +27,6 @@ export default function TambahAntrian() {
         const requestBody = {
             "no_erm" : no_erm,
             "nama" : name,
-            "status" : true,
             "poli" : poli,
             "instalasi" : "pratama",
         };
