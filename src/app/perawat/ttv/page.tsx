@@ -167,15 +167,15 @@ export default function Dashboard() {
       const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
       console.log(response2);
       alert("Data Pemeriksaan Dokter berhasil disimpan");
-      // const changeStatusById = {
-      //   "key": antrian_id ? antrian_id.toString() : '',
-      //   "value": "pemeriksaan_dokter"
-      // }
-      // console.log(changeStatusById);
-      // const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
-      // console.log(response3);
-      // alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
-      // window.location.href = "/perawat";
+      const changeStatusById = {
+        "key": antrian_id ? antrian_id.toString() : '',
+        "value": "pemeriksaan_dokter"
+      }
+      console.log(changeStatusById);
+      const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+      console.log(response3);
+      alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
+      window.location.href = "/perawat";
 
     } catch (error) {
       console.error('Error sending data:', error);
