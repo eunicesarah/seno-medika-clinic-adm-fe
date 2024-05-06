@@ -1,53 +1,31 @@
-image: node:latest
+image: docker
 
 default:
   tags: 
     - test-runner
 
-stages:     
-#   - install    
-#   - build
-  - test
+stages:         
+  - build
+  # - test
   # - deploy
 
-# install:
-#    stage: install
-#    script:
-#       - rm -rf node_modules
-#       - npm install
-#    cache:
-#     key: ${CI_BUILD_REF_NAME}
-#     paths:
-#       - node_modules/
-#    artifacts:
-#     paths:
-#       - node_modules/
 
+build-job:       
+  stage: build
+  when: on_success
+  only: 
+    - main
+  image: docker:stable
 
-# build:
-#    stage: build
-#    script:
-#       - CI=false npm run build
-#    artifacts:
-#       paths:
-#          - build
-#       expire_in: 30 mins
-#    dependencies:
-#       - install
+  services:
+      - name: docker:dind
+        command: ["--tls=false"]
 
-test:
-  image: cypress/browsers:node-20.9.0-chrome-118.0.5993.88-1-ff-118.0.2-edge-118.0.2088.46-1
-  stage: test
-  before_script:
-    - npm install
-  script:
-    - npm ci
-    # start the server in the background
-    - npm start &
-    # run Cypress tests
-    - npx cypress run --browser chrome
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   
+  script:
+    - docker login gitlab.informatika.org:4567 -u access-token-sm-fe -p $CI_TOKEN
+    - docker build -t gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe .
+    - docker push gitlab.informatika.org:4567/if3250_2024_k03_02_sm-02/sm-fe
 
 
 # unit-test-job:   

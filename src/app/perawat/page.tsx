@@ -20,68 +20,33 @@ const head = [
   "TTV",
 ];
 
-interface Antrian {
+interface TableData {
   nomor_antrian: number;
   poli: string;
   created_at: string;
-}
-
-interface PendaftaranPasien {
+  no_eRM: string;
   nik: string;
   nama_pasien: string;
   jenis_kelamin: string;
   tempat_tanggal_lahir: string;
   asuransi: string;
-  TTV: string;
 }
 
-interface TableData extends Antrian, PendaftaranPasien {
-    no_eRM: string;
-}
-
-interface IError{
-  nama: string;
-  email: string;
-  NIK: string;
-  no_KK: string;
-  no_erm: string;
-  goldar: string;
-  jenis_kelamin: string;
-  tempat_lahir: string;
-  tanggal_lahir: string;
-  provinsi: string;
-  kabupaten_kota: string;
-  kecamatan: string;
-  kelurahan: string;
-  alamat: string;
-  no_telpon: string;
-  warga_negara: string;
-  status_perkawinan: string;
-  pendidikan: string;
-  agama: string;
-  pekerjaan: string;
-  nama_kontak_darurat: string;
-  nomor_kontak_darurat: string;
-}
 function parseAndFormatDate(tanggal_lahir: string, tempat_lahir: string): string {
-  // Parse the date string
   const parsedDate: Date = new Date(tanggal_lahir);
-
-  // Format the date
   const formattedDate: string = `${parsedDate.getDate()}-${parsedDate.getMonth() + 1}-${parsedDate.getFullYear()}`;
-
-  // Create the desired output
   const output: string = `${tempat_lahir}, ${formattedDate}`;
-
   return output;
 }
 export default function NurseDashboard() {
-    const initialData: TableData[] = [];
-    
-      const [tableData, setTableData] = useState<TableData[]>(initialData);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const initialData: TableData[] = [];
+  const [tableData, setTableData] = useState<TableData[]>(initialData);
+  // const [selectedOption, setSelectedOption] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedPasien, setSelectedPasien] = useState(null)
+  const [selectedPasien, setSelectedPasien] = useState(null);
+  const [size, setSize] = useState(0);
+  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
@@ -90,11 +55,13 @@ export default function NurseDashboard() {
   const handleDateChange = (date: any) => {
     setSelectedDate(date);
   };
+
   const options = [
     { label: "10", value: "10" },
     { label: "20", value: "20" },
     { label: "30", value: "30" },
   ];
+
   const shiftOptions = [
     { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
     { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
@@ -106,44 +73,98 @@ export default function NurseDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios("http://localhost:8080/antrian")
-            .then(async (resAntrian) => {
+        const responseAntrian = await axios.get("http://localhost:8080/antrian?find_by=pemeriksaan_ttv");
+        const antrian = responseAntrian.data.data.antrian;
+        const size = responseAntrian.data.data.size;
+        const formattedAntrian = antrian.map((data: any) => {
+          return {
+            nomor_antrian: data.nomor_antrian,
+            poli: data.poli,
+            created_at: formatUpdatedAtToDDMMYYYY(data.created_at), 
+            no_eRM: data.no_erm,
+            nik: data.nik,
+            nama_pasien: data.nama,
+            jenis_kelamin: data.jenis_kelamin,
+            tempat_tanggal_lahir: parseAndFormatDate(data.tanggal_lahir, data.tempat_lahir),
+            asuransi: data.penjamin
+          };
+        });
+        console.log(formattedAntrian);
+        setTableData(formattedAntrian);
+        setSize(size);
+        totalPage(size);
 
-              for (const antrian of resAntrian.data.data) {
-                await axios.get(`http://localhost:8080/pasien?find_by=id&target=${antrian.pasien_id}`)
-                    .then((resPasien) => {
-                      console.log(resPasien.data);
-                      const pasien = resPasien.data.data;
-                      const dataPasien = {
-                        nomor_antrian: antrian.nomor_antrian,
-                        poli: antrian.poli,
-                        created_at: antrian.created_at,
-                        no_eRM: pasien.no_eRM,
-                        nik: pasien.nik,
-                        nama_pasien: pasien.nama,
-                        jenis_kelamin: pasien.jenis_kelamin,
-                        tempat_tanggal_lahir: parseAndFormatDate(pasien.tanggal_lahir, pasien.tempat_lahir),
-                        asuransi: pasien.penjamin,
-                        TTV: pasien.TTV,
-                      };
-                      const pasienIdExists = tableData.some(data => data.nik === dataPasien.nik);
-                      console.log(pasienIdExists);
-                      if (!pasienIdExists) {
-                        setTableData((prevData) => [...prevData, dataPasien]);
-                      }
-                    } )
-              }
-            });
-        // setTableData(data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
-    };
+    }
     fetchData();
-  }, [tableData])
+  }, []);
 
+  function formatUpdatedAtToDDMMYYYY(timestamp:string) {
+    const updatedAtDate = new Date(timestamp);
+    const day = updatedAtDate.getDate().toString().padStart(2, '0');
+    const month = (updatedAtDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = updatedAtDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  const [selectedOption, setSelectedOption] = useState("10");
+  const [selectedShift, setSelectedShift] = useState("");
+  const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
+  const [search, setSearch] = useState('');
+
+  const totalPage = (size: any) => {
+    const totalPage = Math.ceil(size / parseInt(selectedOption));
+    setPage(totalPage);
+  }
+
+  const handleSearch = async () => {
+    try {
+        const response = await axios.get(`http://localhost:8080/antrian?find_by=pemeriksaan_ttv&limit=${selectedOption}&date=${mulaiTanggal}&search=${search}&poli=${selectedShift}`);
+        const searchData = response.data.data;
+        const size = searchData.size;
+        const antrian = searchData.antrian;
+
+        setTableData(antrian);
+        setSize(size);
+        totalPage(size);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+  }
+
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page);
+    try {
+      const response = await axios.get(`http://localhost:8080/antrian?find_by=pemeriksaan_ttv&limit=${selectedOption}&date=${mulaiTanggal}&search=${search}&poli=${selectedShift}&page=${page}`);
+        const searchData = response.data.data;
+        const size = searchData.size;
+        const antrian = searchData.antrian;
+        
+        setTableData(antrian);
+        setSize(size);
+        totalPage(size);
+    } catch (error) {
+        console.error('Error searching data:', error);
+    }
+  }
+
+  const handleTTVButtonClick = async (nik: string, poli: string, created_at : string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+      const pasienId = response.data.data.pasien_id;
+      console.log(response.data.data);
+      console.log(pasienId);
+      window.location.href = `/perawat/ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
+    } catch (error) {
+      console.error("Error fetching pasien data:", error);
+    }
+  };
+  
   return (
-    <div className=" bg-tint6 flex-col flex h-screen font-Poppins">
+    <div className=" bg-tint6 flex-col flex min-h-screen font-Poppins">
       <div className="flex mr-20 mt-14 bg-tint6 items-center">
         <div>
           <Image
@@ -158,7 +179,7 @@ export default function NurseDashboard() {
               Isti
             </p>
             <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-              Super Admin
+              Nurse
             </p>
           </button>
         </div>
@@ -204,7 +225,7 @@ export default function NurseDashboard() {
               className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
               placeholder="Pencarian"
             />
-            <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold">Cari</button>
+            <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold" onClick={handleSearch}>Cari</button>
           </div>
           </div>
         </div>
@@ -222,7 +243,7 @@ export default function NurseDashboard() {
             <tbody>
                 {tableData && tableData.map((data, index) => (
                     <tr key={data.nomor_antrian} className=" odd:bg-tint4 even:bg-tint5 text-shade7 text-center hover:bg-shade4 hover:text-tint7">
-                        <td className="p-2">{index + 1}</td>
+                        <td className="p-2">{(currentPage-1)*parseInt(selectedOption)+index+1}</td>
                         <td className="p-2">{data.nomor_antrian}</td>
                         <td className="p-2">{data.poli}</td>
                         <td className="p-2">{data.created_at}</td>
@@ -232,11 +253,42 @@ export default function NurseDashboard() {
                         <td className="p-2">{data.jenis_kelamin}</td>
                         <td className="p-2">{data.tempat_tanggal_lahir}</td>
                         <td className="p-2">{data.asuransi}</td>
-                        <a className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" href="/ners-ttv?pasien_id=">Buka TTV</a>
+                        <a className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" onClick={() => handleTTVButtonClick(data.nik, data.poli, data.created_at)}>Buka TTV</a>
                     </tr>
                 ))}
             </tbody>
           </table>
+          <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+            </div>
         </div>
       </div>
     </div>

@@ -36,17 +36,17 @@ interface TableProps {
     console.log(data)
   
     return (
-      <table className='ml-20 mr-20 w-11/12 mb-14'>
+      <table className='ml-20 mr-20 w-11/12 mb-8'>
         <thead>
-          <tr className='bg-shade1 h-16 font-poppins font-semibold text-shade8 text-left'>
+          <tr className='bg-shade1 h-16 font-Poppins font-semibold text-white text-center'>
             <th className='text-center'>No</th>
             <th>Tanggal Masuk</th>
-            <th>Id Pasien</th>
+            <th>Pasien id</th>
             <th>Nama</th>
             <th>No Antrean</th>
             <th>Jenis Pasien</th>
             <th>Poli</th>
-            <th>Instalasi</th>
+            {/* <th>Instalasi</th> */}
           </tr>
         </thead>
         <tbody>
@@ -54,23 +54,23 @@ interface TableProps {
           data.map((item, index) => (
             <tr
               key={item.antrian_id}
-              className={`h-16 font-poppins text-shade8 text-left font-medium hover:bg-shade4 ${
+              className={` h-10 font-Poppins text-shade8 text-center font-medium hover:bg-shade4 hover:text-white ${
                 item.antrian_id % 2 === 0 ? 'bg-tint4' : 'bg-tint5'
               }`}
             >
-              <td className='w-28 text-center'>{item.nomor_antrian}</td>
+              <td className='w-28 text-center'>{index+1}</td>
               <td className='w-60'>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
               <td className='w-40'>{item.pasien_id}</td>
               <td className=' w-72'>{pasien[index]?.nama}</td>
               <td className='w-32'>{item.nomor_antrian}</td>
               <td className=' w-60'>{pasien[index]?.penjamin}</td>
-              <td className=' w-44'>{item.poli}</td>
-              <td className=' w-40'>{item.instalasi}</td>
+              <td className=' w-60'>{item.poli}</td>
+              {/* <td className=' w-40'>{item.instalasi}</td> */}
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={7} className='text-center h-16 font-poppins text-shade8 font-medium hover:bg-shade4'>
+            <td colSpan={9} className='text-center h-16 font-Poppins text-shade8 font-medium hover:bg-shade4 hover:text-white'>
               Tidak ada data.
             </td>
           </tr>

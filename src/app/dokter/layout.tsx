@@ -5,7 +5,7 @@ import "../globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Dashboard Front Office - Seno Medika Clinic",
+  title: "Dashboard Dokter - Seno Medika Clinic",
   icons: "favicon.ico",
 };
 
