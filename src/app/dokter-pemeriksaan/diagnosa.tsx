@@ -3,22 +3,33 @@ import Dropdown from "../components/dropdown";
 import RemoveButton from "../../../public/remove_button.svg";
 import Image from "next/image";
 import axios from "axios";
+import { useSearchParams } from 'next/navigation'
+
 
 interface Diagnosa {
   diagnosa: string;
   jenis: string;
   kasus: string;
-  statusDiagnosa: string;
-  pemeriksaanDokter: number;
+  status_diagnosis: string;
+  // pemeriksaanDokter: number;
 }
 
 export default function Diagnosa() {
+    const searchParams = useSearchParams();
     const [diagnosaData, setDiagnosaData] = useState<Diagnosa[]>([]);
+    const antrian_id = searchParams.get('antrianID')
     const [diagnosa, setDiagnosa] = useState('');
     const [jenis, setJenis] = useState('');
     const [kasus, setKasus] = useState('');
-    const [statusDiagnosa, setStatusDiagnosa] = useState('');
+    const [status_diagnosis, setStatusDiagnosa] = useState('');
     const [pemeriksaanDokter, setPemeriksaanDokter] = useState(11);
+    const [diagnosaOne, setDiagnosaOne] = useState<Diagnosa>({
+      diagnosa: '',
+      jenis: '',
+      kasus: '',
+      status_diagnosis: '',
+      // pemeriksaanDokter: 0,
+    });
     const options = [
         { label: "Diagnosa1", value: "Diagnosa1" },
         { label: "Diagnosa2", value: "Diagnosa2" },
@@ -43,8 +54,8 @@ export default function Diagnosa() {
         diagnosa: diagnosa,
         jenis: jenis,
         kasus: kasus,
-        statusDiagnosa: statusDiagnosa,
-        pemeriksaanDokter: pemeriksaanDokter,
+        status_diagnosis: status_diagnosis,
+        // pemeriksaanDokter: pemeriksaanDokter,
       };
       setDiagnosaData([...diagnosaData, newDiagnosaData]);
       console.log(diagnosaData);
@@ -59,19 +70,26 @@ export default function Diagnosa() {
       // setDiagnosa(exampleDiagnosa);
     }, []);
 
-  // const handleSave = async(e:any) => {
-  //   e.preventDefault();
-  //   console.log(diagnosaData);
-  //   try{
-  //     const response = await axios.post("http://localhost:8080/diagnosa", diagnosaData); {
-
-  //     console.log(response);
-    
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+    const handleSave = async(e:any) => {
+      e.preventDefault();
+      // console.log(diagnosaData);
+      // console.log(antrian_id);
+      // const diagnosaUpdate = {
+      //   antrian_id: antrian_id,
+      //   diagnosa: diagnosaData,
+      // };
+      // const diagnosaToSend = diagnosaData[0];
+      // console.log(diagnosaToSend);
+      try{
+        
+        const response = await axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=diagnosa&target=${antrian_id}`, diagnosaOne); {
+        console.log(response);
+        alert("Diagnosa berhasil disimpan");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
     return (
         <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
             <div className="flex flex-row justify-between items-center mb-4">
@@ -84,7 +102,8 @@ export default function Diagnosa() {
                 className="w-2/3"
                 options={options}
                 value={diagnosa}
-                onSelect={(selectedOption:any) => setDiagnosa(selectedOption.value)}
+                // onSelect={(selectedOption:any) => setDiagnosa(selectedOption.value)}
+                onSelect={(selectedOption:any) => setDiagnosaOne(prevState => ({...prevState, diagnosa: selectedOption.value}))}
                 placeholder="Cari Diagnosa"
                 required
               />
@@ -98,7 +117,8 @@ export default function Diagnosa() {
                 className="w-2/3"
                 options={jenisOptions}
                 value={jenis}
-                onSelect={(selectedOption:any) => setJenis(selectedOption.value)}
+                // onSelect={(selectedOption:any) => setJenis(selectedOption.value)}
+                onSelect={(selectedOption:any) => setDiagnosaOne(prevState => ({...prevState, jenis: selectedOption.value}))}
                 required
               />
             </div>
@@ -111,7 +131,8 @@ export default function Diagnosa() {
                 className="w-2/3"
                 options={kasusOptions}
                 value={kasus}
-                onSelect={(selectedOption:any) => setKasus(selectedOption.value)}
+                // onSelect={(selectedOption:any) => setKasus(selectedOption.value)}
+                onSelect={(selectedOption:any) => setDiagnosaOne(prevState => ({...prevState, kasus: selectedOption.value}))}
                 required
               />
             </div>
@@ -123,17 +144,18 @@ export default function Diagnosa() {
                 id="statusDiagnosa"
                 className="w-2/3"
                 options={statusDiagnosaOptions}
-                value={statusDiagnosa}
-                onSelect={(selectedOption:any) => setStatusDiagnosa(selectedOption.value)}
+                value={status_diagnosis}
+                // onSelect={(selectedOption:any) => setStatusDiagnosa(selectedOption.value)}
+                onSelect={(selectedOption:any) => setDiagnosaOne(prevState => ({...prevState, status_diagnosis: selectedOption.value}))}
                 required
               />
             </div>
-            <div className='flex justify-end'>
-                <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
+            {/* <div className='flex justify-end'>
+                <button className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
                         onClick={addDiagnosa} >
                     Tambahkan Diagnosa
                 </button>
-            </div>
+            </div> */}
             
             <div className="flex flex-col justify-between items-center my-3 gap-4 w-full">
               {diagnosaData.map((obat, index) => (
@@ -144,7 +166,7 @@ export default function Diagnosa() {
                       <p className="font-bold">{obat.diagnosa}</p>
                       <p>Jenis: {obat.jenis}</p>
                       <p>Kasus: {obat.kasus}</p>
-                      <p>Status Diagnosa: {obat.statusDiagnosa}</p>
+                      <p>Status Diagnosa: {obat.status_diagnosis}</p>
                     </div>
                     <button className="w-10 h-10" onClick={() => removeDiagnosa(index)}>
                       {/* <Image src={RemoveButton} alt="Remove Button" /> */}
@@ -153,6 +175,12 @@ export default function Diagnosa() {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className='flex justify-end'>
+                <button className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
+                        onClick={handleSave} >
+                    Simpan Diagnosa
+                </button>
             </div>
         </div>
     );
