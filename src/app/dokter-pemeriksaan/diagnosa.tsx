@@ -3,6 +3,8 @@ import Dropdown from "../components/dropdown";
 import RemoveButton from "../../../public/remove_button.svg";
 import Image from "next/image";
 import axios from "axios";
+import { useSearchParams } from 'next/navigation'
+
 
 interface Diagnosa {
   diagnosa: string;
@@ -13,7 +15,9 @@ interface Diagnosa {
 }
 
 export default function Diagnosa() {
+    const searchParams = useSearchParams();
     const [diagnosaData, setDiagnosaData] = useState<Diagnosa[]>([]);
+    const antrian_id = searchParams.get('antrianID')
     const [diagnosa, setDiagnosa] = useState('');
     const [jenis, setJenis] = useState('');
     const [kasus, setKasus] = useState('');
@@ -59,19 +63,20 @@ export default function Diagnosa() {
       // setDiagnosa(exampleDiagnosa);
     }, []);
 
-  // const handleSave = async(e:any) => {
-  //   e.preventDefault();
-  //   console.log(diagnosaData);
-  //   try{
-  //     const response = await axios.post("http://localhost:8080/diagnosa", diagnosaData); {
+    const handleSave = async(e:any) => {
+      e.preventDefault();
+      console.log(diagnosaData);
+      console.log(antrian_id);
+      try{
+        const response = await axios.patch("http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=diagnosa", diagnosaData); {
 
-  //     console.log(response);
-    
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // }
+        console.log(response);
+      
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
     return (
         <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
             <div className="flex flex-row justify-between items-center mb-4">
@@ -129,7 +134,7 @@ export default function Diagnosa() {
               />
             </div>
             <div className='flex justify-end'>
-                <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
+                <button className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
                         onClick={addDiagnosa} >
                     Tambahkan Diagnosa
                 </button>
@@ -153,6 +158,12 @@ export default function Diagnosa() {
                   </div>
                 </div>
               ))}
+            </div>
+            <div className='flex justify-end'>
+                <button className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold"
+                        onClick={handleSave} >
+                    Simpan Diagnosa
+                </button>
             </div>
         </div>
     );

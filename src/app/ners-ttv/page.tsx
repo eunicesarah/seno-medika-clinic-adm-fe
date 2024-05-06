@@ -74,51 +74,64 @@ interface Anamnesis {
   lama_sakit: number;
 }
 
+interface PemeriksaanDokter{
+  antrian_id: number;
+  dokter_id: number;
+  perawat_id: number;
+}
+
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const id = searchParams.get('pasien_id');
+  const antrian_id = searchParams.get('antrian_id');
   const poli = searchParams.get('poli');
   const created_at = searchParams.get('created_at');
   const [dokterOptions, setDokterOptions] = useState([]);
   const [perawatOptions, setPerawatOptions] = useState([]);
 
 
-  useEffect(() => {
-    const fetchDokterOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/dokter?find_by=&target=');
-        const dokterData = response.data.data;
-        const options = dokterData.map((dokter: { nama: any; user_id: any}) => ({
+  const fetchDokterOptions = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/dokter?find_by=&target="
+      );
+      const dokterData = response.data.data;
+      const options = dokterData.map(
+        (dokter: { nama: any; user_id: any }) => ({
           label: `dr. ${dokter.nama}`,
-          value: dokter.user_id
-        }));
-        setDokterOptions(options);
-      } catch (error) {
-        console.error('Error fetching dokter data:', error);
-      }
-    };
+          value: dokter.user_id,
+        })
+      );
+      setDokterOptions(options);
+      console.log(options);
+    } catch (error) {
+      console.error("Error fetching dokter data:", error);
+    }
+  };
 
-    fetchDokterOptions();
-  }, [dokterOptions]);
+  const fetchPerawatOptions = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/perawat?find_by=&target="
+      );
+      const perawatData = response.data.data;
+      const options = perawatData.map(
+        (perawat: { nama: any; user_id: any }) => ({
+          label: `sus. ${perawat.nama}`,
+          value: perawat.user_id,
+        })
+      );
+      setPerawatOptions(options);
+      console.log(options);
+    } catch (error) {
+      console.error("Error fetching perawat data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchPerawatOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/perawat?find_by=&target=');
-        const perawatData = response.data.data;
-        const options = perawatData.map((perawat: { nama: any; user_id: any}) => ({
-          label: `sus. ${perawat.nama}`,
-          value: perawat.user_id
-        }));
-        setPerawatOptions(options);
-        console.log(options);
-      } catch (error) {
-        console.error('Error fetching perawat data:', error);
-      }
-    }
+    fetchDokterOptions();
     fetchPerawatOptions();
-  }
-  , [perawatOptions]);
+  }, []);
 
 
   const handleSubmit = async (e: any) => {
@@ -132,16 +145,52 @@ export default function Dashboard() {
       alergi: alergi,
       anamnesis: anamnesis,
     };
+    
     console.log(requestData);
   
     try {
       const response = await axios.post("http://localhost:8080/ttv", requestData);
       console.log(response);
-      alert("Data berhasil disimpan");
+      alert("Data TTV berhasil disimpan");
+
+      console.log(PemeriksaanDokter);
+      const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
+      console.log(response2);
+      alert("Data Pemeriksaan Dokter berhasil disimpan");
+      const changeStatusById = {
+        "key": antrian_id ? antrian_id.toString() : '',
+        "value": "pemeriksaan_dokter"
+      }
+      console.log(changeStatusById);
+      const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+      console.log(response3);
+      alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
 
     } catch (error) {
       console.error('Error sending data:', error);
     }
+    // try {
+    //   console.log(PemeriksaanDokter);
+    //   const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
+    //   console.log(response2);
+    //   alert("Data berhasil disimpan");
+
+    // } catch (error) {
+    //   console.error('Error sending data 2:', error);
+    // }
+    // try {
+    //   const changeStatusById = {
+    //     id: antrian_id,
+    //     status: "pemeriksaan_dokter"
+    //   }
+    //   console.log(changeStatusById);
+    //   const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+    //   console.log(response3);
+    //   alert("Data 3 berhasil disimpan");
+
+    // } catch (error) {
+    //   console.error('Error sending data 3:', error);
+    // }
   };
   const antrianId = "1";
 
@@ -175,7 +224,7 @@ export default function Dashboard() {
     sifat_nyeri: "",
   });
   const [anamnesis, setAnamnesis] = useState<Anamnesis>({
-    pasien_id: 1,
+    pasien_id: id ? +id : 0,
     dokter_id: 1,
     perawat_id: 2,
     keluhan_utama: "",
@@ -209,6 +258,12 @@ export default function Dashboard() {
     rps: "",
     rpd: "",
     rpk: "",
+  });
+
+  const [PemeriksaanDokter, setPemeriksaanDokter] = useState<PemeriksaanDokter>({
+    antrian_id: antrian_id ? +antrian_id : 1,
+    dokter_id: 1,
+    perawat_id: 2,
   });
 
   const fetchData = async () => {
@@ -341,10 +396,12 @@ export default function Dashboard() {
 
   const handleTenagaMedisDropdown = (option: any) => {
     setAnamnesis({ ...anamnesis, dokter_id: option.value });
+    setPemeriksaanDokter({ ...PemeriksaanDokter, dokter_id: option.value });
   };
 
   const handleAsistenPerawatDropdown = (option: any) => {
     setAnamnesis({ ...anamnesis, perawat_id: option.value });
+    setPemeriksaanDokter({ ...PemeriksaanDokter, perawat_id: option.value });
   };
 
   const handleKeluhanUtama = (e: any) => {
