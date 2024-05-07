@@ -50,7 +50,7 @@ export default function Edit() {
 
   return (
     <div className="bg-tint6 h-screen w-full items-center justify-center gap-4 flex flex-col">
-      <h1 className="text-4xl font-bold font-Poppins text-shade6 ">
+      <h1 className="text-4xl font-bold font-Poppins text-shade6 " data-testid="title">
         Edit Data Pegawai
       </h1>
       <div className="flex flex-col items-left justify-left">

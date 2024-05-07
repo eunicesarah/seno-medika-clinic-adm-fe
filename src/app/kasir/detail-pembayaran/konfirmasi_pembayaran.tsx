@@ -3,7 +3,7 @@ import Popup from "@/app/components/popup";
 import { useState } from 'react';
 import Image from 'next/image';
 import SuccessLogo from '../../../../public/ok.svg';
-export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup, poli, noERM, namaPasien, metodePembayaran }:any) {
+export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup, poli, noERM, namaPasien, metodePembayaran, total, antrian_id}:any) {
     const [showConfirm, setShowConfirm] = useState(false);
     const handleConfirm = () => {
         setShowPopup(false);
@@ -51,7 +51,7 @@ export default function KonfirmasiPembayaranPopup({ showPopup, setShowPopup, pol
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Total</p>
-                            <p><span>Rp</span>10.000.000</p>
+                            <p><span>Rp</span>{total}</p>
                         </div>
                         <div className="flex flex-row justify-between">
                             <p>Metode Pembayaran</p>

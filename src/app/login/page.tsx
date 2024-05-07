@@ -5,9 +5,23 @@ import Pattern from '../../../public/images/pattern.svg';
 import axios from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from 'jwt-decode';
+import AlertSuccess from "../components/alert_success";
+import AlertFailed from "../components/alert_failed";
 
+interface JwtPayload {
+    email: string;
+    exp: number;
+    nama: string;
+    role: string;
+    user_id: number;
+    user_uuid: string;
+  }
+
+  
 const loginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [showAlertFailed, setShowAlertFailed] = useState(false);
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -55,7 +69,36 @@ const validateForm = () => {
 
                 if (token) {
                     try {
-                        const decoded = jwtDecode(token);
+                        const decoded: JwtPayload = jwtDecode(token);
+                        console.log('Payload Data:', decoded);
+                        const { role } = decoded;
+                        console.log('Role:', role);
+
+                        switch (role) {
+                            case 'dokter':
+                                location.href = '/dokter';
+                                break;
+                            case 'apoteker':
+                                location.href = '/apoteker/dashboard';
+                                break;
+                            case 'perawat':
+                                location.href = '/nurse-dashboard';
+                                break;
+                            case 'front officer':
+                                location.href = '/frontoffice/dashboard';
+                                break;
+                            case 'kasir':
+                                location.href = '/kasir/dashboard';
+                                break;
+                            case 'super admin':
+                                location.href = '/superadmin/dashboard';
+                                break;
+                            default:
+                                location.href = '/';
+                                break;
+                        
+                        }
+                        
                     } catch (error) {
                         console.error('Gagal mendekode token:', error);
                     }
@@ -66,6 +109,7 @@ const validateForm = () => {
                     }
                     catch (error) {
                         console.log(error);
+                        setShowAlertFailed(true);
                     }
                 }
 };
@@ -107,6 +151,7 @@ return (
                 </form>
             </div>
         </div>
+        <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="Gagal Login" bottomMessage="Email atau Password Salah"/>
     </div>
 );
 }

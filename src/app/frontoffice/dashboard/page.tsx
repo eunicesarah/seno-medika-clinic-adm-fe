@@ -12,6 +12,8 @@ import Table from "../../components/tabel_pasien";
 import Popup from "../../components/popup";
 import Link from "next/link";
 import axios from "axios";
+import Dropdown from "../../components/dropdown";
+import { on } from "events";
 
 interface pasienData {
   pasien_id: number;
@@ -20,11 +22,15 @@ interface pasienData {
 }
 
 export default function Dashboard() {
-  const antrianAPI = "http://localhost:8080/antrian";
+  const antrianAPI = "http://localhost:8080/antrian?find_by=dashboard";
 
   const [data, setData] = useState([]);
   const [totalFinished, setTotalFinished] = useState(0);
   const [pasien, setPasien] = useState([] as pasienData[]);
+  const [size, setSize] = useState(0);
+  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleReload = () => {
     window.location.reload();
   };
@@ -37,8 +43,13 @@ export default function Dashboard() {
       const response = await axios.get(antrianAPI);
       const data1 = response.data;
       const data = data1.data;
-      // console.log(data);
-      setData(data);
+      const size = data.size;
+      const antrian = data.antrian;   
+      
+      setData(antrian);
+      setSize(size);
+      totalPage(size);
+
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -46,21 +57,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchDataDetails = async () => {
-      const promises = data.map(async (item: any) => {
-        const response = await axios.get(
-          `${additionalDataAPI}${item.pasien_id}`
-        );
-        const hasil = response.data.data;
-        console.log(response);
-        const convert: pasienData = {} as pasienData;
-        convert.pasien_id = hasil.pasien_id;
-        convert.nama = hasil.nama;
-        convert.penjamin = hasil.penjamin;
-        return convert;
-      });
-
-      const result = await Promise.all(promises);
-      setPasien(result);
+      if (data === null) {
+        return;
+      }
+      else {
+        const promises = data.map(async (item: any) => {
+          const response = await axios.get(
+            `${additionalDataAPI}${item.pasien_id}`
+          );
+          const hasil = response.data.data;
+          console.log(response);
+          const convert: pasienData = {} as pasienData;
+          convert.pasien_id = hasil.pasien_id;
+          convert.nama = hasil.nama;
+          convert.penjamin = hasil.penjamin;
+          return convert;
+        });
+        const result = await Promise.all(promises);
+        setPasien(result);
+      }
     };
 
     fetchDataDetails();
@@ -78,8 +93,15 @@ export default function Dashboard() {
 
   const fetchFinishedDataLength = async () => {
     const notaLength = await axios.get("http://localhost:8080/kasir");
-    const countNota = notaLength.data.data.length;
-    setTotalFinished(countNota);
+    if (notaLength.data.data === null) {
+      const countNota = 0;
+      setTotalFinished(countNota);
+    }
+    else{
+      const countNota = notaLength.data.data.length;
+      setTotalFinished(countNota);
+    }
+
   };
 
   const calculateFinishedDataLength = () => {
@@ -91,8 +113,68 @@ export default function Dashboard() {
     }
   };
 
+  const options = [
+    { label: "10", value: "10" },
+    { label: "20", value: "20" },
+    { label: "30", value: "30" },
+  ];
+
+const shiftOptions = [
+    { label: 'Poli Umum Shift Pagi', value: 'Poli Umum Shift Pagi' },
+    { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
+  ];
+
+  const [selectedOption, setSelectedOption] = useState("10");
+  const [selectedPoli, setSelectedPoli] = useState("");
+  const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
+  const [search, setSearch] = useState('');
+
+  const handleOptionClick = (option: any) => {
+    setSelectedOption(option.value);
+  };
+
+  const handlePoliClick = (poli: any) => {
+      setSelectedPoli(poli.value);
+  };
+
+  const totalPage = (size: any) => {
+    const total = Math.ceil(size/parseInt(selectedOption));
+    setPage(total);
+  };
+
+  const handleSearch = async () => {
+    try {
+        const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}`);
+        const searchData = response.data.data;
+        const size = searchData.size;
+        const antrian = searchData.antrian;
+        
+        setData(antrian);
+        setSize(size);
+        totalPage(size);
+    } catch (error) {
+        console.error('Error searching data:', error);
+    }
+  };
+  
+  const handlePageChange = async (page: number) => {
+    setCurrentPage(page);
+    try {
+        const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}&page=${page}`);
+        const searchData = response.data.data;
+        const size = searchData.size;
+        const antrian = searchData.antrian;
+        
+        setData(antrian);
+        setSize(size);
+        totalPage(size);
+    } catch (error) {
+        console.error('Error searching data:', error);
+    }
+};
+
   return (
-    <div className=" bg-tint6 flex-col flex h-full w-screen">
+    <div className=" bg-tint6 flex-col flex min-h-screen w-screen">
       <div className="flex mr-20 mt-14 bg-tint6">
         <div>
           <Image
@@ -112,10 +194,10 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
-      <div className="flex mt-9 ml-28 content-center justify-between mr-14">
+      <div className="flex mt-9 content-center justify-between">
         <div className="flex items-center ml-auto">
           <div className="flex bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
-            <div className=" ml-5 mr-4 mt-10 mb-3">
+            <div className=" ml-5 mr-4 mt-10 mb-3 w-8">
               <Image
                 src={QueueLogo}
                 alt="Logo Antrian"
@@ -136,7 +218,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
-            <div className=" ml-5 mr-4 mt-10 mb-3">
+            <div className=" ml-5 mr-4 mt-10 mb-3 w-8">
               <Image
                 src={CheckLogo}
                 alt="Logo Selesai Dilayani"
@@ -157,7 +239,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex bg-[#609E87] mr-4 rounded-xl h-xl ml-auto">
-            <div className=" ml-5 mr-4 mt-10 mb-3">
+            <div className=" ml-5 mr-4 mt-10 mb-3 w-8">
               <Image
                 src={TurnLogo}
                 alt="Logo Selesai Dilayani"
@@ -181,6 +263,7 @@ export default function Dashboard() {
         <button
           className=" rounded-xl h-36 mr-auto bg-primary1 hover:bg-shade6 shadow-xl"
           onClick={() => setShowPopup(true)}
+          
         >
           <div>
             <p className=" w-72 h-8 text-white text-[32px] font-bold font-Poppins uppercase leading-[38.40px] text-center mt-5 ">
@@ -199,7 +282,7 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div className="flex mt-14 mb-14 mr-12">
+      <div className="flex mt-14 mr-12">
         <p className=" font-Poppins ml-28 font-bold h-11 w-[482px] text-5xl text-shade6">
           DAFTAR ANTREAN
         </p>
@@ -217,9 +300,85 @@ export default function Dashboard() {
           </div>
         </button>
       </div>
-      {/*{pasien && pasien.length > 0 &&*/}
+      <div className=" flex flex-row justify-between ml-28 mt-8 mb-4">
+        <div className="flex">
+            <p className="text-black mr-2 py-3 w-auto">Tampilkan</p>
+            <div className=" w-12">
+                <Dropdown
+                    options={options}
+                    onSelect={handleOptionClick}
+                    required
+                />
+            </div>
+            <p className="text-black ml-2 py-3 w-auto">Data</p>
+        </div> 
+
+        <div className=" flex flex-row justify-between mr-16">
+            <p className=" text-black w-auto mr-2 py-3">Tampilkan Data</p>
+            <div className=" w-52 mr-2">
+                <Dropdown
+                    options={shiftOptions}
+                    onSelect={handlePoliClick}
+                    required
+                />
+            </div>
+            <div className="w-25 mr-2">
+            <input
+                type = "date"
+                name = "date"
+                id = "date"
+                onChange={(e) => setMulaiTanggal(e.target.value)}
+                className='w-30 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl'
+            />
+            </div>
+
+              <div className="flex flex-row gap-2">
+                <input
+                type="text"
+                name="search"
+                id="search"
+                className="w-full h-12 px-7 py-3.5 rounded-2xl border text-shade7 placeholder:text-gray-500"
+                placeholder="Pencarian"
+                onChange={(e) => setSearch(e.target.value)}
+                />
+                <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold" onClick={handleSearch}>Cari</button>
+              </div>
+            </div>
+      </div>
+
       <Table data={data} pasien={pasien} />
-      {/*}*/}
+
+      <div className="flex justify-center mb-4">
+        <ul className="flex flex-row">
+            {currentPage > 1 && (
+                <li>
+                    <button 
+                        onClick={() => handlePageChange(currentPage - 1)} 
+                        className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                    >
+                        {"<"}
+                    </button>
+                </li>
+            )}
+            {Array.from({ length: page }, (_, index) => (
+                <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                    <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                        {index + 1}
+                    </button>
+                </li>
+            ))}
+            {currentPage < page && (
+                <li>
+                    <button 
+                        onClick={() => handlePageChange(currentPage + 1)} 
+                        className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                    >
+                        {">"}
+                    </button>
+                </li>
+            )}
+        </ul>
+      </div>
 
       <Popup isvisible={showPopup} onClose={() => setShowPopup(false)}>
         <div className="flex">

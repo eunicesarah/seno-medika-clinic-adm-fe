@@ -1,7 +1,7 @@
 describe('Superadmin Register', () => {
     beforeEach(() => {
         cy.viewport(1920, 1080);
-        cy.visit('http://localhost:3000/superadmin-register');
+        cy.visit('http://localhost:3000/superadmin/register');
     });
 
     it('displays the header correctly', () => {

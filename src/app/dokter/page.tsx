@@ -8,6 +8,7 @@ import axios from "axios";
 interface pasienData {
     pasien_id: number;
     no_erm: string;
+    nik: string;
     nama: string;
     jenis_kelamin: string;
     penjamin: string;
@@ -16,10 +17,13 @@ interface pasienData {
 }
 
 export default function DokterDashboard() {
-    const antrianAPI = "http://localhost:8080/antrian";
+    const antrianAPI = "http://localhost:8080/antrian?find_by=pemeriksaan_dokter";
     const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
     const [data, setData] = useState([]);
     const [pasien, setPasien] = useState([] as pasienData[]);
+    const [size, setSize] = useState(0);
+    const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchData = async () => {
         let arr: Array<any> = [];
@@ -28,7 +32,12 @@ export default function DokterDashboard() {
             const response = await axios.get(antrianAPI);
             const data1 = response.data;
             const data = data1.data;
-            setData(data);
+            const size = data.size;
+            const antrian = data.antrian;   
+
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -37,26 +46,31 @@ export default function DokterDashboard() {
 
     useEffect(() => {
         const fetchDataDetails = async () => {
-            const promises = data.map(async (item: any) => {
-                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
-                const hasil = response.data.data;
-                console.log(response)
-                const convert: pasienData = {} as pasienData;
-                convert.pasien_id = hasil.pasien_id;
-                convert.no_erm = hasil.no_erm;
-                convert.nama = hasil.nama;
-                convert.jenis_kelamin = hasil.jenis_kelamin;
-                convert.penjamin = hasil.penjamin;
-                convert.tempat_lahir = hasil.tempat_lahir;
-                convert.tanggal_lahir = hasil.tanggal_lahir;
-                return convert;
-            });
-
-            const results = await Promise.all(promises);
-            // console.log(results);
-            setPasien(results);
+            if (data === null) {
+                return;
+              }
+              else {
+                const promises = data.map(async (item: any) => {
+                  const response = await axios.get(
+                    `${additionalDataAPI}${item.pasien_id}`
+                  );
+                  const hasil = response.data.data;
+                  console.log(response);
+                  const convert: pasienData = {} as pasienData;
+                  convert.pasien_id = hasil.pasien_id;
+                  convert.no_erm = hasil.no_erm;
+                  convert.nik = hasil.nik;
+                  convert.nama = hasil.nama;
+                  convert.jenis_kelamin = hasil.jenis_kelamin;
+                  convert.penjamin = hasil.penjamin;
+                  convert.tempat_lahir = hasil.tempat_lahir;
+                  convert.tanggal_lahir = hasil.tanggal_lahir;
+                  return convert;
+                });
+                const result = await Promise.all(promises);
+                setPasien(result);
+              }
         };
-
         fetchDataDetails();
     }, [data]);
 
@@ -72,20 +86,52 @@ export default function DokterDashboard() {
         const day = updatedAtDate.getDate().toString().padStart(2, '0');
         const month = (updatedAtDate.getMonth() + 1).toString().padStart(2, '0');
         const year = updatedAtDate.getFullYear();
-      
+
         return `${day}/${month}/${year}`;
     }
 
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedOption, setSelectedOption] = useState("10");
     const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
+    const [search, setSearch] = useState('');
 
     const handleOptionClick = (option: any) => {
         setSelectedOption(option.value);
-      };
+    };
 
-    const handleDateChange = (date: any) => {
-        setSelectedDate(date);
+    const totalPage = (size: any) => {
+        const totalPage = Math.ceil(size / parseInt(selectedOption));
+        setPage(totalPage);
+    }
+
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&date=${mulaiTanggal}&search=${search}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const handlePageChange = async (page: number) => {
+        setCurrentPage(page);
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&date=${mulaiTanggal}&search=${search}&page=${page}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
     };
 
     const options = [
@@ -95,18 +141,28 @@ export default function DokterDashboard() {
       ];
 
     const shiftOptions = [
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
+        { label: 'Poli Umum Shift Pagi', value: 'Poli Umum Shift Pagi' },
+        { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
       ];
 
-      const handlePeriksaClick =  async (id: string) => {
+    const handlePeriksaClick =  async (id: string) => {
         window.location.href = `/dokter-pemeriksaan?antrianID=${id}`;
     }
 
+    const handleTTVButtonClick = async (nik: string, poli: string, created_at : string) => {
+        try {
+          const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+          const pasienId = response.data.data.pasien_id;
+          console.log(response.data.data);
+          console.log(pasienId);
+          window.location.href = `/ners-ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
+        } catch (error) {
+          console.error("Error fetching pasien data:", error);
+        }
+      };
+
     return (
-        <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
+        <div className=" bg-tint6 flex flex-col min-h-screen font-Poppins">
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
@@ -166,8 +222,9 @@ export default function DokterDashboard() {
                         id="search"
                         className="w-full h-12 px-7 py-3.5 rounded-2xl border text-shade7 placeholder:text-gray-500"
                         placeholder="Pencarian"
+                        onChange={(e) => setSearch(e.target.value)}
                         />
-                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold">Cari</button>
+                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold" onClick={handleSearch}>Cari</button>
                     </div>
                 </div>
             </div>
@@ -185,6 +242,7 @@ export default function DokterDashboard() {
                             <th className="w-20">Jenis Kelamin</th>
                             <th className="w-50">Tempat & Tanggal Lahir</th>
                             <th className="w-24">Asuransi</th>
+                            <th className="w-20"></th>
                             <th className="w-16"></th>
                         </tr>
                     </thead>
@@ -193,32 +251,67 @@ export default function DokterDashboard() {
                         {data && data.length > 0 ? (
                             data.map((item: any, index: number) => (
                             <tr key={index} className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
-                                <td>{index + 1}</td>
+                                <td>{(currentPage-1)*parseInt(selectedOption)+index+1}</td>
                                 <td>{item.nomor_antrian}</td>
                                 <td>{item.poli}</td>
                                 <td>{formatUpdatedAtToDDMMYYYY(item.created_at)}</td>
                                 <td>{pasien[index]?.no_erm}</td>
                                 <td>{pasien[index]?.nama}</td>
-                                <td>{pasien[index]?.jenis_kelamin}</td>
-                                <td>{pasien[index]?.tempat_lahir}, {formatUpdatedAtToDDMMYYYY(pasien[index]?.tanggal_lahir)}</td>
+                                {pasien[index]?.jenis_kelamin === 'laki-laki' ? <td>L</td> : <td>P</td>}
+                                <td><div>
+                                    <p>{pasien[index]?.tempat_lahir}, </p>
+                                    <p>{formatUpdatedAtToDDMMYYYY(pasien[index]?.tanggal_lahir)}</p>    
+                                </div></td>
                                 <td>{pasien[index]?.penjamin}</td>
                                 <td>
-                                    <button className="text-blue-700" onClick={() => handlePeriksaClick(item.antrian_id)}>Periksa</button>
+                                    <button className=" text-blue-700 hover:underline hover:text-white" onClick={() => handleTTVButtonClick(pasien[index]?.nik, item.poli, item.created_at)}>Buka TTV</button>
+                                </td>
+                                <td>
+                                    <button className="text-blue-700 hover:underline hover:text-white" onClick={() => handlePeriksaClick(item.antrian_id)}>Periksa</button>
                                 </td>
                             </tr>
                         ))
                         ) : (
                             <tr>
-                                <td colSpan={10} className="text-center">
-                                    Tidak ada data
+                                <td colSpan={11} className="text-center text-black hover:bg-shade4 hover:text-tint7">
+                                    Tidak ada data.
                                 </td>
                             </tr>
                         )}
                     </tbody>
                 </table>
-
+                <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
-
         </div>
     )
 }

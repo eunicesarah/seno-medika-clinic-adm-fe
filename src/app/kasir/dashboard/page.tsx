@@ -15,10 +15,13 @@ interface pasienData {
 }
 
 export default function KasirDashboard(){
-    const antrianAPI = "http://localhost:8080/antrian";
+    const antrianAPI = "http://localhost:8080/antrian?find_by=dashboard";
     const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
     const [data, setData] = useState([]);
     const [pasien, setPasien] = useState([] as pasienData[]);
+    const [size, setSize] = useState(0);
+    const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     const fetchData = async () => {
         let arr: Array<any> = [];
@@ -27,7 +30,12 @@ export default function KasirDashboard(){
             const response = await axios.get(antrianAPI);
             const data1 = response.data;
             const data = data1.data;
-            setData(data);
+            const size = data.size;
+            const antrian = data.antrian;   
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -36,22 +44,27 @@ export default function KasirDashboard(){
 
     useEffect(() => {
         const fetchDataDetails = async () => {
-            const promises = data.map(async (item: any) => {
-                const response = await axios.get(`${additionalDataAPI}${item.pasien_id}`);
-                const hasil = response.data.data;
-                console.log(response)
-                const convert: pasienData = {} as pasienData;
-                convert.pasien_id = hasil.pasien_id;
-                convert.no_erm = hasil.no_erm;
-                convert.nama = hasil.nama;
-                convert.jenis_kelamin = hasil.jenis_kelamin;
-                convert.penjamin = hasil.penjamin;
-                return convert;
-            });
-
-            const results = await Promise.all(promises);
-            // console.log(results);
-            setPasien(results);
+            if (data === null) {
+                return;
+              }
+              else {
+                const promises = data.map(async (item: any) => {
+                  const response = await axios.get(
+                    `${additionalDataAPI}${item.pasien_id}`
+                  );
+                  const hasil = response.data.data;
+                //   console.log(response);
+                  const convert: pasienData = {} as pasienData;
+                  convert.pasien_id = hasil.pasien_id;
+                  convert.no_erm = hasil.no_erm;
+                  convert.nama = hasil.nama;
+                  convert.jenis_kelamin = hasil.jenis_kelamin;
+                  convert.penjamin = hasil.penjamin;
+                  return convert;
+                });
+                const result = await Promise.all(promises);
+                setPasien(result);
+              }
         };
 
         fetchDataDetails();
@@ -60,9 +73,6 @@ export default function KasirDashboard(){
     useEffect(() => {
         fetchData();
     }, []);
-
-    console.log(data);
-    console.log(pasien);
 
     function formatUpdatedAtToDDMMYYYY(timestamp:string) {
         const updatedAtDate = new Date(timestamp);
@@ -73,17 +83,56 @@ export default function KasirDashboard(){
         return `${day}/${month}/${year}`;
       }
 
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedOption, setSelectedOption] = useState("10");
+    const [selectedPoli, setSelectedPoli] = useState("");
     const [mulaiTanggal, setMulaiTanggal] = useState<string>('');
+    const [search, setSearch] = useState('');
+    // console.log("option", selectedOption, "poli", selectedPoli, "mulai tanggal", mulaiTanggal, "search", search);
 
     const handleOptionClick = (option: any) => {
         setSelectedOption(option.value);
       };
 
-    const handleDateChange = (date: any) => {
-        setSelectedDate(date);
+    const handlePoliClick = (poli: any) => {
+        setSelectedPoli(poli.value);
     };
+
+    const totalPage = (size: any) => {
+        const total = Math.ceil(size/parseInt(selectedOption));
+        setPage(total);
+    }
+
+    const handleSearch = async () => {
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error searching data:', error);
+        }
+    };
+
+    const handlePageChange = async (page: number) => {
+        setCurrentPage(page);
+        try {
+            const response = await axios.get(`${antrianAPI}&limit=${selectedOption}&poli=${selectedPoli}&date=${mulaiTanggal}&search=${search}&page=${page}`);
+            const searchData = response.data.data;
+            const size = searchData.size;
+            const antrian = searchData.antrian;
+            
+            setData(antrian);
+            setSize(size);
+            totalPage(size);
+        } catch (error) {
+            console.error('Error searching data:', error);
+        }
+    };
+    
 
     const options = [
         { label: "10", value: "10" },
@@ -92,24 +141,27 @@ export default function KasirDashboard(){
       ];
 
     const shiftOptions = [
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
-        { label: "Shift Pagi Rumah Sakit", value: "Shift Pagi Rumah Sakit" },
+        { label: 'Poli Umum Shift Pagi', value: 'Poli Umum Shift Pagi' },
+        { label: 'Poli Umum Shift Sore', value: 'Poli Umum Shift Sore' },
       ];
 
-    const handleDetailClick =  async (id: string) => {
-        window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+    const handleDetailClick =  async (id: string, antrian_id:string) => {
+        window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}&antrian_id=${antrian_id}`;
     }
 
+    console.log("page", page);
+    console.log("current page", currentPage);
+
+
     return (
-        <div className=" bg-tint6 flex flex-col h-screen font-Poppins">
+        <div className={` bg-tint6 flex flex-col min-h-screen font-Poppins `}>
             <div className="flex mr-20 mt-14 bg-tint6">
                 <div>
                     <Image 
                         src={SMLogo} 
                         alt="Logo Seno Medika" 
                         className="w-32 h-32 ml-28"
+                        priority={true}
                     />    
                 </div>
                 <div className="ml-auto">
@@ -142,7 +194,7 @@ export default function KasirDashboard(){
                     <div className=" w-52 mr-2">
                         <Dropdown
                             options={shiftOptions}
-                            onSelect={handleOptionClick}
+                            onSelect={handlePoliClick}
                             required
                         />
                     </div>
@@ -163,19 +215,20 @@ export default function KasirDashboard(){
                         id="search"
                         className="w-full h-12 px-7 py-3.5 rounded-2xl border text-shade7 placeholder:text-gray-500"
                         placeholder="Pencarian"
+                        onChange={(e) => setSearch(e.target.value)}
                         />
-                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold">Cari</button>
+                        <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold" onClick={handleSearch}>Cari</button>
                     </div>
                 </div>
             </div>
 
-            <div className=" ml-12 mt-4 mr-12">
-                <table className=" table-auto text-center w-full">
-                    <thead className=" bg-shade1 text-shade8 font-Poppins">
+            <div className=" ml-12 mt-4 mr-12 min-h-96">
+                <table className=" table-auto text-center w-full" data-testid="table">
+                    <thead className=" bg-shade1 text-white font-Poppins">
                         <tr>
                             <th className="w-10">No</th>
                             <th className="w-20">Nomor Antrean</th>
-                            <th className="w-32">Poli/Ruangan</th>
+                            <th className="w-36">Poli/Ruangan</th>
                             <th className="w-28">Tanggal Masuk</th>
                             <th className="w-48">No. eRM</th>
                             <th className="w-52">Nama Pasien</th>
@@ -187,7 +240,7 @@ export default function KasirDashboard(){
                     <tbody>
                         {data && data.length > 0 ? (
                             data.map((item: any, index: number) => (
-                                <tr className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
+                                <tr key={item.antrian_id} className=" odd:bg-tint4 even:bg-tint5 text-shade7 hover:bg-shade4 hover:text-tint7">
                                     <td>{index+1}</td>
                                     <td>{item.nomor_antrian}</td>
                                     <td>{item.poli}</td>
@@ -196,7 +249,7 @@ export default function KasirDashboard(){
                                     <td>{pasien[index]?.nama}</td>
                                     <td>{pasien[index]?.jenis_kelamin}</td>
                                     <td>{pasien[index]?.penjamin}</td>
-                                    <td><button onClick={() => handleDetailClick(item.pasien_id)} className=" text-blue-700">Detail</button></td>
+                                    <td><button onClick={() => handleDetailClick(item.pasien_id, item.antrian_id)} className=" text-blue-700">Detail</button></td>
                                 </tr>
                             ))
                         ) : (
@@ -208,6 +261,37 @@ export default function KasirDashboard(){
                         )}
                     </tbody>
                 </table>
+                <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
             </div>
         </div>
     )

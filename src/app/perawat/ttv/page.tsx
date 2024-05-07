@@ -1,10 +1,15 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Arrow from "../../../public/right_arrow.svg";
-import Dropdown from "../components/dropdown";
+import Arrow from "../../../../public/right_arrow.svg";
+import Dropdown from "../../components/dropdown";
 import axios from "axios";
 import { useSearchParams } from 'next/navigation'
+
+import { useRouter } from 'next/navigation';
+
+import AlertSuccess from "../../components/alert_success";
+import AlertFailed from "../../components/alert_failed";
 
 interface NurseStation {
   skrining_awal: SkriningAwal;
@@ -73,53 +78,71 @@ interface Anamnesis {
   keluhan_tambahan: string;
   lama_sakit: number;
 }
-
+interface PemeriksaanDokter{
+  antrian_id: number;
+  dokter_id: number;
+  perawat_id: number;
+}
 export default function Dashboard() {
   const searchParams = useSearchParams();
   const id = searchParams.get('pasien_id');
+  const antrian_id = searchParams.get('antrian_id');
   const poli = searchParams.get('poli');
   const created_at = searchParams.get('created_at');
   const [dokterOptions, setDokterOptions] = useState([]);
   const [perawatOptions, setPerawatOptions] = useState([]);
+  
+  const router = useRouter();
+  const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+  const [showAlertFailed, setShowAlertFailed] = useState(false);
 
 
-  useEffect(() => {
-    const fetchDokterOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/dokter?find_by=&target=');
-        const dokterData = response.data.data;
-        const options = dokterData.map((dokter: { nama: any; user_id: any}) => ({
+  const fetchDokterOptions = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/dokter?find_by=&target="
+      );
+      const dokterData = response.data.data;
+      const options = dokterData.map(
+        (dokter: { nama: any; user_id: any }) => ({
           label: `dr. ${dokter.nama}`,
-          value: dokter.user_id
-        }));
-        setDokterOptions(options);
-      } catch (error) {
-        console.error('Error fetching dokter data:', error);
-      }
-    };
+          value: dokter.user_id,
+        })
+      );
+      setDokterOptions(options);
+      console.log(options);
+    } catch (error) {
+      console.error("Error fetching dokter data:", error);
+    }
+  };
 
-    fetchDokterOptions();
-  }, [dokterOptions]);
+  const fetchPerawatOptions = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/perawat?find_by=&target="
+      );
+      const perawatData = response.data.data;
+      const options = perawatData.map(
+        (perawat: { nama: any; user_id: any }) => ({
+          label: `sus. ${perawat.nama}`,
+          value: perawat.user_id,
+        })
+      );
+      setPerawatOptions(options);
+      console.log(options);
+    } catch (error) {
+      console.error("Error fetching perawat data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchPerawatOptions = async () => {
-      try {
-        const response = await axios.get('http://localhost:8080/perawat?find_by=&target=');
-        const perawatData = response.data.data;
-        const options = perawatData.map((perawat: { nama: any; user_id: any}) => ({
-          label: `sus. ${perawat.nama}`,
-          value: perawat.user_id
-        }));
-        setPerawatOptions(options);
-        console.log(options);
-      } catch (error) {
-        console.error('Error fetching perawat data:', error);
-      }
-    }
+    fetchDokterOptions();
     fetchPerawatOptions();
-  }
-  , [perawatOptions]);
+  }, []);
 
+  const delay = (delayInms : any) => {
+    return new Promise(resolve => setTimeout(resolve, delayInms));
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -132,17 +155,32 @@ export default function Dashboard() {
       alergi: alergi,
       anamnesis: anamnesis,
     };
+    
     console.log(requestData);
   
     try {
       const response = await axios.post("http://localhost:8080/ttv", requestData);
       console.log(response);
-      alert("Data berhasil disimpan");
+      alert("Data TTV berhasil disimpan");
+
+      console.log(PemeriksaanDokter);
+      const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
+      console.log(response2);
+      alert("Data Pemeriksaan Dokter berhasil disimpan");
+      const changeStatusById = {
+        "key": antrian_id ? antrian_id.toString() : '',
+        "value": "pemeriksaan_dokter"
+      }
+      console.log(changeStatusById);
+      const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+      console.log(response3);
+      alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
+      window.location.href = "/perawat";
 
     } catch (error) {
       console.error('Error sending data:', error);
     }
-  };
+  }
   const antrianId = "1";
 
 
@@ -209,6 +247,11 @@ export default function Dashboard() {
     rps: "",
     rpd: "",
     rpk: "",
+  });
+  const [PemeriksaanDokter, setPemeriksaanDokter] = useState<PemeriksaanDokter>({
+    antrian_id: antrian_id ? +antrian_id : 1,
+    dokter_id: 1,
+    perawat_id: 2,
   });
 
   const fetchData = async () => {
@@ -1620,6 +1663,8 @@ export default function Dashboard() {
           </div>
         </form>
       </div>
+      <AlertSuccess isvisible={showAlertSuccess} onClose={() => setShowAlertSuccess(false)} message="TTV Berhasil Ditambahkan"/> 
+      <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="TTV Gagal Ditambahkan" bottomMessage="Data tidak dapat ditambahkan karena terjadi kesalahan pada server."/>
     </div>
   );
 }

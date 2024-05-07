@@ -8,6 +8,9 @@ import CustomDropdown from "../../../components/CustomDropdown";
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 
+import AlertSuccess from "../../components/alert_success";
+import AlertFailed from "../../components/alert_failed";
+
 const genderOptions = [
     { label: "Laki-laki", value: "laki-laki" },
     { label: "Perempuan", value: "perempuan" },
@@ -111,7 +114,8 @@ export default function Register() {
     const [isFormValid, setIsFormValid] = useState(false);
     const [ermNumber, setErmNumber] = useState("");
     const router = useRouter();
-
+    const [showAlertSuccess, setShowAlertSuccess] = useState(false);
+    const [showAlertFailed, setShowAlertFailed] = useState(false);
     const [formValues, setFormValues] = useState({
         nama: "",
         NIK: "",
@@ -401,6 +405,9 @@ export default function Register() {
             marginBottom: '6px', 
         }, 
     }; 
+    const delay = (delayInms : any) => {
+        return new Promise(resolve => setTimeout(resolve, delayInms));
+      };
 
     const handleSubmit = async (e:any) => {
         e.preventDefault()
@@ -412,7 +419,9 @@ export default function Register() {
             .then((response :any) => {
                 console.log(response)
                 if(response.status < 400){
-                    alert('Data berhasil disimpan')
+                    setShowAlertSuccess(true);
+                    delay(3000);
+                    // alert('Data berhasil disimpan')
                     router.push('/frontoffice/dashboard'); 
                     // location.href = '/frontoffice-dashboard'
                 }else(
@@ -421,7 +430,8 @@ export default function Register() {
             })
             .catch((error : any) => console.log(error))
         }else{
-            alert('Form is not valid')
+            // alert('Form is not valid')
+            setShowAlertFailed(true);
         }
 
       }
@@ -1020,6 +1030,8 @@ export default function Register() {
 
                 </form>
             </div>
+            <AlertSuccess isvisible={showAlertSuccess} onClose={() => setShowAlertSuccess(false)} message="Pasien Berhasil Ditambahkan"/> 
+            <AlertFailed isvisible={showAlertFailed} onClose={() => setShowAlertFailed(false)} topMessage="Pasien Gagal Ditambahkan" bottomMessage="Data tidak dapat ditambahkan karena terjadi kesalahan."/>
         </main>
     );
 }

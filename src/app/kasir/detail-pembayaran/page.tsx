@@ -31,6 +31,7 @@ const pembayaranOptions = [
 export default function DetailPembayaran() {
     const searchParams = useSearchParams();
     const idPasien = searchParams.get('pasien_id');
+    const antrianId = searchParams.get('antrian_id');
     const [selectedPembayaran, setSelectedPembayaran] = useState(null);
     const [tableData, setTableData] = useState(null);
     const [showPopup, setShowPopup] = useState(false);
@@ -173,7 +174,7 @@ export default function DetailPembayaran() {
 
 
     return (
-        <div className="bg-tint6 h-full flex flex-col font-Poppins">
+        <div className="bg-tint6 min-h-screen flex flex-col font-Poppins">
             <div className=" mr-20 flex flex-row justify-end mt-14">
                 <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
                     <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
@@ -319,7 +320,7 @@ export default function DetailPembayaran() {
                                 {detailTindakan && detailTindakan.map((tindakan: any, index: number) => (
                                     <tr key={index} className="">
                                         <td className="p-2">{index + 1}</td>
-                                        <td className="p-2">{tindakan.nama_tindakan}</td>
+                                        <td className="p-2">{tindakan.jenis_tindakan}</td>
                                         <td className="p-2"><span>Rp</span>{tindakan.harga_tindakan}</td>
                                     </tr>
                                 ))}
@@ -370,6 +371,8 @@ export default function DetailPembayaran() {
             noERM={pasien?.no_erm}
             namaPasien={pasien?.nama} 
             metodePembayaran={selectedPembayaran} 
+            total = {totalPrice+totalPrice*0.1}
+            antrian_id = {antrianId}
             />
             
         </div>

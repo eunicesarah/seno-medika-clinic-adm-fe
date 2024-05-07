@@ -35,28 +35,36 @@ interface TableData {
 }
 
 export default function ApotekerDashboard() {
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const antrianAPI = "http://localhost:8080/antrian?";
+  const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
+  const [selectedDate, setSelectedDate] = useState<string>('');
   const initialData: TableData[] = [];
   const [tableData, setTableData] = useState<TableData[]>(initialData);
+  const [size, setSize] = useState(0);
+  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleOptionClick = (option: any) => {
     setSelectedOption(option.value);
   };
 
   const handleDateChange = (date: any) => {
-    setSelectedDate(date);
+    const isoDateString = date.toISOString();
+    const formattedDate = isoDateString.split('T')[0];
+    setSelectedDate(formattedDate);
   };
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/apotek?find_by=today"
-      );
+      const response = await axios.get(`${antrianAPI}find_by=dashboard&limit=${selectedOption}`);
       const data1 = response.data;
       const data = data1.data;
-      console.log(data);
-      setTableData(data);
+      console.log(response);
+      const size = data.size;
+      const antrian = data.antrian;
+      setTableData(antrian);
+      setSize(size);
+      totalPage(size);
     } catch (error) {
       console.error("Error");
     }
@@ -68,37 +76,80 @@ export default function ApotekerDashboard() {
     { label: "30", value: "30" },
   ];
   const statusOptions = [
-    { label: "Semua", value: "semua" },
-    { label: "Obat Belum Diberikan", value: "belum_diberikan" },
-    { label: "Obat Sedang Disiapkan", value: "obat_disiapkan" },
-    { label: "Obat Sudah Diberikan", value: "sudah_diberikan" },
-    { label: "Obat Tidak Diambil", value: "obat_tidakdiambil" },
+    { label: "Semua", value: "dashboard" },
+    { label: "Obat Belum Diberikan", value: "obat_belum_diberikan" },
+    { label: "Obat Sedang Disiapkan", value: "obat_sedang_disiapkan" },
+    { label: "Obat Sudah Diberikan", value: "obat_sudah_diberikan" },
+    { label: "Obat Tidak Diambil", value: "obat_tidak_diambil" },
   ];
-  const handleResepButtonClick = (
-    no_erm: string,
-    poli: string,
-    created_at: string
-  ) => {
-    console.log(no_erm, poli, created_at);
+  // const handleResepButtonClick = (
+  //   no_erm: string,
+  //   poli: string,
+  //   created_at: string
+  // ) => {
+  //   // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+  // };
+  const handleDetailClick =  async (nik:string) => {
+    // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
+    const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
+      const id = response.data.data.pasien_id;
+      console.log(response.data.data);
+      console.log(id);
+      window.location.href = `/apoteker/detail-resep?pasien_id=${id}`;
+
+}
+
+  const handleSearch = async () => {
+    try {
+        const response = await axios.get(`${antrianAPI}find_by=${selectedStatus}&limit=${selectedOption}&date=${selectedDate}&search=${search}`);
+        const searchData = response.data.data;
+        const size = searchData.size;
+        const antrian = searchData.antrian;
+        
+        setTableData(antrian);
+        setSize(size);
+        totalPage(size);
+    } catch (error) {
+        console.error('Error searching data:', error);
+    }
+};
+
+const handlePageChange = async (page: number) => {
+  setCurrentPage(page);
+  try {
+      const response = await axios.get(`${antrianAPI}find_by=${selectedStatus}&limit=${selectedOption}&date=${selectedDate}&search=${search}&page=${page}`);
+      const searchData = response.data.data;
+      const size = searchData.size;
+      const antrian = searchData.antrian;
+      
+      setTableData(antrian);
+      setSize(size);
+      totalPage(size);
+  } catch (error) {
+      console.error('Error searching data:', error);
+  }
+};
+
+  const [selectedOption, setSelectedOption] = useState("10");
+  const [selectedStatus, setSelectedStatus] = useState("dashboard");
+  const [search, setSearch] = useState('');
+
+  const handleStatusClick = (poli: any) => {
+    setSelectedStatus(poli.value);
   };
 
-  const filterDate = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/apotek?find_by=date&target=${selectedDate}`
-      );
-      const data1 = response.data;
-      const data = data1.data;
-      console.log(data);
-      setTableData(data);
-    } catch (error) {
-      console.error("Error");
-    }
-  };
+  const totalPage = (size: any) => {
+    const total = Math.ceil(size/parseInt(selectedOption));
+    setPage(total);
+}
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  // console.log("option", selectedOption, "status", selectedStatus, "mulai tanggal", selectedDate, "search", search);
+  // console.log("page", page);
+  // console.log("current page", currentPage);
 
   return (
     <div className=" bg-tint6 flex-col flex h-screen font-Poppins w-screen">
@@ -143,7 +194,7 @@ export default function ApotekerDashboard() {
                 <div className="w-40">
                   <Dropdown
                     options={statusOptions}
-                    onSelect={handleOptionClick}
+                    onSelect={handleStatusClick}
                   />
                 </div>
               </div>
@@ -160,8 +211,9 @@ export default function ApotekerDashboard() {
                   id="search"
                   className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   placeholder="Pencarian"
+                  onChange={(e) => setSearch(e.target.value)}
                 />
-                <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold hover:bg-shade7">
+                <button className="bg-[#609E87] w-20 h-12 rounded-2xl text-white font-bold hover:bg-shade7" onClick={handleSearch}>
                   Cari
                 </button>
               </div>
@@ -215,13 +267,7 @@ export default function ApotekerDashboard() {
                     <td className="py-2 w-30">
                       <a
                         className="p-2 justify-center font-medium hover:text-blue-500 hover:underline"
-                        onClick={() =>
-                          handleResepButtonClick(
-                            data.no_erm,
-                            data.poli,
-                            data.created_at
-                          )
-                        }
+                        onClick={() => handleDetailClick(data.nik)}
                       >
                         Detail
                       </a>
@@ -230,6 +276,37 @@ export default function ApotekerDashboard() {
                 ))}
             </tbody>
           </table>
+          <div className="flex justify-center mt-4">
+                    <ul className="flex flex-row">
+                        {currentPage > 1 && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage - 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {"<"}
+                                </button>
+                            </li>
+                        )}
+                        {Array.from({ length: page }, (_, index) => (
+                            <li key={index} className={`page-item ${page === index + 1 ? 'active' : ''}`}>
+                                <button onClick={() => handlePageChange(index + 1)} className={` mr-3 text-black bg-white px-4 py-2 rounded-3xl ${currentPage === index + 1 ? 'font-bold' : 'font-normal'}`}>
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        {currentPage < page && (
+                            <li>
+                                <button 
+                                    onClick={() => handlePageChange(currentPage + 1)} 
+                                    className="mr-3 text-black bg-white px-4 py-2 rounded-3xl"
+                                >
+                                    {">"}
+                                </button>
+                            </li>
+                        )}
+                    </ul>
+                </div>
         </div>
       </div>
     </div>
