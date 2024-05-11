@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import UserButton from "../../components/user_button";
 
 const head = [
     "Nama Pegawai",
@@ -93,16 +94,7 @@ const Home = () => {
     return (
         <div className="bg-tint6 w-full min-h-screen flex flex-col">
             <div className="flex mr-20 mt-14">
-                <div className="ml-auto">
-                    <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
-                        <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
-                            Isti
-                        </p>
-                        <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-                            Super Admin
-                        </p>
-                    </button>
-                </div>
+                <UserButton />
             </div>
             <div className="h-full w-full overflow-scroll p-16">
                 <table data-testid='table' className="w-full min-w-max table-auto text-center ">

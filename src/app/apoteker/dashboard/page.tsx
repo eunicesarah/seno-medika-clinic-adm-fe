@@ -5,6 +5,7 @@ import Dropdown from "@/app/components/dropdown";
 import CustomDatePicker from "../../../components/Datepicker";
 import Image from "next/image";
 import axios from "axios";
+import UserButton from "../../components/user_button";
 
 const head = [
   "No",
@@ -161,16 +162,7 @@ const handlePageChange = async (page: number) => {
             className="w-32 h-32 ml-20"
           />
         </div>
-        <div className="ml-auto">
-          <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
-            <p className="text-neutral-900 textq-2xl font-semibold font-['Poppins'] leading-9">
-              Isti
-            </p>
-            <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-              Apoteker
-            </p>
-          </button>
-        </div>
+        <UserButton />
       </div>
       <div>
         <label
