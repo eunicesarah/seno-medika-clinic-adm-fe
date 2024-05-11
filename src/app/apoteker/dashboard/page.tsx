@@ -89,13 +89,13 @@ export default function ApotekerDashboard() {
   // ) => {
   //   // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
   // };
-  const handleDetailClick =  async (nik:string) => {
+  const handleDetailClick =  async (no_antrian:number, nik: string) => {
     // window.location.href = `/kasir/detail-pembayaran?pasien_id=${id}`;
     const response = await axios.get(`http://localhost:8080/pasien?find_by=nik&target=${nik}`);
       const id = response.data.data.pasien_id;
       console.log(response.data.data);
       console.log(id);
-      window.location.href = `/apoteker/detail-resep?pasien_id=${id}`;
+      window.location.href = `/apoteker/detail-resep?no_antrian=${no_antrian}&pasien_id=${id}`;
 
 }
 
@@ -267,7 +267,7 @@ const handlePageChange = async (page: number) => {
                     <td className="py-2 w-30">
                       <a
                         className="p-2 justify-center font-medium hover:text-blue-500 hover:underline"
-                        onClick={() => handleDetailClick(data.nik)}
+                        onClick={() => handleDetailClick(data.nomor_antrian, data.nik)}
                       >
                         Detail
                       </a>

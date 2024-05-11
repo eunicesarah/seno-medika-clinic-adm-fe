@@ -18,6 +18,7 @@ const head = [
 export default function DetailResep() {
     const searchParams = useSearchParams();
     const idPasien = searchParams.get('pasien_id');
+    const noAntrian = searchParams.get('no_antrian');
     const [showPopup, setShowPopup] = useState(false);
     const [pasien, setPasien] = useState<any>(null);
     const [antrian, setAntrian] = useState<any>(null);
@@ -58,9 +59,9 @@ export default function DetailResep() {
         }
     };
     
-    const fetchDetailObat = async (nota_id : any) => {
-        console.log(nota_id);
-        await axios.get(`${detailObatDataAPI}${nota_id}`).then((response) => {
+    const fetchDetailObat = async (noAntrian : any) => {
+        console.log(noAntrian);
+        await axios.get(`${detailObatDataAPI}${noAntrian}`).then((response) => {
             const responseData = response.data;
             const fetchedData = responseData.data;
             console.log(fetchedData);
@@ -74,7 +75,7 @@ export default function DetailResep() {
     useEffect(() => {
         fetchDataPasien();
         fetchDataAntrian();
-        fetchDetailObat(idPasien);
+        fetchDetailObat(noAntrian);
       }, []);
     
       const handleBackButton = () => {
@@ -123,6 +124,9 @@ export default function DetailResep() {
             console.log(newStock);
             handleUpdateStockObat(item.obat_id, item.nama_obat, item.jenis_asuransi, item.harga, item.satuan, newStock);
           });
+        alert("Obat telah diambil");
+        window.location.href = `/apoteker/dashboard`;
+
     }
 
     return (
