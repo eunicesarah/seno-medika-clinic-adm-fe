@@ -66,8 +66,9 @@ export default function DetailPembayaran() {
         const tax = totalPrice*0.1;
         const total = totalPrice;
         const totalAmount = totalPrice+tax;
+        const date= getDate();
 
-        appComponent.download_invoice(bodyTable, tindakanTable,  tax, total, totalAmount);
+        appComponent.download_invoice(bodyTable, tindakanTable,  tax, total, totalAmount, date);
     }
 
     const getUsia = (tanggalLahir: string) => {

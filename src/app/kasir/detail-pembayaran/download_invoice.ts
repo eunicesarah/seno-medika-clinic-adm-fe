@@ -3,7 +3,7 @@ import autoTable from 'jspdf-autotable';
 
 
 export default class AppComponent{
-  public async download_invoice(bodyTable: any, tindakanTable: any, tax: number, total: number, totalAmount: number){
+  public async download_invoice(bodyTable: any, tindakanTable: any, tax: number, total: number, totalAmount: number, date: string){
     const doc = new jspdf();
     // const img = new Image();
     // img.src = '../../../../public/logo_seno.png';
@@ -55,7 +55,7 @@ export default class AppComponent{
         [
           {
             content: 'Reference: #INV0001'
-            +'\nDate: 2022-01-27'
+            +'\nDate: '+date
             +'\nInvoice number: 123456',
             styles: {
               halign: 'right'
