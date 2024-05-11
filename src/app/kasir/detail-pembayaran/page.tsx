@@ -6,6 +6,7 @@ import KonfirmasiPembayaranPopup from "./konfirmasi_pembayaran";
 import axios from "axios";
 import { useSearchParams } from 'next/navigation'
 import { get } from "http";
+import AppComponent from './download_invoice';
 
 const headObat = [
     "No",
@@ -46,6 +47,8 @@ export default function DetailPembayaran() {
     const [totalQuantityTindakan, setTotalQuantityTindakan] = useState(0);
     const [totalPriceObat, setTotalPriceObat] = useState(0);
     const [totalQuantityObat, setTotalQuantityObat] = useState(0);
+    const appComponent = new AppComponent();
+    
 
     const pasienDataApi = "http://localhost:8080/pasien?find_by=id&target=";
     const antrianDataAPI = "http://localhost:8080/antrian?find_by=pasienId&target=";
@@ -53,10 +56,19 @@ export default function DetailPembayaran() {
     const detailObatDataAPI = "http://localhost:8080/kasir?find_by=detail_resep&target=";
     const detailTindakanDataAPI = "http://localhost:8080/kasir?find_by=detail_tindakan&target=";
     const handlePembayaran = (option: any) => {
+        console.log(bodyTable);
         setSelectedPembayaran(option);
         console.log(detailObat);
         console.log(option);
     };
+
+    const handleDownloadInvoice = () => {
+        const tax = totalPrice*0.1;
+        const total = totalPrice;
+        const totalAmount = totalPrice+tax;
+
+        appComponent.download_invoice(bodyTable, tax, total, totalAmount);
+    }
 
     const getUsia = (tanggalLahir: string) => {
         const today = new Date();
@@ -170,7 +182,16 @@ export default function DetailPembayaran() {
             setTotalPriceTindakan(totalPricee);
             setTotalQuantityTindakan(totalQuantityy);
         });
+
+        
     };
+    const bodyTable = (detailObat||[]).map((obat:any, index:any) => [
+        index + 1,
+        obat.Obat.nama_obat,
+        obat.ListObat.jumlah,
+        obat.Obat.harga,
+        obat.Obat.harga * obat.ListObat.jumlah
+      ]);
 
 
     return (
@@ -357,7 +378,10 @@ export default function DetailPembayaran() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex justify-end my-7">
+                    <div className="flex justify-between my-7 ">
+                        <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => handleDownloadInvoice()}>
+                                Download Invoice
+                            </button>
                             <button data-testid='popup-lanjutkan-pembayaran'className="bg-shade4 w-1/4 px-3 py-3 font-bold rounded-xl items-center hover:bg-shade6" onClick={() => setShowPopup(true)}>
                                 Lanjutkan Pembayaran
                             </button>
@@ -365,14 +389,15 @@ export default function DetailPembayaran() {
                 </div>
             </div>
             <KonfirmasiPembayaranPopup 
-            showPopup={showPopup} 
-            setShowPopup={setShowPopup} 
-            poli={antrian && antrian.length > 0 ? antrian[0].poli : undefined} 
-            noERM={pasien?.no_erm}
-            namaPasien={pasien?.nama} 
-            metodePembayaran={selectedPembayaran} 
-            total = {totalPrice+totalPrice*0.1}
-            antrian_id = {antrianId}
+                showPopup={showPopup} 
+                body={bodyTable}
+                setShowPopup={setShowPopup} 
+                poli={antrian && antrian.length > 0 ? antrian[0].poli : undefined} 
+                noERM={pasien?.no_erm}
+                namaPasien={pasien?.nama} 
+                metodePembayaran={selectedPembayaran} 
+                total = {totalPrice+totalPrice*0.1}
+                antrian_id = {antrianId}
             />
             
         </div>
