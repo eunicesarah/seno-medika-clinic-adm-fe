@@ -5,6 +5,7 @@ import React, {useEffect, useState} from "react";
 import CustomDatePicker from "../../components/Datepicker";
 import Dropdown from "@/components/Dropdown";
 import axios from "axios";
+import UserButton from "../components/user_button";
 
 const head = [
   "No",
@@ -175,16 +176,7 @@ export default function NurseDashboard() {
             className="w-32 h-32 ml-20"
           />
         </div>
-        <div className="ml-auto">
-          <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
-            <p className="text-neutral-900 textq-2xl font-semibold font-['Poppins'] leading-9">
-              Isti
-            </p>
-            <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-              Nurse
-            </p>
-          </button>
-        </div>
+        <UserButton />
       </div>
       <div>
         <label className=" font-poppins ml-20 mt-8 font-bold h-11 w-auto text-3xl text-shade6">

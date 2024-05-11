@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/jwt-decode": "^3.1.0",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
     "cypress": "^13.8.0",
