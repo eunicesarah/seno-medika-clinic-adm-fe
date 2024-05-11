@@ -3,8 +3,26 @@ import autoTable from 'jspdf-autotable';
 
 
 export default class AppComponent{
-  public download_invoice(bodyTable: any, tax: number, total: number, totalAmount: number){
+  public async download_invoice(bodyTable: any, tindakanTable: any, tax: number, total: number, totalAmount: number){
     const doc = new jspdf();
+    // const img = new Image();
+    // img.src = '../../../../public/logo_seno.png';
+    // await img.decode();
+
+    // // Create a canvas and draw the image onto it
+    // const canvas = document.createElement('canvas');
+    // canvas.width = img.width;
+    // canvas.height = img.height;
+    // const ctx = canvas.getContext('2d');
+    // if (ctx) {
+    //   ctx.drawImage(img, 0, 0);
+    // }
+
+    // // Convert the canvas to a Data URL
+    // const dataUrl = canvas.toDataURL('image/png');
+
+    // // Add the image to the PDF
+    // doc.addImage(dataUrl, 'PNG', 10, 10, 50, 50);
     autoTable(doc, {
       body: [
         [
@@ -145,6 +163,14 @@ export default class AppComponent{
         fillColor: '#343a40'
       }
     });
+    autoTable(doc, {
+      head: [['No', 'Tindakan', 'Harga']],
+      body: tindakanTable,
+      theme: 'striped',
+      headStyles:{
+        fillColor: '#343a40'
+      }
+    });
 
     autoTable(doc, {
       body: [
@@ -156,7 +182,7 @@ export default class AppComponent{
             }
           },
           {
-            content: total.toString(),
+            content: 'Rp'+total.toString(),
             styles:{
               halign:'right'
             }
@@ -170,7 +196,7 @@ export default class AppComponent{
             }
           },
           {
-            content: tax.toString(),
+            content: 'Rp'+tax.toString(),
             styles:{
               halign:'right'
             }
@@ -184,7 +210,7 @@ export default class AppComponent{
             }
           },
           {
-            content: totalAmount.toString(),
+            content: 'Rp'+totalAmount.toString(),
             styles:{
               halign:'right'
             }

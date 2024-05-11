@@ -67,7 +67,7 @@ export default function DetailPembayaran() {
         const total = totalPrice;
         const totalAmount = totalPrice+tax;
 
-        appComponent.download_invoice(bodyTable, tax, total, totalAmount);
+        appComponent.download_invoice(bodyTable, tindakanTable,  tax, total, totalAmount);
     }
 
     const getUsia = (tanggalLahir: string) => {
@@ -191,6 +191,12 @@ export default function DetailPembayaran() {
         obat.ListObat.jumlah,
         obat.Obat.harga,
         obat.Obat.harga * obat.ListObat.jumlah
+      ]);
+
+    const tindakanTable = (detailTindakan||[]).map((tindakan:any, index:any) => [
+        index + 1,
+        tindakan.jenis_tindakan,
+        tindakan.harga_tindakan
       ]);
 
 
