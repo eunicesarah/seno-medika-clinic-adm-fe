@@ -4,6 +4,7 @@ import SMLogo from "../../../public/Logo_Seno_Medika.svg";
 import Dropdown from "../components/dropdown";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import UserButton from "../components/user_button";
 
 interface pasienData {
     pasien_id: number;
@@ -177,6 +178,7 @@ export default function DokterDashboard() {
                         <p className="text-gray-700 text-xl font-normal font-['Poppins']">Super Admin</p>
                     </button>
                 </div>
+                <UserButton />
             </div>
 
             <div className=" mt-11 ml-28 h-11 text-black text-5xl font-bold font-Poppins uppercase leading-10">
