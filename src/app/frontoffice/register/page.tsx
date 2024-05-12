@@ -111,7 +111,7 @@ export default function Register() {
     const [kecamatanOptions, setKecamatanOptions] = useState([]);
     const [kelurahanOptions, setKelurahanOptions] = useState([]);
     const [errors , setErrors] = useState({} as IError);
-    const [isFormValid, setIsFormValid] = useState(false);
+    // const [isFormValid, setIsFormValid] = useState(false);
     const [ermNumber, setErmNumber] = useState("");
     const router = useRouter();
     const [showAlertSuccess, setShowAlertSuccess] = useState(false);
@@ -155,89 +155,114 @@ export default function Register() {
 
     const validateForm = () => {
         let err: IError = {} as IError;
+        let isValid = true;
 
         if(!formValues.nama){
             err.nama = 'Nama is required.';
+            isValid = false;
         }
 
         if (!formValues.email) {
             err.email = 'Email is required.';
+            isValid = false;
         }else if (!/\S+@\S+\.\S+/.test(formValues.email)) {
             err.email = 'Email is invalid.';
+            isValid = false;
         }
 
         if(!formValues.NIK) {
             err.NIK = 'NIK is required.';
+            isValid = false;
         }
 
         if(!formValues.no_KK) {
             err.no_KK = 'No KK is required.';
+            isValid = false;
         }
 
         if(!formValues.no_erm) {
             err.no_erm = 'No ERM is required.';
+            isValid = false;
         }
 
         if(!formValues.golongan_darah){
             err.goldar = 'Golongan Darah is required.';
+            isValid = false;
         }
 
         if(!formValues.jenis_kelamin){
-            err.jenis_kelamin = "Jenis Kelamin is required."
+            err.jenis_kelamin = "Jenis Kelamin is required.";
+            isValid = false;
         }
 
         if(!formValues.tempat_lahir) {
             err.tempat_lahir = 'Tempat Lahir is required.';
+            isValid = false;
         }
 
         if(!formValues.tanggal_lahir) {
             err.tanggal_lahir = 'Tanggal Lahir is required.';
+            isValid = false;
         }
 
         if(!formValues.provinsi){
             err.provinsi = 'Provinsi is required.';
+            isValid = false;
         }
         if(!formValues.kabupaten_kota){
             err.kabupaten_kota = 'Kabupaten Kota is required.';
+            isValid = false;
         }
         if(!formValues.kecamatan){
             err.kecamatan = 'Kecamatan is required.';
+            isValid = false;
         }
         if(!formValues.kelurahan){
             err.kelurahan = 'Kelurahan is required.';
+            isValid = false;
         }
         if(!formValues.alamat){
             err.alamat = 'Alamat is required.';
+            isValid = false;
         }
         if(!formValues.no_telpon){
             err.no_telpon = 'No Telepon is required.';
+            isValid = false;
         }else if(!/^\d{10,13}$/.test(formValues.no_telpon)){
             err.no_telpon = 'No Telepon is invalid.';
+            isValid = false;
         }
         if(!formValues.warga_negara){
             err.warga_negara = 'Warga Negara is required.';
+            isValid = false;
         }
         if(!formValues.status_perkawinan){
             err.status_perkawinan = 'Status Perkawinan is required.';
+            isValid = false;
         }
         if(!formValues.pendidikan){
             err.pendidikan = 'Pendidikan Terakhir is required.';
+            isValid = false;
         }
         if(!formValues.agama){
             err.agama = 'Agama is required.';
+            isValid = false;
         }
         if(!formValues.pekerjaan){
             err.pekerjaan = 'Pekerjaan is required.';
+            isValid = false;
         }
         if(!formValues.nama_kontak_darurat){
             err.nama_kontak_darurat = 'Nama Kontak Darurat is required.';
+            isValid = false;
         }
         if(!formValues.nomor_kontak_darurat){
             err.nomor_kontak_darurat = 'No Kontak Darurat is required.';
+            isValid = false;
         }
 
         setErrors(err);
-        setIsFormValid(Object.keys(errors).length === 0); 
+        return isValid;
     }
 
     const handlePenjaminChange = (option: any) => {
@@ -411,7 +436,7 @@ export default function Register() {
 
     const handleSubmit = async (e:any) => {
         e.preventDefault()
-        validateForm();
+        const isFormValid = await validateForm();
         console.log(formValues)
 
         if(isFormValid){
