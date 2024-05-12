@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UserButton from "../../components/user_button";
+import Nav from "../../components/hamburger";
 
 const head = [
     "Nama Pegawai",
@@ -94,6 +95,7 @@ const Home = () => {
     return (
         <div className="bg-tint6 w-full min-h-screen flex flex-col">
             <div className="flex mr-20 mt-14">
+                <Nav />
                 <UserButton />
             </div>
             <div className="h-full w-full overflow-scroll p-16">
