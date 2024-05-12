@@ -91,11 +91,68 @@ export default function Dashboard() {
   const created_at = searchParams.get('created_at');
   const [dokterOptions, setDokterOptions] = useState([]);
   const [perawatOptions, setPerawatOptions] = useState([]);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [errors, setErrors] = useState<ValidationErrors>({});
   
   const router = useRouter();
   const [showAlertSuccess, setShowAlertSuccess] = useState(false);
   const [showAlertFailed, setShowAlertFailed] = useState(false);
 
+
+  
+  interface ValidationErrors {
+    [key: string]: string;
+  }
+  
+  const validateForm =   () => {
+    let err: ValidationErrors = {}; 
+    let isValid = true;
+    if (ttv.kesadaran==="") {
+      err.kesadaran = "Kesadaran harus diisi";
+      isValid = false;
+    }
+    if (typeof ttv.sistole !== 'number' || ttv.sistole === 0 || isNaN(ttv.sistole)) {
+      err.sistole = "Sistole harus diisi";
+      isValid = false;
+    }
+    if(ttv.diastole === 0 || isNaN(ttv.diastole)){
+      err.diastole = "Diastole harus diisi";
+      isValid = false;
+    }
+    if(ttv.tinggi_badan === 0 || isNaN(ttv.tinggi_badan)){
+      err.tinggi_badan = "Tinggi badan harus diisi";
+      isValid = false;
+    }
+    if(ttv.berat_badan === 0 || isNaN(ttv.berat_badan)){
+      err.berat_badan = "Berat badan harus diisi";
+      isValid = false;
+    }
+    if(ttv.lingkar_perut === 0 || isNaN(ttv.lingkar_perut)){
+      err.lingkar_perut = "Lingkar perut harus diisi";
+      isValid = false;
+    }
+    if(ttv.detak_nadi === 0 || isNaN(ttv.detak_nadi)){
+      err.detak_nadi = "Detak nadi harus diisi";
+      isValid = false;
+    }
+    if(ttv.nafas === 0 || isNaN(ttv.nafas)){
+      err.nafas = "Nafas harus diisi";
+      isValid = false;
+    }
+    if(ttv.triage === ""){
+      err.triage = "Triage harus diisi";
+      isValid = false;
+    }
+    if(ttv.cara_ukur_tb === ""){
+      err.cara_ukur_tb = "Cara ukur TB harus diisi";
+      isValid = false;
+    }
+  
+
+  
+    setErrors(err);
+    return isValid;
+  }
 
   const fetchDokterOptions = async () => {
     try {
@@ -146,7 +203,10 @@ export default function Dashboard() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
+    validateForm();
+    console.log(ttv.triage);
+    console.log(ttv.cara_ukur_tb);
+    console.log(ttv.kesadaran);
     const requestData = {
       skrining_awal: skriningAwal,
       skrining_gizi: skriningGizi,
@@ -156,29 +216,36 @@ export default function Dashboard() {
       anamnesis: anamnesis,
     };
     
-    console.log(requestData);
+    // console.log(requestData);
+    const formIsValid = await validateForm();
+    console.log(formIsValid );
+
+    if(formIsValid){
+      try {
+        const response = await axios.post("http://localhost:8080/ttv", requestData);
+        console.log(response);
+        // alert("Data TTV berhasil disimpan");
   
-    try {
-      const response = await axios.post("http://localhost:8080/ttv", requestData);
-      console.log(response);
-      alert("Data TTV berhasil disimpan");
-
-      console.log(PemeriksaanDokter);
-      const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
-      console.log(response2);
-      alert("Data Pemeriksaan Dokter berhasil disimpan");
-      const changeStatusById = {
-        "key": antrian_id ? antrian_id.toString() : '',
-        "value": "pemeriksaan_dokter"
+        console.log(PemeriksaanDokter);
+        const response2 = await axios.post("http://localhost:8080/pemeriksaan_dokter", PemeriksaanDokter);
+        console.log(response2);
+        // alert("Data Pemeriksaan Dokter berhasil disimpan");
+        const changeStatusById = {
+          "key": antrian_id ? antrian_id.toString() : '',
+          "value": "pemeriksaan_dokter"
+        }
+        console.log(changeStatusById);
+        const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+        console.log(response3);
+        setShowAlertSuccess(true);
+        await delay(3000);
+        // alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
+        window.location.href = "/perawat";
+  
+      } catch (error) {
+        console.error('Error sending data:', error);
+        setShowAlertFailed(true);
       }
-      console.log(changeStatusById);
-      const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
-      console.log(response3);
-      alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
-      window.location.href = "/perawat";
-
-    } catch (error) {
-      console.error('Error sending data:', error);
     }
   }
   const antrianId = "1";
@@ -655,7 +722,7 @@ export default function Dashboard() {
                 className="w-2/3"
                 options={dokterOptions}
                 onSelect={handleTenagaMedisDropdown}
-                required
+                // required
               />
             </div>
             <div
@@ -686,7 +753,7 @@ export default function Dashboard() {
                 onChange={handleKeluhanUtama}
                 className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                 placeholder="Pisahkan dengan koma"
-                required
+                // required
               />
             </div>
             <div className="flex flex-row justify-between items-center mb-4">
@@ -718,7 +785,7 @@ export default function Dashboard() {
                     onChange={handleLamaSakit}
                     className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                     placeholder="0"
-                    required
+                    // required
                   />
                   <span className="absolute right-0 top-0 bottom-0 bg-shade4 border border-l-0 rounded-r-2xl flex items-center px-3 text-sm text-tint7">
                     Thn
@@ -732,7 +799,7 @@ export default function Dashboard() {
                     onChange={handleLamaSakit}
                     className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                     placeholder="0"
-                    required
+                    // required
                   />
                   <span className="absolute right-0 top-0 bottom-0 bg-shade4 border border-l-0 rounded-r-2xl flex items-center px-3 text-sm text-tint7">
                     Bln
@@ -746,7 +813,7 @@ export default function Dashboard() {
                     id="hari"
                     className="w-full h-12 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                     placeholder="0"
-                    required
+                    // required
                   />
                   <span className="absolute right-0 top-0 bottom-0 bg-shade4 border border-l-0 rounded-r-2xl flex items-center px-3 text-sm text-tint7">
                     Hr
@@ -1308,8 +1375,10 @@ export default function Dashboard() {
                   className="w-2/3"
                   options={kesadaranOptions}
                   onSelect={handleKesadaranDropdown}
+                  // required
                 />
               </div>
+              {errors.kesadaran && <p className="text-[#D66A63]">{errors.kesadaran}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Sistole <span className="text-[#D66A63]"> *</span>
@@ -1320,11 +1389,13 @@ export default function Dashboard() {
                   id="sistole"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl  border border-neutral-200 text-shade7"
+                  
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">
                   Mm
                 </span>
               </div>
+              {errors.sistole && <p className="text-[#D66A63]">{errors.sistole}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Diastole <span className="text-[#D66A63]"> *</span>
@@ -1335,11 +1406,14 @@ export default function Dashboard() {
                   id="diastole"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">
                   Hg
                 </span>
               </div>
+              {errors.diastole && <p className="text-[#D66A63]">{errors.diastole}</p>}
+              
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Tinggi Badan <span className="text-[#D66A63]"> *</span>
@@ -1350,11 +1424,14 @@ export default function Dashboard() {
                   onChange={handleInputTTV}
                   id="tinggi_badan"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
+                
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">
                   Cm
                 </span>
               </div>
+              {errors.tinggi_badan && <p className="text-[#D66A63]">{errors.tinggi_badan}</p>}
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Cara Ukur TB <span className="text-[#D66A63]"> *</span>
@@ -1363,8 +1440,10 @@ export default function Dashboard() {
                   className="w-2/3"
                   options={cara_ukur_tbOptions}
                   onSelect={handleCaraUkurTbDropdown}
+                  
                 />
               </div>
+              {errors.cara_ukur_tb && <p className="text-[#D66A63]">{errors.cara_ukur_tb}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Berat Badan <span className="text-[#D66A63]"> *</span>
@@ -1375,11 +1454,13 @@ export default function Dashboard() {
                   id="berat_badan"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">
                   Kg
                 </span>
               </div>
+              {errors.berat_badan && <p className="text-[#D66A63]">{errors.berat_badan}</p>}
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   IMT <span className="text-[#D66A63]"> *</span>
@@ -1389,11 +1470,13 @@ export default function Dashboard() {
                   name="imt"
                   id="imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
                 />
               </div>
+              {/* {errors.imt && <p>{errors.imt}</p>} */}
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
-                  Hasil IMT <span className="text-[#D66A63]"> *</span>
+                  Hasil IMT 
                 </label>
                 <input
                   type="text"
@@ -1459,11 +1542,14 @@ export default function Dashboard() {
                   id="lingkar_perut"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
+                
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-5 text-sm text-tint7">
                   Cm
                 </span>
               </div>
+              {errors.lingkar_perut && <p className="text-[#D66A63]">{errors.lingkar_perut}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Detak Nadi <span className="text-[#D66A63]"> *</span>
@@ -1474,11 +1560,14 @@ export default function Dashboard() {
                   id="detak_nadi"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
+                
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">
                   /Menit
                 </span>
               </div>
+              {errors.detak_nadi && <p className="text-[#D66A63]">{errors.detak_nadi}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Nafas <span className="text-[#D66A63]"> *</span>
@@ -1489,14 +1578,17 @@ export default function Dashboard() {
                   id="nafas"
                   onChange={handleInputTTV}
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
+                  
+                
                 />
                 <span className="absolute right-0 top-0 bottom-0 bg-shade4 rounded-r-2xl flex items-center px-4 text-sm text-tint7">
                   /Menit
                 </span>
               </div>
+              {errors.nafas && <p className="text-[#D66A63]">{errors.nafas}</p>}
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
-                  Saturasi <span className="text-[#D66A63]"> *</span>
+                  Saturasi 
                 </label>
                 <input
                   type="text"
@@ -1511,7 +1603,7 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-row justify-between items-center mb-4 relative">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
-                  Suhu <span className="text-[#D66A63]"> *</span>
+                  Suhu 
                 </label>
                 <input
                   type="text"
@@ -1526,7 +1618,7 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
-                  Detak Jantung <span className="text-[#D66A63]"> *</span>
+                  Detak Jantung
                 </label>
                 <div className="w-2/3 flex flex-row gap-10 items-center">
                   <div className="flex items-center">
@@ -1572,6 +1664,7 @@ export default function Dashboard() {
                       name="triage"
                       value="gawat_darurat"
                       onChange={handleTriage}
+                      
                     />
                     <label
                       htmlFor="gawat_darurat"
@@ -1586,6 +1679,8 @@ export default function Dashboard() {
                       id="darurat"
                       name="triage"
                       value="darurat"
+                      onChange={handleTriage}
+
                     />
                     <label
                       htmlFor="darurat"
@@ -1600,6 +1695,8 @@ export default function Dashboard() {
                       id="tdk_gawat_darurat"
                       name="triage"
                       value="tdk_gawat_darurat"
+                      onChange={handleTriage}
+
                     />
                     <label
                       htmlFor="tdk_gawat_darurat"
@@ -1614,6 +1711,8 @@ export default function Dashboard() {
                       id="meninggal"
                       name="triage"
                       value="meninggal"
+                      onChange={handleTriage}
+
                     />
                     <label
                       htmlFor="meninggal"
@@ -1624,6 +1723,7 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
+              {errors.triage && <p className="text-[#D66A63]">{errors.triage}</p>}
             </div>
           </div>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-11">
