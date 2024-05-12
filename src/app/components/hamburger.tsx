@@ -5,6 +5,7 @@ import Nurse from "../../../public/Nurse.png";
 import Permanent from "../../../public/Permanent Job.png";
 import Receipt from "../../../public/Receipt Terminal.png";
 import Stethoscope from "../../../public/Stethoscope.png";
+import AddUser from "../../../public/Add User Male.png";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -40,25 +41,29 @@ export default function Header() {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             </div>
-            <ul className="flex flex-col items-center min-h-[250px] text-[#CADFD7]">
-              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
-                <Image src={Permanent} alt="gambar pill"></Image>
+            <ul className="flex flex-col items-center text-[#CADFD7] w-full">
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={AddUser} alt="tambah akun"></Image>
+                <a href="/superadmin/register" className="font-bold ">Tambahkan Akun Karyawan</a>
+              </li>
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={Permanent} alt="gambar dashboard frontoffice"></Image>
                 <a href="/frontoffice" className="font-bold">Dashboard Front Office</a>
               </li>
-              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
-                <Image src={Nurse} alt="gambar pill"></Image>
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={Nurse} alt="gambar dashboard perawat"></Image>
                 <a href="/perawat" className="font-bold">Dashboard Perawat</a>
               </li>
-              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
-                <Image src={Stethoscope} alt="gambar pill"></Image>
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={Stethoscope} alt="gambar dashboard dokter"></Image>
                 <a href="/dokter" className="font-bold">Dashboard Dokter</a>
               </li>
-              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
-                <Image src={Pill} alt="gambar pill"></Image>
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={Pill} alt="gambar dashboard apoteker"></Image>
                 <a href="/apoteker" className="font-bold">Dashboard Apoteker</a>
               </li>
-              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
-                <Image src={Receipt} alt="gambar pill"></Image>
+              <li className="py-5 flex flex-row w-full items-center text-2xl pl-8 gap-4 hover:bg-shade6">
+                <Image src={Receipt} alt="gambar dashboard kasir"></Image>
                 <a href="/kasir" className="font-bold">Dashboard Kasir</a>
               </li>
             </ul>
