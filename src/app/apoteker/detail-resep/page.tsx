@@ -79,7 +79,7 @@ export default function DetailResep() {
       }, []);
     
       const handleBackButton = () => {
-        window.location.href = `/apoteker/dashboard`;
+        window.location.href = `/apoteker`;
       }
     //TODO : Add popup component
     //TODO : Add button tidak diambil
@@ -125,7 +125,7 @@ export default function DetailResep() {
             handleUpdateStockObat(item.obat_id, item.nama_obat, item.jenis_asuransi, item.harga, item.satuan, newStock);
           });
         alert("Obat telah diambil");
-        window.location.href = `/apoteker/dashboard`;
+        window.location.href = `/apoteker`;
 
     }
 

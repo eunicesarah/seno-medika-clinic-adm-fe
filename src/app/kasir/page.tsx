@@ -1,10 +1,10 @@
 "use client"
 import Image from "next/image"
-import SMLogo from "../../../../public/Logo_Seno_Medika.svg"
-import Dropdown from "../../components/dropdown";
+import SMLogo from "../../../public/Logo_Seno_Medika.svg"
+import Dropdown from "../components/dropdown";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UserButton from "../../components/user_button";
+import UserButton from "../components/user_button";
 
 interface pasienData {
     pasien_id: number;

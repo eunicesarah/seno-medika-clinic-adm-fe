@@ -130,7 +130,7 @@ export default function Register() {
         setShowAlertSuccess(true);
         await delay(3000);
         
-        router.push('/superadmin/dashboard');
+        router.push('/superadmin');
       }
     }
     catch (error) {
@@ -151,7 +151,7 @@ export default function Register() {
         console.log("User created");
         setShowAlertSuccess(true);
         await delay(3000);
-        router.push('/superadmin/dashboard');
+        router.push('/superadmin');
       }
     }
     catch (error) {
@@ -170,7 +170,7 @@ export default function Register() {
         console.log("User created");
         setShowAlertSuccess(true);
         await delay(3000);
-        router.push('/superadmin/dashboard');
+        router.push('/superadmin');
       }
     }
     catch (error) {
@@ -191,7 +191,7 @@ export default function Register() {
         console.log("User created");
         setShowAlertSuccess(true);
         await delay(3000);
-        router.push('/superadmin/dashboard');
+        router.push('/superadmin');
       }
     }
     catch (error) {

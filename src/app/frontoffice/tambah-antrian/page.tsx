@@ -48,7 +48,7 @@ export default function TambahAntrian() {
             // alert("Berhasil menambahkan antrian")
             setShowAlertSuccess(true);
             await delay(3000);
-            router.push('/frontoffice/dashboard'); 
+            router.push('/frontoffice'); 
           } else {
             alert('Error:'+ response.status + response.statusText);
           }

@@ -422,7 +422,7 @@ export default function Register() {
                     setShowAlertSuccess(true);
                     delay(3000);
                     // alert('Data berhasil disimpan')
-                    router.push('/frontoffice/dashboard'); 
+                    router.push('/frontoffice'); 
                     // location.href = '/frontoffice-dashboard'
                 }else(
                     alert(response.data.message)

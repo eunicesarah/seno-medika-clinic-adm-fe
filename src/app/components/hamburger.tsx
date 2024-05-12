@@ -41,25 +41,25 @@ export default function Header() {
               </svg>
             </div>
             <ul className="flex flex-col items-center min-h-[250px] text-[#CADFD7]">
-              <li className="my-8 flex flex-row w-full items-center text-2xl gap-4">
+              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
                 <Image src={Permanent} alt="gambar pill"></Image>
-                <a href="/frontoffice/dashboard" className="font-bold">Dashboard Front Office</a>
+                <a href="/frontoffice" className="font-bold">Dashboard Front Office</a>
               </li>
-              <li className="my-8 flex flex-row w-full items-center text-2xl gap-4">
+              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
                 <Image src={Nurse} alt="gambar pill"></Image>
                 <a href="/perawat" className="font-bold">Dashboard Perawat</a>
               </li>
-              <li className="my-8 flex flex-row w-full items-center text-2xl gap-4">
+              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
                 <Image src={Stethoscope} alt="gambar pill"></Image>
                 <a href="/dokter" className="font-bold">Dashboard Dokter</a>
               </li>
-              <li className="my-8 flex flex-row w-full items-center text-2xl gap-4">
+              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
                 <Image src={Pill} alt="gambar pill"></Image>
-                <a href="/apoteker/dashboard" className="font-bold">Dashboard Apoteker</a>
+                <a href="/apoteker" className="font-bold">Dashboard Apoteker</a>
               </li>
-              <li className="my-8 flex flex-row w-full items-center text-2xl gap-4">
+              <li className="my-5 flex flex-row w-full items-center text-2xl gap-4">
                 <Image src={Receipt} alt="gambar pill"></Image>
-                <a href="/kasir/dashboard" className="font-bold">Dashboard Kasir</a>
+                <a href="/kasir" className="font-bold">Dashboard Kasir</a>
               </li>
             </ul>
           </div>

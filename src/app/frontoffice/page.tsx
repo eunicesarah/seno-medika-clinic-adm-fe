@@ -1,20 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import SMLogo from "../../../../public/Logo_Seno_Medika.svg";
-import QueueLogo from "../../../../public/queue.svg";
-import CheckLogo from "../../../../public/check.svg";
-import PlusLogo from "../../../../public/plus_pasien.svg";
-import TurnLogo from "../../../../public/giliran.svg";
-import RefreshLogo from "../../../../public/refresh.svg";
+import SMLogo from "../../../public/Logo_Seno_Medika.svg";
+import QueueLogo from "../../../public/queue.svg";
+import CheckLogo from "../../../public/check.svg";
+import PlusLogo from "../../../public/plus_pasien.svg";
+import TurnLogo from "../../../public/giliran.svg";
+import RefreshLogo from "../../../public/refresh.svg";
 import React, { useState, useEffect } from "react";
-import Table from "../../components/tabel_pasien";
-import Popup from "../../components/popup";
+import Table from "../components/tabel_pasien";
+import Popup from "../components/popup";
 import Link from "next/link";
 import axios from "axios";
-import Dropdown from "../../components/dropdown";
+import Dropdown from "../components/dropdown";
 import { on } from "events";
-import UserButton from "../../components/user_button";
+import UserButton from "../components/user_button";
 
 
 interface pasienData {

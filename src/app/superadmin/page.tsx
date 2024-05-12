@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UserButton from "../../components/user_button";
-import Nav from "../../components/hamburger";
+import UserButton from "../components/user_button";
+import Nav from "../components/hamburger";
 
 const head = [
     "Nama Pegawai",

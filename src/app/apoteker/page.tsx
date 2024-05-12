@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import SMLogo from "../../../../public/Logo_Seno_Medika.svg";
+import SMLogo from "../../../public/Logo_Seno_Medika.svg";
 import Dropdown from "@/app/components/dropdown";
-import CustomDatePicker from "../../../components/Datepicker";
+import CustomDatePicker from "../../components/Datepicker";
 import Image from "next/image";
 import axios from "axios";
-import UserButton from "../../components/user_button";
+import UserButton from "../components/user_button";
 
 const head = [
   "No",
