@@ -8,6 +8,8 @@ import SegitigaBawah from "../../../public/segitiga_bawah.svg";
 import Diagnosa from "./diagnosa";
 import Resep from "./resep";
 import Keur from "./keur";
+import Tindakan from "./tindakan";
+
 import Head from "next/head";
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
@@ -122,6 +124,10 @@ export default function PemeriksaanDokter() {
     {
       title: "Keur",
       content: <Keur tanggal="23/04/2024" dokter="dr. Upin" />,
+    },
+    {
+      title: "Tindakan",
+      content: <Tindakan />,
     },
   ];
 
