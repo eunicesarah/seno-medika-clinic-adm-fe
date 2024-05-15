@@ -107,10 +107,63 @@ export default function Dashboard() {
   const validateForm =   () => {
     let err: ValidationErrors = {}; 
     let isValid = true;
-    if (ttv.kesadaran==="") {
+
+    // if (anamnesis.dokter_id00 === '' || isNaN(anamnesis.dokter_id)) {
+    //   err.tenaga_medis = "Tenaga medis harus diisi";
+    //   isValid = false;
+    // }
+
+    if(anamnesis.keluhan_utama===""){
+      err.keluhan_utama = "Keluhan utama harus diisi";
+      isValid = false;
+    }
+
+    if(anamnesis.lama_sakit===0 || isNaN(anamnesis.lama_sakit)){
+      err.lama_sakit = "Lama sakit harus diisi";
+      isValid = false;
+    }
+
+    if (skriningAwal.skala_nyeri === 0 || isNaN(skriningAwal.skala_nyeri)) {
+      err.skala_nyeri = "Skala nyeri harus diisi";
+      isValid = false;
+    }
+
+    if (skriningAwal.nyeri_berulang === "") {
+      err.nyeri_berulang = "Nyeri berulang harus diisi";
+      isValid = false;
+    }
+
+    if (skriningAwal.sifat_nyeri === "") {
+      err.sifat_nyeri = "Sifat nyeri harus diisi";
+      isValid = false;
+    }
+
+    if (skriningGizi.penurunan_bb === "") {
+      err.penurunan_bb = "Penurunan berat badan harus diisi";
+      isValid = false;
+    }
+
+
+    if (typeof skriningGizi.tdk_nafsu_makan !== 'boolean' || typeof skriningGizi.tdk_nafsu_makan === 'undefined') {
+      err.tdk_nafsu_makan = "Tidak nafsu makan harus diisi";
+      isValid = false;
+    }
+
+    if (typeof skriningGizi.diagnosis_khusus !== 'boolean' || typeof skriningGizi.diagnosis_khusus === 'undefined') {
+      err.tdk_nafsu_makan = "Tidak nafsu makan harus diisi";
+      isValid = false;
+    }
+
+    if (skriningGizi.nama_penyakit === "") {
+      err.nama_penyakit = "Nama penyakit harus diisi";
+      isValid = false;
+    }
+
+    if (ttv.kesadaran === "") {
       err.kesadaran = "Kesadaran harus diisi";
       isValid = false;
     }
+
     if (typeof ttv.sistole !== 'number' || ttv.sistole === 0 || isNaN(ttv.sistole)) {
       err.sistole = "Sistole harus diisi";
       isValid = false;
@@ -207,6 +260,7 @@ export default function Dashboard() {
     console.log(ttv.triage);
     console.log(ttv.cara_ukur_tb);
     console.log(ttv.kesadaran);
+    // console.log(anamnesis.keluhan_utama);
     const requestData = {
       skrining_awal: skriningAwal,
       skrining_gizi: skriningGizi,
@@ -725,6 +779,7 @@ export default function Dashboard() {
                 // required
               />
             </div>
+            {errors.tenaga_medis && <p className="text-[#D66A63]">{errors.tenaga_medis}</p>}
             <div
               className="flex flex-row justify-between items-center mb-4"
               data-testid="asisten_perawat"
@@ -739,6 +794,7 @@ export default function Dashboard() {
                 onSelect={handleAsistenPerawatDropdown}
               />
             </div>
+  
             <div className="flex flex-row justify-between items-center mb-4">
               <label
                 htmlFor="keluhan_utama"
@@ -756,6 +812,7 @@ export default function Dashboard() {
                 // required
               />
             </div>
+            {errors.keluhan_utama && <p className="text-[#D66A63]">{errors.keluhan_utama}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label
                 htmlFor="keluhan_tambahan"
@@ -821,7 +878,9 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {errors.lama_sakit && <p className="text-[#D66A63]">{errors.lama_sakit}</p>}
           </div>
+          
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
             <label className="text-shade6 font-bold text-xl m-4 underline">
               Status Fungsional Pasien
@@ -1130,6 +1189,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {errors.skala_nyeri && <p className="text-[#D66A63]">{errors.skala_nyeri}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Kapan Nyeri Berulang<span className="text-[#D66A63]"> *</span>
@@ -1143,6 +1203,7 @@ export default function Dashboard() {
                 onChange={handleSkalaNyeri}
               />
             </div>
+            {errors.nyeri_berulang && <p className="text-[#D66A63]">{errors.nyeri_berulang}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Sifat Nyeri<span className="text-[#D66A63]"> *</span>
@@ -1156,6 +1217,7 @@ export default function Dashboard() {
                 onChange={handleSkalaNyeri}
               />
             </div>
+            {errors.sifat_nyeri && <p className="text-[#D66A63]">{errors.sifat_nyeri}</p>}
             <label className="text-shade6 font-bold text-xl m-4 underline">
               Skrining Gizi
             </label>
@@ -1231,6 +1293,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {errors.penurunan_bb && <p className="text-[#D66A63]">{errors.penurunan_bb}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
             <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
             Apakah asupan makan berkurang karena tidak nafsu makan <span className="text-[#D66A63]"> *</span>
@@ -1268,6 +1331,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+          {errors.tdk_nafsu_makan && <p className="text-[#D66A63]">{errors.tdk_nafsu_makan}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Pasien dengan diagnosis khusus{" "}
@@ -1306,6 +1370,7 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
+            {errors.diagnosis_khusus && <p className="text-[#D66A63]">{errors.diagnosis_khusus}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Nama Penyakit <span className="text-[#D66A63]"> *</span>
@@ -1319,7 +1384,9 @@ export default function Dashboard() {
                 onChange={handleInputSkriningGizi}
               />
             </div>
+            {errors.nama_penyakit && <p className="text-[#D66A63]">{errors.nama_penyakit}</p>}
           </div>
+          
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-11 grid grid-cols-2 gap-4">
             <div className="mr-4 px-5 ">
               <label className="text-shade6 font-bold text-xl mv-4 underline">
