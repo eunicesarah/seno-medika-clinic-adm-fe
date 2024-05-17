@@ -19,6 +19,33 @@ interface Tab {
   content: React.ReactNode;
 }
 
+interface PemeriksaanFisik {
+  terapiYgSdhDilakukan: string,
+	rencanaTindakan     : string,
+	tindakanKeperawatan :  string ,
+	observasi           :  string,
+	merokok             :  boolean,
+	konsumsiAlkohol     :  boolean ,
+	kurangSayur : boolean
+}
+
+interface KeadaanFisik {
+  pemeriksaanKulit        :    boolean, 
+	pemeriksaanKuku          :   boolean, 
+	pemeriksaanKepala         :  boolean, 
+	pemeriksaanMata            : boolean,
+	pemeriksaanTelinga          : boolean,
+	pemeriksaanHidungSinus      : boolean,
+	pemeriksaanMulutBibir       : boolean,
+	pemeriksaanLeher            :boolean,
+	pemeriksaanDadaPunggung     : boolean,
+	pemeriksaanKardiovaskuler  :  boolean,
+	pemeriksaanAbdomenPerut     : boolean,
+	pemeriksaanEkstremitasAtas :  boolean,
+	pemeriksaanEkstremitasBawah : boolean,
+	pemeriksaanGenitaliaPria    : boolean
+}
+
 const head = ["No", "Bagian Tubuh", "Keterangan", "Action"];
 const head2 = ["Tanggal", "Pemeriksaan", "Keterangan"];
 
@@ -35,6 +62,65 @@ export default function PemeriksaanDokter() {
   const [data, setData] = useState<any>(null);
   const [pasien, setPasien] = useState<any>(null);
 
+  const [pemeriksaanfisik, setpemeriksaanfisik] = useState<PemeriksaanFisik>({
+  terapiYgSdhDilakukan: '',
+	rencanaTindakan     : '',
+	tindakanKeperawatan :  '' ,
+	observasi           : '',
+	merokok             :  false,
+	konsumsiAlkohol     :  false ,
+	kurangSayur : false,
+    // pemeriksaanDokter: 0,
+  });
+
+
+  const [keadaanFisik, setKeadaanFisik] = useState<KeadaanFisik>({
+    pemeriksaanKulit: false,
+    pemeriksaanKuku: false,
+    pemeriksaanKepala: false,
+    pemeriksaanMata: false,
+    pemeriksaanTelinga: false,
+    pemeriksaanHidungSinus: false,
+    pemeriksaanMulutBibir: false,
+    pemeriksaanLeher: false,
+    pemeriksaanDadaPunggung: false,
+    pemeriksaanKardiovaskuler: false,
+    pemeriksaanAbdomenPerut: false,
+    pemeriksaanEkstremitasAtas: false,
+    pemeriksaanEkstremitasBawah: false,
+    pemeriksaanGenitaliaPria: false
+  });
+  
+
+      
+  const handleSave = async(e:any) => {
+    e.preventDefault();
+    // console.log(diagnosaData);
+    // console.log(antrian_id);
+    // const diagnosaUpdate = {
+    //   antrian_id: antrian_id,
+    //   diagnosa: diagnosaData,
+    // };
+    // const diagnosaToSend = diagnosaData[0];
+    // console.log(diagnosaToSend);
+    
+      try{
+        const response = await axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=pemeriksaan_fisik&target=${id}`,pemeriksaanfisik ); {
+        console.log(response);
+        alert("Pemeriksaan fisik berhasil disimpan");
+        }
+        const response2 = await axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=keadaan_fisik&target=${id}`,keadaanFisik ); {
+          console.log(response2);
+          alert("Keadaan fisik berhasil disimpan");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    
+    
+  }
+
+  
   const fetchData = async () => {
     let arr: Array<any> = [];
 
@@ -46,6 +132,7 @@ export default function PemeriksaanDokter() {
       setData(data);
     } catch (error) {
       console.error("Error fetching data:", error);
+      alert("Data tidak in");
     }
   };
 
@@ -703,6 +790,11 @@ export default function PemeriksaanDokter() {
                     </tr>
                   </thead>
                 </table>
+                <div className='flex justify-end mt-20'>
+                  <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold" onClick={handleSave}>
+                      Simpan Pemeriksaan Fisik
+                  </button>
+              </div>
               </div>
             </div>
 

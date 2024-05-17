@@ -107,6 +107,7 @@ export default function Diagnosa() {
           }
         } catch (error) {
           console.error(error);
+          alert("Gagal menyimpan diagnosa");
         }
       }
       
