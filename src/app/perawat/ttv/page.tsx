@@ -235,6 +235,7 @@ export default function Dashboard() {
       return responses.data !== null;
     }
     catch(error){
+      console.log("haiaiai")
       console.error("error", error);
     }
     finally{
@@ -243,7 +244,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    checkTTVExist().then((exist) => setIsTTVAlreadyExist(exist));
+    // checkTTVExist().then((exist) => setIsTTVAlreadyExist(exist));
     console.log(isTTVAlreadyExist);
     if(isTTVAlreadyExist){
       console.log("mas7uk");
@@ -448,59 +449,59 @@ export default function Dashboard() {
     // let value = kesadaranElement.singleNodeValue ? kesadaranElement.singleNodeValue.textContent : null;
     // console.log(value)
     if (isTTVAlreadyExist){
-    if (triageElement) {
-  triageElement.checked = true;
-}
+      if (triageElement) {
+        triageElement.checked = true;
+      }
 
-if (sistoleElement) {
-  sistoleElement.value = ttv.sistole;
-}
+      if (sistoleElement) {
+        sistoleElement.value = ttv.sistole;
+      }
 
-if (diastole) {
-  diastole.value = ttv.diastole;
-}
+      if (diastole) {
+        diastole.value = ttv.diastole;
+      }
 
-if (tinggiElement) {
-  tinggiElement.value = ttv.tinggi_badan;
-}
+      if (tinggiElement) {
+        tinggiElement.value = ttv.tinggi_badan;
+      }
 
-if (beratElement) {
-  beratElement.value = ttv.berat_badan;
-}
+      if (beratElement) {
+        beratElement.value = ttv.berat_badan;
+      }
 
-if (lingkarPerutElement) {
-  lingkarPerutElement.value = ttv.lingkar_perut;
-}
+      if (lingkarPerutElement) {
+        lingkarPerutElement.value = ttv.lingkar_perut;
+      }
 
-if (detakNadiElement) {
-  detakNadiElement.value = ttv.detak_nadi;
-}
+      if (detakNadiElement) {
+        detakNadiElement.value = ttv.detak_nadi;
+      }
 
-if (nafasElement) {
-  nafasElement.value = ttv.nafas;
-}
+      if (nafasElement) {
+        nafasElement.value = ttv.nafas;
+      }
 
-if (saturasiElement) {
-  saturasiElement.value = ttv.saturasi;
-}
+      if (saturasiElement) {
+        saturasiElement.value = ttv.saturasi;
+      }
 
-if (suhuElement) {
-  suhuElement.value = ttv.suhu;
-}
+      if (suhuElement) {
+        suhuElement.value = ttv.suhu;
+      }
 
-if (detakJantungElement) {
-  if (ttv.detak_jantung) {
-    detakJantungElement[0].checked = true;
-  } else {
-    detakJantungElement[1].checked = true;
-  }
-}
-if(psikososialSpiritElement){
-  psikososialSpiritElement.value = ttv.psikososial_spirit;
-}
-if (keteranganElement) {
-  keteranganElement.value = ttv.keterangan;
-}}
+      if (detakJantungElement) {
+        if (ttv.detak_jantung) {
+          detakJantungElement[0].checked = true;
+        } else {
+          detakJantungElement[1].checked = true;
+        }
+      }
+      if(psikososialSpiritElement){
+        psikososialSpiritElement.value = ttv.psikososial_spirit;
+      }
+      if (keteranganElement) {
+        keteranganElement.value = ttv.keterangan;
+      }}
     }, [ttv]);
 
     useEffect(()=> {
@@ -635,6 +636,7 @@ if(diagnosisKhususElement) {
 
   useEffect(() =>{
     checkTTVExist();
+    console.log(122121)
   }, []);
 
 
