@@ -79,18 +79,21 @@ const validateForm = () => {
                                 location.href = '/dokter';
                                 break;
                             case 'apoteker':
+                            case 'Apoteker':
                                 location.href = '/apoteker';
                                 break;
                             case 'perawat':
                                 location.href = '/perawat';
                                 break;
-                            case 'front officer':
+                            case 'Front Officer':
                                 location.href = '/frontoffice';
                                 break;
                             case 'kasir':
+                            case 'Kasir':
                                 location.href = '/kasir';
                                 break;
                             case 'super admin':
+                            case 'Super Admin':
                                 location.href = '/superadmin';
                                 break;
                             default:
