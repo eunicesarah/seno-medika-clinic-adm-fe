@@ -7,6 +7,7 @@ import axios from "axios";
 import { useSearchParams } from 'next/navigation'
 import { get } from "http";
 import AppComponent from './download_invoice';
+import UserButton from "@/app/components/user_button";
 
 const headObat = [
     "No",
@@ -202,16 +203,9 @@ export default function DetailPembayaran() {
 
 
     return (
-        <div className="bg-tint6 min-h-screen flex flex-col font-Poppins">
-            <div className=" mr-20 flex flex-row justify-end mt-14">
-                <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
-                    <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
-                        Zara
-                    </p>
-                    <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-                        Suster
-                    </p>
-                </button>
+        <div className="bg-tint6 min-h-screen flex flex-col font-Poppins pt-10 ">
+            <div className="flex justify-end pr-12">
+            <UserButton />
             </div>
             <div data-testid='title' className="ml-10 text-black font-bold text-3xl mt-9" > 
                 DETAIL PEMBAYARAN 

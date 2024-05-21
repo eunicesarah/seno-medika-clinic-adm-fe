@@ -3,6 +3,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from 'next/navigation'
+import UserButton from "@/app/components/user_button";
 
 const head = [
     "No",
@@ -138,15 +139,8 @@ export default function DetailResep() {
                                 Kembali ke Dashboard
                             </button>
                 </div>
-                <div className=" mr-20 flex flex-row justify-end mt-14">
-                    <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
-                        <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
-                            Zara
-                        </p>
-                        <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-                            Suster
-                        </p>
-                    </button>
+                <div className="flex justify-end pr-12 pt-10">
+                <UserButton />
                 </div>
             </div>
             <div data-testid='title' className="font-Poppins ml-16 mt-8 mb-5 font-bold h-11 w-auto text-3xl text-shade6" > 

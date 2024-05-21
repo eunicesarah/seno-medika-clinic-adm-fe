@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 
 import AlertSuccess from "../../components/alert_success";
 import AlertFailed from "../../components/alert_failed";
+import UserButton from "@/app/components/user_button";
 
 interface NurseStation {
   skrining_awal: SkriningAwal;
@@ -577,16 +578,9 @@ export default function Dashboard() {
 
   return (
     <div className="bg-tint6 h-full flex flex-col">
-      <div className=" mr-20 flex flex-row justify-end mt-14">
-        <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200 w-56">
-          <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
-            Zara
-          </p>
-          <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-            Suster
-          </p>
-        </button>
-      </div>
+      <div className="flex justify-end pr-12 pt-10">
+                <UserButton />
+                </div>
       <div className=" mt-10 font-poppins font-bold text-5xl ml-20 text-shade5">
         TANDA-TANDA VITAL PASIEN
       </div>
