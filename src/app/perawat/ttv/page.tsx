@@ -94,6 +94,8 @@ export default function Dashboard() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isTTVAlreadyExist, setIsTTVAlreadyExist] = useState(false);
+  const [imt, setImt] = useState(0);
+  const [hasilImt, setHasilImt] = useState("");
 
   
   const router = useRouter();
@@ -242,6 +244,9 @@ export default function Dashboard() {
       return false;
     }
   };
+
+  
+
 
   useEffect(() => {
     // checkTTVExist().then((exist) => setIsTTVAlreadyExist(exist));
@@ -657,6 +662,33 @@ if(diagnosisKhususElement) {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(()=>{
+    if(ttv.berat_badan>0 && ttv.tinggi_badan>0){
+      const bmi = ttv.berat_badan / (ttv.tinggi_badan / 100) ** 2;
+      console.log(bmi);
+      setImt(bmi);
+    }
+    console.log(ttv.berat_badan, ttv.tinggi_badan);
+  },[ttv.tinggi_badan, ttv.berat_badan]);
+
+  useEffect(()=>{
+    if(imt<=0){
+      setHasilImt("-");
+      return;
+    }else if(imt<18.5){
+      console.log("Underweight");
+      setHasilImt("Underweight");
+    }else if(imt>=18.5 && imt<=24.9){
+      console.log("Normal");
+      setHasilImt("Normal");
+    }else if(imt>=25 && imt<=29.9){
+      console.log("Overweight");
+      setHasilImt("Overweight");
+    }else{
+      console.log("Obese");
+      setHasilImt("Obese");
+    }
+  },[imt]);
 
   const fetchDataPasien = async () => {
 
@@ -1794,26 +1826,28 @@ if(diagnosisKhususElement) {
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   IMT <span className="text-[#D66A63]"> *</span>
                 </label>
-                <input
+                {/* <input
                   type="text"
                   name="imt"
                   id="imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   
-                />
+                /> */}
+                 <p className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7">{imt.toString().slice(0,5)}</p>
               </div>
               {/* {errors.imt && <p>{errors.imt}</p>} */}
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Hasil IMT 
                 </label>
-                <input
+                {/* <input
                   type="text"
                   name="hasil_imt"
                   onChange={handleInputTTV}
                   id="hasil_imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                /> */}
+                 <p className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7">{hasilImt}</p>
               </div>
             </div>
             <div>
