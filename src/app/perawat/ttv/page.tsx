@@ -94,6 +94,10 @@ export default function Dashboard() {
   const [perawatOptions, setPerawatOptions] = useState([]);
   const [isFormValid, setIsFormValid] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const [isTTVAlreadyExist, setIsTTVAlreadyExist] = useState(false);
+  const [imt, setImt] = useState(0);
+  const [hasilImt, setHasilImt] = useState("");
+
   
   const router = useRouter();
   const [showAlertSuccess, setShowAlertSuccess] = useState(false);
@@ -208,6 +212,53 @@ export default function Dashboard() {
     return isValid;
   }
 
+  const editPage = async () =>{
+    try{
+      const response = await axios.get(`http://localhost:8080/ttv?find_by=pasien_id&target=${id}`);
+      const data = response.data.data;
+      console.log(data);
+      setSkriningAwal(data.skrining_awal);
+      setSkriningGizi(data.skrining_gizi);
+      setRiwayatPenyakit(data.riwayat_penyakit);
+      setTtv(data.ttv);
+      setAlergi(data.alergi);
+      setAnamnesis(data.anamnesis);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
+
+  const checkTTVExist = async () => {
+    try{
+      const responses = await axios.get(
+        `http://localhost:8080/ttv?find_by=pasien_id&target=${id}`
+      );
+      console.log("response" + responses.data !== null)
+      setIsTTVAlreadyExist(responses.data !== null)
+      return responses.data !== null;
+    }
+    catch(error){
+      console.log("haiaiai")
+      console.error("error", error);
+    }
+    finally{
+      return false;
+    }
+  };
+
+  
+
+
+  useEffect(() => {
+    // checkTTVExist().then((exist) => setIsTTVAlreadyExist(exist));
+    console.log(isTTVAlreadyExist);
+    if(isTTVAlreadyExist){
+      console.log("mas7uk");
+      editPage();
+    }
+  }, [isTTVAlreadyExist]);
+
+
   const fetchDokterOptions = async () => {
     try {
       const response = await axios.get(
@@ -290,8 +341,8 @@ export default function Dashboard() {
           "value": "pemeriksaan_dokter"
         }
         console.log(changeStatusById);
-        const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
-        console.log(response3);
+        // const response3 = await axios.patch("http://localhost:8080/antrian?change_type=status&change_by=id", changeStatusById);
+        // console.log(response3);
         setShowAlertSuccess(true);
         await delay(3000);
         // alert("Status antrian dengan antrian_id: " + antrian_id + " berhasil diubah");
@@ -376,6 +427,225 @@ export default function Dashboard() {
     perawat_id: 2,
   });
 
+  useEffect(()=> {
+    // const kesadaranElement = document.getElementById("kesadaran");
+    const sistoleElement = document.getElementById("sistole");
+    const diastole = document.getElementById("diastole");
+    const tinggiElement = document.getElementById("tinggi_badan");
+    const beratElement = document.getElementById("berat_badan");
+    const lingkarPerutElement = document.getElementById("lingkar_perut");
+    const detakNadiElement = document.getElementById("detak_nadi");
+    const nafasElement = document.getElementById("nafas");
+    const saturasiElement = document.getElementById("saturasi");
+    const suhuElement = document.getElementById("suhu");
+    const detakJantungElement = document.getElementsByName("detak_jantung");
+    const triageElement = document.getElementById(ttv.triage);
+    const psikososialSpiritElement = document.getElementById("psikososial_spirit");
+    const keteranganElement = document.getElementById("keterangan");
+    // const kesadaranElement = document.evaluate("/html/body/div/div[3]/form/div[3]/div[1]/div[4]/div/button", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+    // const caraUkurElement = document.evaluate("/html/body/div/div[3]/form/div[3]/div[1]/div[8]/div/button", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null)
+    // if (kesadaranElement){
+    //   kesadaranElement.singleNodeValue.textContent = ttv.kesadaran;
+
+    // }
+
+    // if (caraUkurElement){
+    //   caraUkurElement.singleNodeValue.textContent = ttv.cara_ukur_tb;
+    // }
+    // let value = kesadaranElement.singleNodeValue ? kesadaranElement.singleNodeValue.textContent : null;
+    // console.log(value)
+    if (isTTVAlreadyExist){
+      if (triageElement) {
+        triageElement.checked = true;
+      }
+
+      if (sistoleElement) {
+        sistoleElement.value = ttv.sistole;
+      }
+
+      if (diastole) {
+        diastole.value = ttv.diastole;
+      }
+
+      if (tinggiElement) {
+        tinggiElement.value = ttv.tinggi_badan;
+      }
+
+      if (beratElement) {
+        beratElement.value = ttv.berat_badan;
+      }
+
+      if (lingkarPerutElement) {
+        lingkarPerutElement.value = ttv.lingkar_perut;
+      }
+
+      if (detakNadiElement) {
+        detakNadiElement.value = ttv.detak_nadi;
+      }
+
+      if (nafasElement) {
+        nafasElement.value = ttv.nafas;
+      }
+
+      if (saturasiElement) {
+        saturasiElement.value = ttv.saturasi;
+      }
+
+      if (suhuElement) {
+        suhuElement.value = ttv.suhu;
+      }
+
+      if (detakJantungElement) {
+        if (ttv.detak_jantung) {
+          detakJantungElement[0].checked = true;
+        } else {
+          detakJantungElement[1].checked = true;
+        }
+      }
+      if(psikososialSpiritElement){
+        psikososialSpiritElement.value = ttv.psikososial_spirit;
+      }
+      if (keteranganElement) {
+        keteranganElement.value = ttv.keterangan;
+      }}
+    }, [ttv]);
+
+    useEffect(()=> {
+      const rpsElement = document.getElementById("rps");
+      const rpdElement = document.getElementById("rpd");
+      const rpkElement = document.getElementById("rpk");
+      if(rpsElement && rpdElement && rpkElement){
+        rpsElement.value = riwayatPenyakit.rps;
+        rpdElement.value = riwayatPenyakit.rpd;
+        rpkElement.value = riwayatPenyakit.rpk;
+      }
+    }, [riwayatPenyakit]);
+
+useEffect(() =>{
+const obatElement = document.getElementById("obat");
+const makananElement = document.getElementById("makanan");
+const lainnyaElement = document.getElementById("lainnya");
+if (obatElement && makananElement && lainnyaElement){
+  obatElement.value = alergi.obat;
+  makananElement.value = alergi.makanan;
+  lainnyaElement.value = alergi.lainnya;
+}
+}, [alergi]);
+    
+
+    useEffect(()=> {
+      const disabilitasElement = document.getElementsByName("disabilitas");
+      const ambulansiElement = document.getElementById("ambulansi");
+      const hambatanKomunikasiElement = document.getElementsByName("hambatan_komunikasi");
+      const jalanTidakSeimbangElement = document.getElementsByName("sempoyongan");
+      const menopangSaatDudukElement = document.getElementsByName("duduk_menopang");
+      const jalanAlatBantuElement = document.getElementsByName("alat_bantu");
+      const skalaNyeriElement = document.getElementById(skriningAwal.skala_nyeri.toString());      const nyeriBerulangElement = document.getElementById("nyeri_berulang");
+      const sifatNyeriElement = document.getElementById("sifat_nyeri");
+     if (isTTVAlreadyExist){
+      if (skalaNyeriElement) {
+  skalaNyeriElement.checked = true;
+}
+
+if (nyeriBerulangElement) {
+  nyeriBerulangElement.value = skriningAwal.nyeri_berulang;
+}
+
+if (sifatNyeriElement) {
+  sifatNyeriElement.value = skriningAwal.sifat_nyeri;
+}
+
+if (disabilitasElement) {
+  if (skriningAwal.disabilitas) {
+    disabilitasElement[0].checked = true;
+  } else {
+    disabilitasElement[1].checked = true;
+  }
+}
+
+if (hambatanKomunikasiElement) {
+  if (skriningAwal.hambatan_komunikasi) {
+    hambatanKomunikasiElement[0].checked = true;
+  } else {
+    hambatanKomunikasiElement[1].checked = true;
+  }
+}
+
+if (jalanTidakSeimbangElement) {
+  if (skriningAwal.jalan_tidak_seimbang) {
+    jalanTidakSeimbangElement[0].checked = true;
+  } else {
+    jalanTidakSeimbangElement[1].checked = true;
+  }
+}
+
+if (menopangSaatDudukElement) {
+  if (skriningAwal.menopang_saat_duduk) {
+    menopangSaatDudukElement[0].checked = true;
+  } else {
+    menopangSaatDudukElement[1].checked = true;
+  }
+}
+
+if (jalanAlatBantuElement) {
+  if (skriningAwal.jalan_alat_bantu) {
+    jalanAlatBantuElement[0].checked = true;
+  } else {
+    jalanAlatBantuElement[1].checked = true;
+  }
+}
+
+if (ambulansiElement){
+  ambulansi.value = skriningAwal.ambulansi ? 'ya' : 'tidak';
+}}
+    },[skriningAwal]);
+
+    useEffect(()=> {
+      const penurunanBbElement = document.querySelector(`input[name="penurunan_bb"][value="${skriningGizi.penurunan_bb}"]`);
+      console.log(penurunanBbElement)
+      const tdkNafsuMakanElement = document.getElementsByName("tdk_nafsu_makan");
+      const diagnosisKhususElement = document.getElementsByName("diagnosis_khusus");
+      const namaPenyakitElement = document.getElementById("nama_penyakit");
+      if(isTTVAlreadyExist){
+     if(namaPenyakitElement) {
+  namaPenyakitElement.value = skriningGizi.nama_penyakit;
+}
+
+if(penurunanBbElement) {
+  penurunanBbElement.checked = true;
+}
+
+if(tdkNafsuMakanElement) {
+  if (skriningGizi.tdk_nafsu_makan) {
+    tdkNafsuMakanElement[0].checked = true;
+  } else {
+    tdkNafsuMakanElement[1].checked = true;
+  }
+}
+
+if(diagnosisKhususElement) {
+  if (skriningGizi.diagnosis_khusus) {
+    diagnosisKhususElement[0].checked = true;
+  } else {
+    diagnosisKhususElement[1].checked = true;
+  }
+}
+}}, [skriningGizi]);
+
+  useEffect(() => {
+    fetchDataPasien();
+    if (isTTVAlreadyExist) {
+      console.log("masuk");
+      editPage();
+    }
+  }, [data]);
+
+  useEffect(() =>{
+    checkTTVExist();
+    console.log(122121)
+  }, []);
+
+
   const fetchData = async () => {
     let arr: Array<any> = [];
 
@@ -393,6 +663,33 @@ export default function Dashboard() {
   useEffect(() => {
     fetchData();
   }, []);
+  useEffect(()=>{
+    if(ttv.berat_badan>0 && ttv.tinggi_badan>0){
+      const bmi = ttv.berat_badan / (ttv.tinggi_badan / 100) ** 2;
+      console.log(bmi);
+      setImt(bmi);
+    }
+    console.log(ttv.berat_badan, ttv.tinggi_badan);
+  },[ttv.tinggi_badan, ttv.berat_badan]);
+
+  useEffect(()=>{
+    if(imt<=0){
+      setHasilImt("-");
+      return;
+    }else if(imt<18.5){
+      console.log("Underweight");
+      setHasilImt("Underweight");
+    }else if(imt>=18.5 && imt<=24.9){
+      console.log("Normal");
+      setHasilImt("Normal");
+    }else if(imt>=25 && imt<=29.9){
+      console.log("Overweight");
+      setHasilImt("Overweight");
+    }else{
+      console.log("Obese");
+      setHasilImt("Obese");
+    }
+  },[imt]);
 
   const fetchDataPasien = async () => {
 
@@ -410,9 +707,6 @@ export default function Dashboard() {
     
   };
 
-  useEffect(() => {
-    fetchDataPasien();
-  }, [data]);
 
   function calculateAge(dateOfBirth: string) {
     const dob = new Date(dateOfBirth);
@@ -1526,26 +1820,28 @@ export default function Dashboard() {
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   IMT <span className="text-[#D66A63]"> *</span>
                 </label>
-                <input
+                {/* <input
                   type="text"
                   name="imt"
                   id="imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
                   
-                />
+                /> */}
+                 <p className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7">{imt.toString().slice(0,5)}</p>
               </div>
               {/* {errors.imt && <p>{errors.imt}</p>} */}
               <div className="flex flex-row justify-between items-center mb-4">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Hasil IMT 
                 </label>
-                <input
+                {/* <input
                   type="text"
                   name="hasil_imt"
                   onChange={handleInputTTV}
                   id="hasil_imt"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7"
-                />
+                /> */}
+                 <p className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-neutral-200 text-shade7">{hasilImt}</p>
               </div>
             </div>
             <div>

@@ -156,7 +156,7 @@ export default function DokterDashboard() {
           const pasienId = response.data.data.pasien_id;
           console.log(response.data.data);
           console.log(pasienId);
-          window.location.href = `/ners-ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
+          window.location.href = `/perawat/ttv?pasien_id=${pasienId}&poli=${poli}&created_at=${created_at}`;
         } catch (error) {
           console.error("Error fetching pasien data:", error);
         }

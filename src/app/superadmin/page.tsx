@@ -1,8 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import UserButton from "../components/user_button";
-import Nav from "../components/hamburger";
 
 const head = [
     "Nama Pegawai",
@@ -91,12 +89,28 @@ const Home = () => {
             console.error("Error deleting user:", error);
         }
     };
+    const handleEditButtonClick = async (id: any) => {
+        try{
+            window.location.href = `http://localhost:3000/superadmin/edit?user_id=${id}`;
+        }
+        catch (error) {
+            console.error("Error editing user:", error);
+        }
+    }
 
     return (
         <div className="bg-tint6 w-full min-h-screen flex flex-col">
             <div className="flex mr-20 mt-14">
-                <Nav />
-                <UserButton />
+                <div className="ml-auto">
+                    <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
+                        <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
+                            Isti
+                        </p>
+                        <p className="text-gray-700 text-xl font-normal font-['Poppins']">
+                            Super Admin
+                        </p>
+                    </button>
+                </div>
             </div>
             <div className="h-full w-full overflow-scroll p-16">
                 <table data-testid='table' className="w-full min-w-max table-auto text-center ">
@@ -143,12 +157,12 @@ const Home = () => {
                                             : "-"}
                                     </td>
                                     <td className="px-4 py-2">
-                                        <a
-                                            href={`/superadmin/edit?${user_id}`} // Include user ID in the URL
+                                        <button
+                                            onClick={() => handleEditButtonClick(user_id)}
                                             className="font-medium hover:text-blue-500 hover:underline mr-2"
                                         >
                                             Edit
-                                        </a>
+                                        </button>
                                         <button
                                             className="font-medium hover:text-red-500 hover:underline ml-2"
                                             onClick={() => deleteUser(user_id)}
