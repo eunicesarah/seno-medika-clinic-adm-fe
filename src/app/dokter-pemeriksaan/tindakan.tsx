@@ -16,11 +16,14 @@ interface Tindakan {
   komplikasi: string;
   alternatif_risiko: string;
 }
-
+interface ValidationErrors {
+  [key: string]: string;
+}
 export default function Tindakan() {
   const searchParams = useSearchParams();
   const antrian_id = searchParams.get("antrianID");
   const [selectedDate, setSelectedDate] = useState(null);
+  const [errors, setErrors] = useState<ValidationErrors>({}); 
   const [tindakanData, setTindakanData] = useState<Tindakan[]>([]);
   const [tindakanOne, setTindakanOne] = useState<Tindakan>({
     jenis_tindakan: "",
@@ -35,6 +38,27 @@ export default function Tindakan() {
     komplikasi: "",
     alternatif_risiko: "",
   });
+
+  const validateForm = () => {
+    let err: ValidationErrors = {};
+    let isValid = true;
+
+    if (!tindakanOne.jenis_tindakan) {
+      isValid = false;
+      err.jenis_tindakan = "Jenis Tindakan is required";
+    }
+    if (!tindakanOne.jumlah) {
+      isValid = false;
+      err.jumlah = "Jumlah is required";
+    }
+    if (!tindakanOne.harga) {
+      isValid = false;
+      err.harga = "Harga is required";
+    }
+    setErrors(err);
+    return isValid;
+  }
+
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -74,6 +98,15 @@ export default function Tindakan() {
     console.log("Komplikasi " + tindakanOne.komplikasi);
     console.log("Alternatif & Risiko " + tindakanOne.alternatif_risiko);
     console.log("Antrian ID " + antrian_id);
+
+    const formIsValid  = await validateForm();
+    if(formIsValid){
+      try{
+        console.log("masukk");
+      }catch(error){
+        console.error("Error fetching tindakan data:", error);
+      }
+    }
   }
 
   return (
@@ -91,6 +124,7 @@ export default function Tindakan() {
           className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
         />
       </div>
+      {errors.jenis_tindakan && <p className="text-[#D66A63]">{errors.jenis_tindakan}</p>}
       <div className="flex flex-row justify-between items-center mb-4">
         <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
           Prosedur Tindakan
@@ -116,6 +150,7 @@ export default function Tindakan() {
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
+        {errors.jumlah && <p className="text-[#D66A63]">{errors.jumlah}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Keterangan
@@ -139,7 +174,7 @@ export default function Tindakan() {
         </div>
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
-            Harga
+            Harga <span className="text-[#D66A63]"> *</span>
           </label>
           <input
             onChange={handleInputChange}
@@ -148,6 +183,7 @@ export default function Tindakan() {
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
+        {errors.harga && <p className="text-[#D66A63]">{errors.harga}</p> }
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Indikasi Tindakan

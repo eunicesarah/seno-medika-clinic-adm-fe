@@ -13,10 +13,13 @@ interface Resep {
   harga: number;
   keterangan: string;
 }
-
+interface ValidationErrors {
+  [key: string]: string;
+}
 export default function Resep() {
   const searchParams = useSearchParams();
   const antrian_id = searchParams.get("antrianID");
+  const [errors, setErrors] = useState<ValidationErrors>({});
   const [resepData, setResepData] = useState<Resep[]>([]);
   const [ruangTujuan, setRuangTujuan] = useState("");
   const [statusObat, setStatusObat] = useState("");
@@ -56,6 +59,35 @@ export default function Resep() {
       console.error("Error fetching obat data:", error);
     }
   };
+
+  const validateForm = () => {
+    let err: ValidationErrors = {};
+    let isValid = true;
+
+    if(resepOne.jumlah === 0){
+      err.jumlah = "Jumlah harus diisi";
+      isValid = false;
+    }
+    if(resepOne.status_obat === ""){
+      err.status_obat = "Status obat harus diisi";
+      isValid = false;
+    }
+    if(resepOne.ruang_tujuan === ""){
+      err.ruang_tujuan = "Ruang tujuan harus diisi";
+      isValid = false;
+    }
+    if(resepOne.nama_obat === ""){
+      err.nama_obat = "Nama obat harus diisi";
+      isValid = false;
+    }
+    if(resepOne.dosis === ""){
+      err.dosis = "Dosis harus diisi";
+      isValid = false;
+    } 
+
+    setErrors(err);
+    return isValid;
+  }
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
     setResepOne({
@@ -111,13 +143,19 @@ export default function Resep() {
     };
     const resepToSend = resepOne;
     console.log("send " + resepToSend);
-    // try{
-    //     const response = await axios.post(`http://localhost:8080/resep`, resepOne);
-    //     console.log(response);
-    //     alert("Resep berhasil disimpan");
-    // } catch (error) {
-    //     console.error("Error saving resep:", error);
-    // }
+
+    const formIsValid = await validateForm();
+    if(formIsValid){
+        try{
+        // const response = await axios.post(`http://localhost:8080/resep`, resepOne);
+        // console.log(response);
+        // alert("Resep berhasil disimpan");
+        // console.log("masukk");
+        } catch (error) {
+            console.error("Error saving resep:", error);
+        }
+    }
+
   };
 
   const removeResep = (index: number) => {
@@ -146,6 +184,7 @@ export default function Resep() {
           required
         />
       </div>
+      {errors.ruang_tujuan && <p className="text-[#D66A63]">{errors.ruang_tujuan}</p>}
       <div className="flex flex-row justify-between items-center mb-4">
         <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
           Status Obat
@@ -165,6 +204,7 @@ export default function Resep() {
           required
         />
       </div>
+      {errors.status_obat && <p className="text-[#D66A63]">{errors.status_obat}</p>}
       <div>
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
@@ -182,6 +222,7 @@ export default function Resep() {
             required
           />
         </div>
+        {errors.nama_obat && <p className="text-[#D66A63]">{errors.nama_obat}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Jumlah
@@ -195,6 +236,7 @@ export default function Resep() {
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
+        {errors.jumlah && <p className="text-[#D66A63]">{errors.jumlah}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Dosis
@@ -208,6 +250,7 @@ export default function Resep() {
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
+        {errors.dosis && <p className="text-[#D66A63]">{errors.dosis}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Aturan Pakai
