@@ -23,6 +23,8 @@ export default function Diagnosa() {
     const [kasus, setKasus] = useState('');
     const [status_diagnosis, setStatusDiagnosa] = useState('');
     const [pemeriksaanDokter, setPemeriksaanDokter] = useState(11);
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [errors, setErrors] = useState<ValidationErrors>({});
     const [diagnosaOne, setDiagnosaOne] = useState<Diagnosa>({
       diagnosa: '',
       jenis: '',
@@ -69,6 +71,22 @@ export default function Diagnosa() {
     useEffect(() => {
       // setDiagnosa(exampleDiagnosa);
     }, []);
+    interface ValidationErrors {
+      [key: string]: string;
+    }
+    
+    const validateForm = () =>{
+      let err: ValidationErrors = {};
+      let isValid = true;
+
+      if (diagnosaOne.diagnosa ===""){
+        err.diagnosa = "Diagnosa harus diisi";
+        isValid = false;
+      }
+
+      setErrors(err);
+      return isValid;
+    }
 
     const handleSave = async(e:any) => {
       e.preventDefault();
@@ -80,15 +98,19 @@ export default function Diagnosa() {
       // };
       // const diagnosaToSend = diagnosaData[0];
       // console.log(diagnosaToSend);
-      try{
-        
-        const response = await axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=diagnosa&target=${antrian_id}`, diagnosaOne); {
-        console.log(response);
-        alert("Diagnosa berhasil disimpan");
+      const formIsValid = await validateForm();
+      if(formIsValid){
+        try{
+          const response = await axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=diagnosa&target=${antrian_id}`, diagnosaOne); {
+          console.log(response);
+          alert("Diagnosa berhasil disimpan");
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Gagal menyimpan diagnosa");
         }
-      } catch (error) {
-        console.error(error);
       }
+      
     }
     return (
         <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
@@ -108,6 +130,7 @@ export default function Diagnosa() {
                 required
               />
             </div>
+            {errors.diagnosa && <p className="text-[#D66A63]">{errors.diagnosa}</p>}
             <div className="flex flex-row justify-between items-center mb-4">
               <label htmlFor='jenis' className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
                 Jenis
