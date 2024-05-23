@@ -208,10 +208,10 @@ export default function PemeriksaanDokter() {
       title: "Resep",
       content: <Resep />,
     },
-    {
-      title: "Keur",
-      content: <Keur tanggal="23/04/2024" dokter="dr. Upin" />,
-    },
+    // {
+    //   title: "Keur",
+    //   content: <Keur tanggal="23/04/2024" dokter="dr. Upin" />,
+    // },
     {
       title: "Tindakan",
       content: <Tindakan />,
