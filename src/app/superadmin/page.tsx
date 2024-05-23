@@ -1,14 +1,13 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Nav from "./../components/hamburger";
+import UserButton from "./../components/user_button";
 
 const head = [
     "Nama Pegawai",
     "Role",
-    "Nomor Lisensi",
     "E-mail",
-    "Jenis Poli",
-    "Jadwal Praktik",
     "Aksi",
 ];
 
@@ -101,16 +100,8 @@ const Home = () => {
     return (
         <div className="bg-tint6 w-full min-h-screen flex flex-col">
             <div className="flex mr-20 mt-14">
-                <div className="ml-auto">
-                    <button className="px-12 py-4 bg-gray-100 rounded-[51px] shadow flex-col justify-start inline-flex hover:bg-slate-200">
-                        <p className="text-neutral-900 text-2xl font-semibold font-['Poppins'] leading-9">
-                            Isti
-                        </p>
-                        <p className="text-gray-700 text-xl font-normal font-['Poppins']">
-                            Super Admin
-                        </p>
-                    </button>
-                </div>
+                <Nav />
+                <UserButton />
             </div>
             <div className="h-full w-full overflow-scroll p-16">
                 <table data-testid='table' className="w-full min-w-max table-auto text-center ">
@@ -127,12 +118,9 @@ const Home = () => {
                         {users && users.map(
                             ({
                                 user_id,
-                                nomor_lisensi,
                                 nama,
                                 email,
                                 role,
-                                jenis_poli,
-                                jadwal_praktik,
                             }) => (
                                 <tr
                                     key={user_id}
@@ -140,22 +128,7 @@ const Home = () => {
                                 >
                                     <td className="px-4 py-2">{nama}</td>
                                     <td className="px-4 py-2">{role}</td>
-                                    <td className="px-4 py-2">
-                                        {role === "Dokter" ||
-                                        role === "Suster" ||
-                                        role === "Apoteker"
-                                            ? nomor_lisensi
-                                            : "-"}
-                                    </td>
                                     <td className="px-4 py-2">{email}</td>
-                                    <td className="px-4 py-2">
-                                        {role === "Dokter" ? jenis_poli : "-"}
-                                    </td>
-                                    <td className="px-4 py-2">
-                                        {role === "Dokter"
-                                            ? jadwal_praktik
-                                            : "-"}
-                                    </td>
                                     <td className="px-4 py-2">
                                         <button
                                             onClick={() => handleEditButtonClick(user_id)}
