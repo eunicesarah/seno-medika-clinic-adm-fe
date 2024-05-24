@@ -1,9 +1,6 @@
 describe('Superadmin', () => {
     beforeEach(() => {
         cy.viewport(1920, 1080);
-        // cy.visit('http://localhost:3000/login');
-        // cy.visit('http://localhost:3000/superadmin/register');
-        // cy.visit('http://localhost:3000/superadmin');
     });
 
     // Login
@@ -64,16 +61,4 @@ describe('Superadmin', () => {
         cy.get('[data-testid="select-role"]').select('Kasir');
         cy.get('[data-testid="button-submit1"]').click();
     });
-
-    // Dashboard
-    // it('displays the table correctly', () => {
-    //     cy.get('[data-testid=table]').should('exist');
-    //     cy.get('[data-testid=table] thead tr').within(() => {
-    //         cy.get('th').should('have.length', 4);
-    //         cy.get('th').eq(0).should('contain', 'Nama Pegawai');
-    //         cy.get('th').eq(1).should('contain', 'Role');
-    //         cy.get('th').eq(2).should('contain', 'E-mail');
-    //         cy.get('th').eq(3).should('contain', 'Aksi');
-    //     });
-    // });
 });
