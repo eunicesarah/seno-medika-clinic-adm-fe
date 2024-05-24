@@ -9,7 +9,7 @@ describe('Front Officer', () => {
     });
 
     it('register new patient', () => {
-        cy.get('[data-testid="input-email"]').type('foahmada@gmail.com');
+        cy.get('[data-testid="input-email"]').type('fometiw@gmail.com');
         cy.get('[data-testid="input-password"]').type('123123qw');
         cy.get('[data-testid="button-login"]').click();
         cy.get('[data-testid="button-tambah-pasien"]').click();
