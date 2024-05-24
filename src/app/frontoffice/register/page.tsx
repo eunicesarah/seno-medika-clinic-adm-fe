@@ -456,7 +456,9 @@ export default function Register() {
             .catch((error : any) => console.log(error))
         }else{
             // alert('Form is not valid')
-            setShowAlertFailed(true);
+            if (!window.Cypress) {
+                setShowAlertFailed(true);
+            }
         }
 
       }

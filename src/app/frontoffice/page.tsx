@@ -258,7 +258,7 @@ const shiftOptions = [
           onClick={() => setShowPopup(true)}
           
         >
-          <div>
+          <div data-testid="button-tambah-pasien">
             <p className=" w-72 h-8 text-white text-[32px] font-bold font-Poppins uppercase leading-[38.40px] text-center mt-5 ">
               Tambah Pasien
             </p>{" "}
@@ -379,7 +379,7 @@ const shiftOptions = [
             href="/frontoffice/tambah-antrian"
             className=" ml-auto mr-2 mt-4 w-1/2 h-48 bg-primary1 rounded-3xl  font-Poppins text-2xl hover:bg-shade6 p-2"
           >
-            <div className="flex flex-col items-center h-full justify-center text-white">
+            <div className="flex flex-col items-center h-full justify-center text-white" data-testid="pasien-lama">
               <p>Pasien Sudah Terdaftar</p>
               <p>(Pasien Lama)</p>
             </div>
@@ -388,7 +388,7 @@ const shiftOptions = [
             href="/frontoffice/register"
             className="mr-auto ml-2 mt-4 w-1/2 h-48 bg-shade4 rounded-3xl font-Poppins text-2xl hover:bg-shade6 hover:text-white p-2"
           >
-            <div className=" flex flex-col items-center h-full justify-center ">
+            <div className=" flex flex-col items-center h-full justify-center " data-testid="pasien-baru">
               <p>Pasien Belum Terdaftar</p>
               <p>(Pasien Baru)</p>
             </div>

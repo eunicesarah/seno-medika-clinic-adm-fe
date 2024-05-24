@@ -389,6 +389,7 @@ export default function Register() {
             <div className="flex flex-row justify-center">
               {showSubmitButton && (
                 <button
+                  data-testid="button-submit1"
                   className="rounded-2xl py-2.5 px-16 bg-primary1 font-Poppins font-semibold hover:bg-shade5"
                   // onSubmit={handleSubmit}
                   type="submit"
@@ -408,6 +409,7 @@ export default function Register() {
                   Nomor Lisensi
                 </label>
                 <input
+                  data-testid="input-lisensi"
                   type="text"
                   name="no_lisensi"
                   id="no_lisensi"
@@ -423,6 +425,7 @@ export default function Register() {
                       Jenis Poli
                     </label>
                     <select
+                      data-testid="select-poli"
                       id="jenis_poli"
                       name="jenis_poli"
                       className="font-Poppins font-semibold w-full  p-2 rounded-xl px-7 py-3.5 left-0 top-9 bg-gray-100  border border-neutral-200 justify-start items-center gap-2.5 inline-flex text-shade7"
@@ -469,6 +472,7 @@ export default function Register() {
                 />
               ))} */}
                       <button
+                        data-testid="jadwal"
                         name="jadwal"
                         id="jadwal"
                         onClick={handleOpenModal}
@@ -607,7 +611,7 @@ export default function Register() {
                               </div>
                             </label>
                           </div>
-                          <div>
+                          <div data-testid="hari">
                             <label className="relative cursor-pointer">
                               <input
                                 type="radio"
@@ -632,6 +636,7 @@ export default function Register() {
                       <div className="flex flex-row gap-3">
                         <label className="font-bold text-l">Shift</label>
                         <input
+                        data-testid="shift"
                         type="radio"
                         name="shift"
                         value="pagi"
@@ -653,10 +658,13 @@ export default function Register() {
                       <button
                         onClick={handleSaveSchedule}
                         className="h-11 bg-primary1 rounded-2xl p-2.5 px-6 justify-center items-center inline-flex font-semibold text-tint7 hover:bg-tint6 hover:text-shade7"
+                        data-testid="button-simpan"
                       >
                         Simpan
                       </button>
-                      <button onClick={handleCloseModal}>Close</button>
+                      <button 
+                      data-testid="button-close"
+                      onClick={handleCloseModal}>Close</button>
                     </Modal>
                   </div>
                 )}
@@ -669,6 +677,7 @@ export default function Register() {
               selectedPosisi === "Apoteker") &&
               showAdditionalFields && (
                 <button
+                  data-testid="button-submit2"
                   className="rounded-2xl py-2.5 px-16 bg-primary1 font-Poppins font-semibold hover:bg-shade5"
                   // onSubmit={handleSubmit}
                   type="submit"

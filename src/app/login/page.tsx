@@ -147,7 +147,7 @@ return (
                             *) untuk pembuatan akun silahkan <span className="font-bold">menghubungi super admin</span>
                         </p>
                         <div className="flex items-center justify-center text-center">
-                            <button type="submit" className="flex w-[230px] h-11 px-[67px] py-2.5 rounded-3xl justify-center items-center gap-2.5  text-white bg-primary1 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-lg text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" >
+                            <button type="submit" className="flex w-[230px] h-11 px-[67px] py-2.5 rounded-3xl justify-center items-center gap-2.5  text-white bg-primary1 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium text-lg text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800" data-testid="button-login">
                             <p className="justify-center">Login</p></button>
                         </div>
                     </div>

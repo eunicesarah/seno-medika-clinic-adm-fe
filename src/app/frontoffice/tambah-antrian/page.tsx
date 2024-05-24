@@ -107,7 +107,9 @@ export default function TambahAntrian() {
                     </div>
                     <button 
                         onClick={handleSubmit}
-                        className='bg-primary1 h-11 w-full md:w-36 rounded-3xl text-white font-Poppins mt-4 hover:bg-shade6'>
+                        className='bg-primary1 h-11 w-full md:w-36 rounded-3xl text-white font-Poppins mt-4 hover:bg-shade6'
+                        data-testid="button-lanjut"
+                        >
                         Lanjut
                     </button>
                 </div>

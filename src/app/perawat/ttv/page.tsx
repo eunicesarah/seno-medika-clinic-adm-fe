@@ -1052,10 +1052,11 @@ if(diagnosisKhususElement) {
         <form className=" mr-20 " onSubmit={handleSubmit}>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
             <div
+              data-testid="tenaga-medis"
               className="flex flex-row justify-between items-center mb-4"
-              data-testid="tenaga_medis"
             >
-              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
+              <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold"
+              >
                 Tenaga Medis
                 <span className="text-[#D66A63]"> *</span>
               </label>
@@ -1070,7 +1071,7 @@ if(diagnosisKhususElement) {
             {errors.tenaga_medis && <p className="text-[#D66A63]">{errors.tenaga_medis}</p>}
             <div
               className="flex flex-row justify-between items-center mb-4"
-              data-testid="asisten_perawat"
+              data-testid="asisten-perawat"
             >
               <label className="w-1/3 pl-4 mb-1 text-l text-white font-Poppins font-semibold">
                 Asisten Perawat
@@ -1092,6 +1093,7 @@ if(diagnosisKhususElement) {
                 <span className="text-[#D66A63]"> *</span>
               </label>
               <textarea
+                data-testid="keluhan-utama"
                 name="keluhan_utama"
                 id="keluhan_utama"
                 onChange={handleKeluhanUtama}
@@ -1109,6 +1111,7 @@ if(diagnosisKhususElement) {
                 Keluhan Tambahan
               </label>
               <textarea
+                data-testid="keluhan-tambahan"
                 name="keluhan_tambahan"
                 id="keluhan_tambahan"
                 onChange={handleKeluhanTambahan}
@@ -1124,6 +1127,7 @@ if(diagnosisKhususElement) {
               <div className="w-2/3 flex flex-row gap-4">
                 <div className="relative w-1/3">
                   <input
+                    data-testid="lama-sakit-tahun"
                     type="text"
                     name="tahun"
                     id="tahun"
@@ -1138,6 +1142,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="relative w-1/3">
                   <input
+                    data-testid="lama-sakit-bulan"
                     type="text"
                     name="bulan"
                     id="bulan"
@@ -1152,6 +1157,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="relative w-1/3">
                   <input
+                    data-testid="lama-sakit-hari"
                     type="text"
                     name="hari"
                     onChange={handleLamaSakit}
@@ -1195,6 +1201,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="disabilitas-tidak"
                     type="radio"
                     id="tidak"
                     onChange={handleDisabilitas}
@@ -1215,6 +1222,7 @@ if(diagnosisKhususElement) {
                 Ambulansi
               </label>
               <input
+                data-testid="ambulansi"
                 type="text"
                 onChange={handleAmbulansi}
                 name="ambulasi"
@@ -1245,6 +1253,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="hambatan-komunikasi-tidak"
                     type="radio"
                     id="tidak"
                     onChange={handleHambatanKomunikasi}
@@ -1285,6 +1294,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="sempoyongan-tidak"
                     type="radio"
                     id="tidak"
                     name="sempoyongan"
@@ -1323,6 +1333,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="duduk-menopang-tidak"
                     type="radio"
                     id="tidak"
                     onChange={handleMenopangSaatDuduk}
@@ -1360,6 +1371,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="alat-bantu-tidak"
                     type="radio"
                     id="tidak"
                     onChange={handleAlatBantu}
@@ -1385,7 +1397,9 @@ if(diagnosisKhususElement) {
                 Skala Nyeri<span className="text-[#D66A63]"> *</span>
               </label>
               <div className="w-2/3 flex flex-row gap-10 items-center">
-                <div className="flex flex-col items-center justify-center text-center">
+                <div className="flex flex-col items-center justify-center text-center"
+                data-testid="skala-nyeri">
+                >
                   <label
                     htmlFor="1"
                     className=" text-white font-Poppins font-normal "
@@ -1483,6 +1497,7 @@ if(diagnosisKhususElement) {
                 Kapan Nyeri Berulang<span className="text-[#D66A63]"> *</span>
               </label>
               <input
+                data-testid="nyeri-berulang"
                 type="text"
                 name="nyeri_berulang"
                 id="nyeri_berulang"
@@ -1497,6 +1512,7 @@ if(diagnosisKhususElement) {
                 Sifat Nyeri<span className="text-[#D66A63]"> *</span>
               </label>
               <input
+                data-testid="sifat-nyeri"
                 type="text"
                 name="sifat_nyeri"
                 id="sifat_nyeri"
@@ -1518,6 +1534,7 @@ if(diagnosisKhususElement) {
               <div className="w-2/3 flex flex-col gap-2  text-start justify-start items-start">
                 <div className="flex flex-row items-center justify-center text-center">
                   <input
+                    data-testid="penurunan-bb-tdk-tahu"
                     type="radio"
                     id="tdk_tahu"
                     name="penurunan_bb"
@@ -1589,6 +1606,7 @@ if(diagnosisKhususElement) {
             <div className="w-2/3 flex flex-row gap-10 items-center">
               <div className="flex items-center">
                 <input
+                  data-testid="tdk-nafsu-makan-ya"
                   type="radio"
                   id="ya"
                   name="tdk_nafsu_makan"
@@ -1643,6 +1661,7 @@ if(diagnosisKhususElement) {
                 </div>
                 <div className="flex items-center">
                   <input
+                    data-testid="diagnosis-khusus-tidak"
                     type="radio"
                     id="tidak"
                     name="diagnosis_khusus"
@@ -1664,6 +1683,7 @@ if(diagnosisKhususElement) {
                 Nama Penyakit <span className="text-[#D66A63]"> *</span>
               </label>
               <input
+                data-testid="nama-penyakit"
                 type="text"
                 name="nama_penyakit"
                 id="nama_penyakit"
@@ -1722,7 +1742,8 @@ if(diagnosisKhususElement) {
               </div>
               <br />
               <br />
-              <div className="flex flex-row justify-between items-center mb-4">
+              <div className="flex flex-row justify-between items-center mb-4"
+                data-testid="kesadaran">
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Kesadaran <span className="text-[#D66A63]"> *</span>
                 </label>
@@ -1739,6 +1760,7 @@ if(diagnosisKhususElement) {
                   Sistole <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="sistole"
                   type="text"
                   name="sistole"
                   id="sistole"
@@ -1756,6 +1778,7 @@ if(diagnosisKhususElement) {
                   Diastole <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="diastole"
                   type="text"
                   name="diastole"
                   id="diastole"
@@ -1774,6 +1797,7 @@ if(diagnosisKhususElement) {
                   Tinggi Badan <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="tinggi-badan"
                   type="text"
                   name="tinggi_badan"
                   onChange={handleInputTTV}
@@ -1787,7 +1811,9 @@ if(diagnosisKhususElement) {
                 </span>
               </div>
               {errors.tinggi_badan && <p className="text-[#D66A63]">{errors.tinggi_badan}</p>}
-              <div className="flex flex-row justify-between items-center mb-4">
+              <div className="flex flex-row justify-between items-center mb-4"
+              data-testid="cara-ukur-tb"
+              >
                 <label className="w-1/3 mb-1 text-l text-white font-Poppins font-semibold">
                   Cara Ukur TB <span className="text-[#D66A63]"> *</span>
                 </label>
@@ -1804,6 +1830,7 @@ if(diagnosisKhususElement) {
                   Berat Badan <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="berat-badan"
                   type="text"
                   name="berat_badan"
                   id="berat_badan"
@@ -1894,6 +1921,7 @@ if(diagnosisKhususElement) {
                   Lingkar Perut <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="lingkar-perut"
                   type="text"
                   name="lingkar_perut"
                   id="lingkar_perut"
@@ -1912,6 +1940,7 @@ if(diagnosisKhususElement) {
                   Detak Nadi <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="detak-nadi"
                   type="text"
                   name="detak_nadi"
                   id="detak_nadi"
@@ -1930,6 +1959,7 @@ if(diagnosisKhususElement) {
                   Nafas <span className="text-[#D66A63]"> *</span>
                 </label>
                 <input
+                  data-testid="nafas"
                   type="text"
                   name="nafas"
                   id="nafas"
@@ -2048,6 +2078,7 @@ if(diagnosisKhususElement) {
                   </div>
                   <div className="flex flex-row items-center justify-center text-center">
                     <input
+                      data-testid="tdk-gawat-darurat"
                       type="radio"
                       id="tdk_gawat_darurat"
                       name="triage"
@@ -2114,6 +2145,7 @@ if(diagnosisKhususElement) {
             <button
               type="submit"
               className="flex items-center justify-center text-white font-semibold border-none rounded-2xl h-12 px-10 py-3.5 bg-primary1 w-full"
+              data-testid="simpan"
             >
               Simpan
             </button>
