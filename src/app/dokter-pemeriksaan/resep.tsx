@@ -2,43 +2,39 @@ import React, { useEffect, useState } from "react";
 import Dropdown from "../components/dropdown";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
+import { Noto_Sans_Mayan_Numerals } from "next/font/google";
 
 interface Resep {
   ruang_tujuan: string;
   status_obat: string;
-  nama_obat: string;
+}
+
+interface ListObat {
+  obat_id: number;
   jumlah: number;
   dosis: string;
   aturan_pakai: string;
   harga: number;
   keterangan: string;
+  nama_obat?: string;
 }
-interface ValidationErrors {
-  [key: string]: string;
-}
+
 export default function Resep() {
   const searchParams = useSearchParams();
-  const antrian_id = searchParams.get("antrianID");
-  const [errors, setErrors] = useState<ValidationErrors>({});
+  const antrianID = searchParams.get("antrianID");
   const [resepData, setResepData] = useState<Resep[]>([]);
+  const [listObatData, setListObatData] = useState<ListObat[]>([]);
   const [ruangTujuan, setRuangTujuan] = useState("");
   const [statusObat, setStatusObat] = useState("");
-  const [namaObat, setNamaObat] = useState("");
+  const [namaObatOptions, setNamaObatOptions] = useState<any[]>([]);
+  const [selectedObat, setSelectedObat] = useState(null);
   const [jumlah, setJumlah] = useState(0);
   const [dosis, setDosis] = useState("");
   const [aturanPakai, setAturanPakai] = useState("");
   const [harga, setHarga] = useState(0);
   const [keterangan, setKeterangan] = useState("");
-  const [resepOne, setResepOne] = useState<Resep>({
-    ruang_tujuan: "",
-    status_obat: "",
-    nama_obat: "",
-    jumlah: 0,
-    dosis: "",
-    aturan_pakai: "",
-    harga: 0,
-    keterangan: "",
-  });
+  const [pemeriksaanID, setPemeriksaanID] = useState<any>(null);
+
   const ruangTujuanOpt = [{ label: "Apotek", value: "Apotek" }];
   const statusObatOpt = [
     { label: "Belum Dikirim", value: "Belum Dikirim" },
@@ -49,51 +45,39 @@ export default function Resep() {
     try {
       const response = await axios.get("http://localhost:8080/obat");
       const obat = response.data.data;
-      console.log(obat);
       const options = obat.map((obat: { obat_id: any; nama_obat: any }) => ({
         label: obat.nama_obat,
         value: obat.obat_id,
+        nama_obat: obat.nama_obat,
       }));
-      setNamaObat(options);
+      setNamaObatOptions(options);
     } catch (error) {
       console.error("Error fetching obat data:", error);
     }
   };
 
-  const validateForm = () => {
-    let err: ValidationErrors = {};
-    let isValid = true;
-
-    if(resepOne.jumlah === 0){
-      err.jumlah = "Jumlah harus diisi";
-      isValid = false;
-    }
-    if(resepOne.status_obat === ""){
-      err.status_obat = "Status obat harus diisi";
-      isValid = false;
-    }
-    if(resepOne.ruang_tujuan === ""){
-      err.ruang_tujuan = "Ruang tujuan harus diisi";
-      isValid = false;
-    }
-    if(resepOne.nama_obat === ""){
-      err.nama_obat = "Nama obat harus diisi";
-      isValid = false;
-    }
-    if(resepOne.dosis === ""){
-      err.dosis = "Dosis harus diisi";
-      isValid = false;
-    } 
-
-    setErrors(err);
-    return isValid;
-  }
-  const handleInputChange = (e: any) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setResepOne({
-      ...resepOne,
-      [name]: value,
-    });
+
+    switch (name) {
+      case "jumlah":
+        setJumlah(value === "" ? 0 : parseInt(value));
+        break;
+      case "harga":
+        setHarga(value === "" ? 0 : parseFloat(value));
+        break;
+      case "dosis":
+        setDosis(value);
+        break;
+      case "aturan_pakai":
+        setAturanPakai(value);
+        break;
+      case "keterangan":
+        setKeterangan(value);
+        break;
+      default:
+        break;
+    }
   };
 
   useEffect(() => {
@@ -101,70 +85,107 @@ export default function Resep() {
   }, []);
 
   const handleObatDropdown = (value: any) => {
-    setNamaObat(value);
+    setSelectedObat(value);
   };
 
   const removeObat = (index: number) => {
-    const newResepData = resepData.filter((_, i) => i !== index);
-    setResepData(newResepData);
-    console.log(resepData);
+    const newListObatData = listObatData.filter((_, i) => i !== index);
+    setListObatData(newListObatData);
   };
 
   const addResep = () => {
-    const newResepData: Resep = {
-      ruang_tujuan: ruangTujuan,
-      status_obat: statusObat,
-      nama_obat: namaObat,
+    if (!selectedObat) {
+      alert("Please select a medicine");
+      return;
+    }
+
+    const newListObatData: ListObat = {
+      obat_id: selectedObat.value,
       jumlah: jumlah,
       dosis: dosis,
       aturan_pakai: aturanPakai,
       harga: harga,
       keterangan: keterangan,
+      nama_obat: selectedObat.label,
     };
-    setResepData([...resepData, newResepData]);
-    console.log(resepData);
+
+    setListObatData([...listObatData, newListObatData]);
+
+    // Reset form fields
+    setSelectedObat(null);
+    setJumlah(0);
+    setDosis("");
+    setAturanPakai("");
+    setHarga(0);
+    setKeterangan("");
   };
+
+  const fetchPemeriksaanId = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/pemeriksaan_dokter?find_by=antrian_id&target=${antrianID}`
+      );
+      const pemeriksaanData = response.data.data;
+      const pemeriksaanId = pemeriksaanData.pemeriksaan.pemeriksaan_dokter_id; // Extract the ID
+      setPemeriksaanID(pemeriksaanId); // Set the ID
+      console.log("Pemeriksaan ID:", pemeriksaanId);
+    } catch (error) {
+      console.error("Error fetching pemeriksaan data:", error);
+    }
+  };
+
+  useEffect(() => {
+    if(antrianID){
+
+      fetchPemeriksaanId();
+    }
+  }, [antrianID]);
 
   const handleSave = async (e: any) => {
     e.preventDefault();
-    console.log("Ruang Tujuan: " + ruangTujuan);
-    console.log("Status Obat: " + statusObat);
-    console.log("Nama Obat: " + namaObat);
-    console.log("Jumlah: " + resepOne.jumlah);
-    console.log("Dosis: " + resepOne.dosis);
-    console.log("Aturan Pakai: " + resepOne.aturan_pakai);
-    console.log("Harga: " + resepOne.harga);
-    console.log("Keterangan: " + resepOne.keterangan);
-    console.log("Resep: " + resepData);
-    console.log("Antrian ID: " + antrian_id);
-    const resepUpdate = {
-      antrian_id: antrian_id,
-      resep: resepOne,
-    };
-    const resepToSend = resepOne;
-    console.log("send " + resepToSend);
-
-    const formIsValid = await validateForm();
-    if(formIsValid){
-        try{
-        // const response = await axios.post(`http://localhost:8080/resep`, resepOne);
-        // console.log(response);
-        // alert("Resep berhasil disimpan");
-        // console.log("masukk");
-        } catch (error) {
-            console.error("Error saving resep:", error);
-        }
+  
+    if (!pemeriksaanID) {
+      alert("Pemeriksaan ID is not set");
+      return;
     }
+  
+    const resepUpdate = {
+      pemeriksaan_dokter_id: pemeriksaanID,
+      ruang_tujuan: ruangTujuan,
+      status_obat: statusObat,
+    };
+  
+    try {
+      // Update resep
+      const response = await axios.put(`http://localhost:8080/resep?update_by=id&target=${pemeriksaanID}`, resepUpdate);
+      
+      const updatedListObatData = listObatData.map(obat => ({ ...obat, resep_id: response.data.data.resep_id }));
 
+      // Post updated listObatData
+      for (const obat of updatedListObatData) {
+        const responseObat = await axios.post(`http://localhost:8080/obat/list`, obat);
+        console.log("Obat update response:", responseObat.data);
+      }
+      // const responseListObat = await axios.post(`http://localhost:8080/obat/list`, updatedListObatData[0]);
+  
+      // console.log("List obat update response:", responseListObat.data);
+      alert("Resep berhasil disimpan");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error saving resep:", error.response?.data || error.message);
+        alert(`Error saving resep: ${error.response?.data.message || error.message}`);
+      } else {
+        console.error("Unexpected error:", error);
+        alert("An unexpected error occurred.");
+      }
+    }
   };
+  
+  
+  
 
-  const removeResep = (index: number) => {
-    const newResepData = resepData.filter((_, i) => i !== index);
-    setResepData(newResepData);
-    console.log(resepData);
-  };
   return (
-    <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md ">
+    <div className="flex flex-col w-full pt-12 pl-6 pr-10 pb-10 mb-14 rounded-md">
       <div className="flex flex-row justify-between items-center mb-4">
         <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
           Ruang Tujuan
@@ -184,7 +205,6 @@ export default function Resep() {
           required
         />
       </div>
-      {errors.ruang_tujuan && <p className="text-[#D66A63]">{errors.ruang_tujuan}</p>}
       <div className="flex flex-row justify-between items-center mb-4">
         <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
           Status Obat
@@ -204,7 +224,6 @@ export default function Resep() {
           required
         />
       </div>
-      {errors.status_obat && <p className="text-[#D66A63]">{errors.status_obat}</p>}
       <div>
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
@@ -214,7 +233,7 @@ export default function Resep() {
           <Dropdown
             id="nama_obat"
             className="w-2/3"
-            options={namaObat}
+            options={namaObatOptions}
             onSelect={handleObatDropdown}
             name="nama_obat"
             placeholder="Nama Obat"
@@ -222,7 +241,6 @@ export default function Resep() {
             required
           />
         </div>
-        {errors.nama_obat && <p className="text-[#D66A63]">{errors.nama_obat}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Jumlah
@@ -231,12 +249,12 @@ export default function Resep() {
           <input
             name="jumlah"
             onChange={handleInputChange}
+            value={jumlah}
             required
             placeholder="Masukkan Jumlah"
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
-        {errors.jumlah && <p className="text-[#D66A63]">{errors.jumlah}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Dosis
@@ -245,19 +263,22 @@ export default function Resep() {
           <input
             name="dosis"
             onChange={handleInputChange}
+            value={dosis}
             required
-            placeholder="Masukkan Dosis Obat"
+            placeholder="Masukkan Dosis"
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
-        {errors.dosis && <p className="text-[#D66A63]">{errors.dosis}</p>}
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Aturan Pakai
+            <span className="text-[#D66A63]"> *</span>
           </label>
           <input
             name="aturan_pakai"
             onChange={handleInputChange}
+            value={aturanPakai}
+            required
             placeholder="Masukkan Aturan Pakai"
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
@@ -265,10 +286,13 @@ export default function Resep() {
         <div className="flex flex-row justify-between items-center mb-4">
           <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
             Harga
+            <span className="text-[#D66A63]"> *</span>
           </label>
           <input
             name="harga"
             onChange={handleInputChange}
+            value={harga}
+            required
             placeholder="Masukkan Harga"
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
@@ -280,43 +304,33 @@ export default function Resep() {
           <input
             name="keterangan"
             onChange={handleInputChange}
+            value={keterangan}
             placeholder="Masukkan Keterangan"
             className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border rounded-2xl"
           />
         </div>
-        <div className="flex flex-col justify-between items-center my-3 gap-4 w-full">
-          {resepData.map((resep, index) => (
-            <div key={index} className="w-full">
-              <hr className="h-px bg-shade6 border-0 w-full" />
-              <div className="flex justify-between items-center w-full">
-                <div className="flex-grow">
-                  <p className="font-bold">{resep.nama_obat}</p>
-                  <p>Jumlah: {resep.jumlah}</p>
-                  <p>Dosis: {resep.dosis}</p>
-                  <p>Aturan Pakai: {resep.aturan_pakai}</p>
-                  <p>Harga: {resep.harga}</p>
-                  <p>Keterangan: {resep.keterangan}</p>
-                </div>
-                <button
-                  className="w-10 h-10"
-                  onClick={() => removeResep(index)}
-                >
-                  {/* <Image src={RemoveButton} alt="Remove Button" /> */}
-                  delete
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div>
-          <button
-            className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold "
-            onClick={handleSave}
-          >
-            Tambah Obat
-          </button>
-        </div>
+        <button onClick={addResep} className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold hover:text-shade6 hover:bg-tint5">
+          Tambah Resep
+        </button>
       </div>
+      <div>
+        <h3 className="w-1/3 pl-4 mb-1 text-xl text-shade8 font-Poppins font-bold mt-4">Daftar Obat</h3>
+        <ul>
+        {listObatData.map((obat, index) => (
+            <li key={index} className="p-4 border rounded-lg">
+              <div className="font-semibold">Nama Obat: {obat.nama_obat}</div>
+              <div>Dosis: {obat.dosis}</div>
+              <div>Jumlah: {obat.jumlah}</div>
+              <div>Aturan Pakai: {obat.aturan_pakai}</div>
+              <div>Keterangan: {obat.keterangan}</div>
+              <button onClick={() => removeObat(index)} className="w-1/5 h-10 mt-1 bg-[#D66A63] text-white rounded-md font-Poppins font-semibold hover:bg-cancel">Hapus</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <button onClick={handleSave} className="w-1/5 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold items-end hover:text-shade6 hover:bg-tint5">
+        Simpan Resep
+      </button>
     </div>
   );
 }
