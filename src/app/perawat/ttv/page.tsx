@@ -1007,47 +1007,6 @@ if(diagnosisKhususElement) {
               </tbody>
             </table>
           </div>
-          <div className=" bg-tint1 mr-14 rounded-3xl px-10 py-10 mb-7">
-            <div className=" text-white text-3xl font-semibold font-poppins leading-10 mb-7">
-              Rekam Medis Kunjungan
-            </div>
-            <table>
-              <tbody>
-                <tr
-                  className="mb-3"
-                  onClick={() => (window.location.href = "/")}
-                >
-                  <td>
-                    <p className="text-white font-poppins text-xl font-normal mr-11">
-                      24/02/2023
-                    </p>
-                    <p className="text-white font-poppins text-xl font-normal">
-                      Bidan
-                    </p>
-                  </td>
-                  <td>
-                    <p className="text-white font-poppins text-xl font-normal">
-                      Diagnosa:
-                    </p>
-                    <p className="text-white font-poppins text-xl font-normal w-56">
-                      Migraine PRIMER BARU
-                    </p>
-                  </td>
-                  <td>
-                    <button>
-                      <Image
-                        src={Arrow}
-                        alt="Arrow"
-                        width={11}
-                        height={20}
-                        className=" ml-3"
-                      />
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
         <form className=" mr-20 " onSubmit={handleSubmit}>
           <div className=" bg-tint4 w-auto mb-7 rounded-2xl px-5 py-8">
@@ -2144,7 +2103,7 @@ if(diagnosisKhususElement) {
           <div>
             <button
               type="submit"
-              className="flex items-center justify-center text-white font-semibold border-none rounded-2xl h-12 px-10 py-3.5 bg-primary1 w-full"
+              className="flex items-center justify-center text-white font-semibold border-none rounded-2xl h-12 px-10 py-3.5 mb-4 bg-primary1 w-full"
               data-testid="simpan"
             >
               Simpan
