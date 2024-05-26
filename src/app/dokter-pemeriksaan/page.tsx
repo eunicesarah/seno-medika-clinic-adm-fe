@@ -20,13 +20,15 @@ interface Tab {
 }
 
 interface PemeriksaanFisik {
-  terapiYgSdhDilakukan: string,
-	rencanaTindakan     : string,
-	tindakanKeperawatan :  string ,
+  pemeriksaan_fisik_id: number,
+  pemeriksaan_dokter_id: number,
+  terapi_yg_sdh_dilakukan: string,
+	rencana_tindakan     : string,
+	tindakan_keperawatan :  string ,
 	observasi           :  string,
 	merokok             :  boolean,
-	konsumsiAlkohol     :  boolean ,
-	kurangSayur : boolean
+	konsumsi_alkohol     :  boolean ,
+	kurang_sayur : boolean
 }
 
 interface KeadaanFisik {
@@ -46,6 +48,13 @@ interface KeadaanFisik {
 	pemeriksaanGenitaliaPria    : boolean
 }
 
+interface Anatomi {
+  pasien_id: number,
+  pemeriksaan_dokter_id: number,
+  bagian_tubuh: string,
+  keterangan: string
+}
+
 const head = ["No", "Bagian Tubuh", "Keterangan", "Action"];
 const head2 = ["Tanggal", "Pemeriksaan", "Keterangan"];
 
@@ -60,17 +69,31 @@ export default function PemeriksaanDokter() {
   const antrianAPI = "http://localhost:8080/antrian?find_by=id&target=";
   const additionalDataAPI = "http://localhost:8080/pasien?find_by=id&target=";
   const [data, setData] = useState<any>(null);
+  const [pemeriksaanStruct, setPemeriksaanStruct] = useState<any>(null);
   const [pasien, setPasien] = useState<any>(null);
+  const [anatomi, setAnatomi] = useState<string>('');
+    const [keterangan, setKeterangan] = useState<string>('');
+
+  const [anatomiList, setAnatomiList] = useState<Anatomi[]>([]);
+  const [terapi, setTerapi] = useState<string>('');
+    const [rencanaTindakan, setRencanaTindakan] = useState<string>('');
+    const [tindakanKeperawatan, setTindakanKeperawatan] = useState<string>('');
+    const [observasi, setObservasi] = useState<string>('');
+    const [merokok, setMerokok] = useState<boolean>(false);
+    const [konsumsiAlkohol, setKonsumsiAlkohol] = useState<boolean>(false);
+    const [kurangSayur, setKurangSayur] = useState<boolean>(false);
+
 
   const [pemeriksaanfisik, setpemeriksaanfisik] = useState<PemeriksaanFisik>({
-  terapiYgSdhDilakukan: '',
-	rencanaTindakan     : '',
-	tindakanKeperawatan :  '' ,
-	observasi           : '',
-	merokok             :  false,
-	konsumsiAlkohol     :  false ,
-	kurangSayur : false,
-    // pemeriksaanDokter: 0,
+    pemeriksaan_fisik_id: 0,
+    pemeriksaan_dokter_id: (pemeriksaanStruct)?pemeriksaanStruct.pemeriksaan_dokter_id: 0,
+    terapi_yg_sdh_dilakukan: '',
+    rencana_tindakan     : '',
+    tindakan_keperawatan :  '' ,
+    observasi           :  '',
+    merokok             :  false,
+    konsumsi_alkohol     :  false ,
+    kurang_sayur : false
   });
 
 
@@ -90,6 +113,39 @@ export default function PemeriksaanDokter() {
     pemeriksaanEkstremitasBawah: false,
     pemeriksaanGenitaliaPria: false
   });
+
+
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    switch (name){
+      case 'anatomi':
+        setAnatomi(value);
+        break;
+      case 'keterangan':
+        setKeterangan(value);
+        break;
+    }
+  }
+
+  const handleInputPemeriksaanFisik = (e: any) => {
+    const { name, value } = e.target;
+    setpemeriksaanfisik({...pemeriksaanfisik, [name]: value});
+  }
+
+  const handleAddAnatomi = () => {
+    if (anatomi === '' || keterangan === '') {
+        alert('Bagian tubuh dan keterangan tidak boleh kosong');
+        return;
+    }
+    setAnatomiList([...anatomiList, {pasien_id: pemeriksaanStruct.pasien_id, pemeriksaan_dokter_id: pemeriksaanStruct.pemeriksaan_dokter_id ,bagian_tubuh: anatomi, keterangan: keterangan}]);
+    setAnatomi('');
+    setKeterangan('');
+  }
+
+  const deleteLastAnatomi = () => {
+    const newAnatomiList = anatomiList.slice(0, anatomiList.length - 1);
+    setAnatomiList(newAnatomiList);
+  }
   
 
       
@@ -136,8 +192,20 @@ export default function PemeriksaanDokter() {
     }
   };
 
+  const getPemeriksaanStruct = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8080/pemeriksaan_dokter?find_by=antrian_id&target=${id}`);
+      const data = response.data.data;
+      setPemeriksaanStruct(data.pemeriksaan);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+  }
+
   useEffect(() => {
     fetchData();
+    getPemeriksaanStruct();
   }, []);
 
   const fetchDataPasien = async () => {
@@ -552,20 +620,64 @@ export default function PemeriksaanDokter() {
                   <label className="text-black font-bold text-xl">
                     Anatomi Tubuh
                   </label>
+                  <div className="flex flex-row justify-between items-center mb-4">
+                    <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+                      Bagian Tubuh
+                      <span className="text-[#D66A63]"> *</span>
+                    </label>
+                    <input
+                        name="anatomi"
+                        onChange={handleInputChange}
+                        value={anatomi}
+                        required
+                        placeholder="Masukkan nama bagian tubuh"
+                        className="w-2/3 h-12 pl-4 pr-4 text-sm text-shade8 font-Poppins font-normal border border-shade1 rounded-2xl"
+                    />
+                    </div>
                 </div>
-                <div className="text-black">Ini fotonya</div>
-                <table className="w-full min-w-max table-auto text-center text-black bg-tint4 ">
+                <div className="bg-tint6 p-2">
+                  <div className="flex flex-row justify-between items-center mb-4">
+                    <label className="w-1/3 pl-4 mb-1 text-l text-shade8 font-Poppins font-semibold">
+                      Keterangan
+                      <span className="text-[#D66A63]"> *</span>
+                    </label>
+                    <textarea
+                        name="keterangan"
+                        id="keterangan"
+                        className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-shade1 text-shade7"
+                        placeholder="Keterangan"
+                        onChange={handleInputChange}
+                        value={keterangan}
+                    />
+                  </div>
+                </div>
+                <div className='bg-tint6 flex justify-end pb-10 pr-2'>
+                  <button className="w-1/3 h-10 bg-primary1 text-white rounded-md font-Poppins font-semibold" onClick={handleAddAnatomi}>
+                    Tambah
+                  </button>
+                </div>
+                <table className="w-full min-w-max table-auto text-center text-black  ">
                   <thead>
                     <tr>
                       {head.map((head) => (
-                        <th key={head} className="px-4 py-2">
+                        <th key={head} className="px-4 py-2 bg-tint4">
                           {head}
                         </th>
                       ))}
                     </tr>
                   </thead>
+                    <tbody>
+                        {anatomiList.map((anatomi, index) => (
+                        <tr key={index}>
+                            <td className="border border-gray-300 px-4 py-2">{index + 1}</td>
+                            <td className="border border-gray-300 px-4 py-2">{anatomi.bagian_tubuh}</td>
+                            <td className="border border-gray-300 px-4 py-2">{anatomi.keterangan}</td>
+                            <td className="border border-gray-300 px-4 py-2"><input type="checkbox"/></td>
+                        </tr>
+                        ))}
+                    </tbody>
                 </table>
-                <button className="bg-[#D66A63] px-3 py-2 hover:bg-[#A93B3B] font-normal rounded-xl">Hapus</button>
+                <button className="bg-[#D66A63] px-3 py-2 hover:bg-[#A93B3B] font-normal rounded-xl" onClick={deleteLastAnatomi}>Hapus</button>
                 <p></p>
               </div>
               <div className="p-2">
