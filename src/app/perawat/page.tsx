@@ -247,7 +247,7 @@ export default function NurseDashboard() {
                         <td className="p-2">{data.jenis_kelamin}</td>
                         <td className="p-2">{data.tempat_tanggal_lahir}</td>
                         <td className="p-2">{data.asuransi}</td>
-                        <a className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" onClick={() => handleTTVButtonClick(data.nik, data.poli, data.created_at, data.antrian_id)} data-testid="ttv-link">Buka TTV</a>
+                        <td className="p-2 justify-center font-medium hover:text-blue-500 hover:underline" onClick={() => handleTTVButtonClick(data.nik, data.poli, data.created_at, data.antrian_id)} data-testid="ttv-link">Buka TTV</td>
                     </tr>
                 ))}
             </tbody>

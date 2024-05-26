@@ -254,7 +254,7 @@ const shiftOptions = [
         </div>
 
         <button
-          className=" rounded-xl h-36 mr-auto bg-primary1 hover:bg-shade6 shadow-xl"
+          className=" rounded-xl h-xl mr-auto bg-primary1 hover:bg-shade6 shadow-xl"
           onClick={() => setShowPopup(true)}
           
         >
