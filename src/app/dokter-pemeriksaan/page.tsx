@@ -212,10 +212,10 @@ export default function PemeriksaanDokter() {
     //   title: "Keur",
     //   content: <Keur tanggal="23/04/2024" dokter="dr. Upin" />,
     // },
-    {
-      title: "Tindakan",
-      content: <Tindakan />,
-    },
+    // {
+    //   title: "Tindakan",
+    //   content: <Tindakan />,
+    // },
   ];
 
   return (
