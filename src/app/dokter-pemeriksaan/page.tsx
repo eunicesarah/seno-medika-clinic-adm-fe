@@ -132,6 +132,16 @@ export default function PemeriksaanDokter() {
     setpemeriksaanfisik({...pemeriksaanfisik, [name]: value});
   }
 
+  const handleBoolPemeriksaanFisik = (e: any) => {
+    const { name, checked, value } = e.target;
+    setpemeriksaanfisik({...pemeriksaanfisik, [name]: (value === "ya" && checked)});
+  }
+
+    const handleBoolKeadaanFisik = (e: any) => {
+        const { name, checked } = e.target;
+        setKeadaanFisik({...keadaanFisik, [name]: checked});
+    }
+
   const handleAddAnatomi = () => {
     if (anatomi === '' || keterangan === '') {
         alert('Bagian tubuh dan keterangan tidak boleh kosong');
@@ -176,6 +186,26 @@ export default function PemeriksaanDokter() {
     
   }
 
+  const handleSavePemeriksaan = async(e:any) => {
+    axios.post(`http://localhost:8080/list-anatomi`, anatomiList).then((response) => {
+        console.log(response);
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    })
+
+    axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=pemeriksaan_fisik&target=${id}`, pemeriksaanfisik).then((response) => {
+      console.log(response);
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+
+    axios.patch(`http://localhost:8080/pemeriksaan_dokter?update_by=antrian_id&update_type=keadaan_fisik&target=${id}`, keadaanFisik).then((response) => {
+      console.log(response);
+    }).catch((error) => {
+        console.error("Error fetching data:", error);
+    });
+  }
+
   
   const fetchData = async () => {
     let arr: Array<any> = [];
@@ -193,14 +223,12 @@ export default function PemeriksaanDokter() {
   };
 
   const getPemeriksaanStruct = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8080/pemeriksaan_dokter?find_by=antrian_id&target=${id}`);
+    await axios.get(`http://localhost:8080/pemeriksaan_dokter?find_by=antrian_id&target=${id}`).then((response) => {
       const data = response.data.data;
       setPemeriksaanStruct(data.pemeriksaan);
-    } catch (error) {
+    }).catch((error) => {
       console.error("Error fetching data:", error);
-    }
-
+    });
   }
 
   useEffect(() => {
@@ -471,6 +499,8 @@ export default function PemeriksaanDokter() {
                   id="terapi_yg_sdh_dilakukan"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-shade1 text-shade7"
                   placeholder="Terapi"
+                    onChange={handleInputPemeriksaanFisik}
+                    value={pemeriksaanfisik.terapi_yg_sdh_dilakukan}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -485,6 +515,8 @@ export default function PemeriksaanDokter() {
                   id="rencana_tindakan"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-shade1 text-shade7"
                   placeholder="Rencana Tindakan"
+                    onChange={handleInputPemeriksaanFisik}
+                    value={pemeriksaanfisik.rencana_tindakan}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -499,6 +531,8 @@ export default function PemeriksaanDokter() {
                   id="tindakan_keperawatan"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-shade1 text-shade7"
                   placeholder="Tindakan Keperawatan"
+                    onChange={handleInputPemeriksaanFisik}
+                    value={pemeriksaanfisik.tindakan_keperawatan}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -513,6 +547,8 @@ export default function PemeriksaanDokter() {
                   id="observasi"
                   className="w-2/3 px-7 py-3.5 bg-gray-100 rounded-2xl border border-shade1 text-shade7"
                   placeholder="Observasi"
+                    onChange={handleInputPemeriksaanFisik}
+                    value={pemeriksaanfisik.observasi}
                 />
               </div>
               <div className="flex flex-row justify-between items-center mb-4">
@@ -521,7 +557,7 @@ export default function PemeriksaanDokter() {
                 </label>
                 <div className="w-2/3 flex flex-row gap-10 items-center">
                   <div className="flex items-center">
-                    <input type="radio" id="ya" name="merokok" value="ya" />
+                    <input type="radio" id="ya" name="merokok" value="ya" onChange={handleBoolPemeriksaanFisik}  />
                     <label
                       htmlFor="ya"
                       className="text-black font-Poppins font-normal ml-4"
@@ -556,6 +592,7 @@ export default function PemeriksaanDokter() {
                       id="ya"
                       name="konsumsi_alkohol"
                       value="ya"
+                        onChange={handleBoolPemeriksaanFisik}
                     />
                     <label
                       htmlFor="ya"
@@ -591,6 +628,7 @@ export default function PemeriksaanDokter() {
                       id="ya"
                       name="kurang_sayur"
                       value="ya"
+                        onChange={handleBoolPemeriksaanFisik}
                     />
                     <label
                       htmlFor="ya"
@@ -692,6 +730,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_kulit"
                         name="pemeriksaan_kulit"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_kulit"
@@ -706,6 +745,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_kuku"
                         name="pemeriksaan_kuku"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_kuku"
@@ -720,6 +760,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_kepala"
                         name="pemeriksaan_kepala"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_kepala"
@@ -734,6 +775,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_mata"
                         name="pemeriksaan_mata"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_mata"
@@ -748,6 +790,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_telinga"
                         name="pemeriksaan_telinga"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_telinga"
@@ -762,6 +805,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_hidung_sinus"
                         name="pemeriksaan_hidung_sinus"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_hidung_sinus"
@@ -776,6 +820,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_mulut_bibir"
                         name="pemeriksaan_mulut_bibir"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_mulut_bibir"
@@ -795,6 +840,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_leher"
                         name="pemeriksaan_leher"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_leher"
@@ -809,6 +855,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_dada_punggung"
                         name="pemeriksaan_dada_punggung"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_dada_punggung"
@@ -823,6 +870,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_kardiovaskuler"
                         name="pemeriksaan_kardiovaskuler"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_kardiovaskuler"
@@ -837,6 +885,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_abdomen_perut"
                         name="pemeriksaan_abdomen_perut"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_abdomen_perut"
@@ -851,6 +900,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_ekstremitas_atas"
                         name="pemeriksaan_ekstremitas_atas"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_ekstremitas_atas"
@@ -866,6 +916,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_ekstremitas_bawah"
                         name="pemeriksaan_ekstremitas_bawah"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_ekstremitas_bawah"
@@ -881,6 +932,7 @@ export default function PemeriksaanDokter() {
                         value="ya"
                         id="pemeriksaan_genitalia_pria"
                         name="pemeriksaan_genitalia_pria"
+                        onChange={handleBoolKeadaanFisik}
                       />
                       <label
                         htmlFor="pemeriksaan_genitalia_pria"
@@ -903,7 +955,7 @@ export default function PemeriksaanDokter() {
                   </thead>
                 </table>
                 <div className='flex justify-end mt-20'>
-                  <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold" onClick={handleSave}>
+                  <button className="w-1/3 h-10 mt-4 bg-primary1 text-white rounded-md font-Poppins font-semibold" onClick={handleSavePemeriksaan}>
                       Simpan Pemeriksaan Fisik
                   </button>
               </div>
