@@ -327,7 +327,7 @@ export default function DetailPembayaran() {
                             </tbody>
                         </table>
                     </div>
-                    <div className="rounded-2xl overflow-hidden mt-10">
+                    {/* <div className="rounded-2xl overflow-hidden mt-10">
                         <table data-testid='table-action' className="table-auto text-center w-full ">
                             <thead className=" bg-shade5  ">
                                 <tr>
@@ -348,7 +348,7 @@ export default function DetailPembayaran() {
                                 ))}
                             </tbody>
                         </table>
-                    </div>
+                    </div> */}
                     <div className="flex flex-row justify-end">
                         <div className="bg-shade2 mt-7 rounded-2xl w-1/2 px-5 py-5 flex flex-col text-base">
                             <div className="flex flex-row justify-between my-1 ">
